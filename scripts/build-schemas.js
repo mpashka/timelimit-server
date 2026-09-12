@@ -43,6 +43,7 @@ const types = [
   'RequestWithAuthToken',
   'SendMailLoginCodeRequest',
   'SignInByMailCodeRequest',
+  'SignInByGoogleRequest',
   'IdentityTokenPayload',
   'DeleteAccountPayload',
 ]

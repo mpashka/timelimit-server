@@ -17,12 +17,16 @@
 
 import { json } from 'body-parser'
 import { Router } from 'express'
-import { BadRequest } from 'http-errors'
+import { BadRequest, NotImplemented, Unauthorized } from 'http-errors'
+import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
+import { createAuthTokenByMailAddress } from '../function/authentication'
 import { sendLoginCode, signInByMailCode } from '../function/authentication/login-by-mail'
+import { GoogleIdTokenException, verifyGoogleIdToken } from '../util/google-id-token'
 import { isMailAddressCoveredByWhitelist, isMailServerBlacklisted, sanitizeMailAddress } from '../util/mail'
 import {
   isSendMailLoginCodeRequest,
+  isSignInByGoogleRequest,
   isSignInByMailCodeRequest
 } from './validator'
 
@@ -73,6 +77,49 @@ export const createAuthRouter = (database: SimpleDatabase) => {
       })
 
       res.json({ mailAuthToken })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:parent-console
+  router.post('/sign-in-by-google', json(), async (req, res, next) => {
+    try {
+      if (config.googleClientIds.length === 0) {
+        throw new NotImplemented('sign in by google is disabled because GOOGLE_CLIENT_ID is not set')
+      }
+
+      if (!isSignInByGoogleRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const { locale } = req.body
+
+      const verified = await verifyGoogleIdToken({
+        idToken: req.body.idToken,
+        clientIds: config.googleClientIds
+      }).catch((ex) => {
+        if (ex instanceof GoogleIdTokenException) throw new Unauthorized('invalid google id token: ' + ex.message)
+        else throw ex
+      })
+
+      const mail = sanitizeMailAddress(verified.mail)
+
+      if (!mail) {
+        throw new BadRequest()
+      }
+
+      if (!isMailAddressCoveredByWhitelist(mail)) {
+        res.json({ mailAddressNotWhitelisted: true })
+      } else if (isMailServerBlacklisted(mail)) {
+        res.json({ mailServerBlacklisted: true })
+      } else {
+        const mailAuthToken = await database.transaction(
+          (transaction) => createAuthTokenByMailAddress({ mail, locale, transaction })
+        )
+
+        res.json({ mailAuthToken })
+      }
     } catch (ex) {
       next(ex)
     }

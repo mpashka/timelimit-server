@@ -57,3 +57,8 @@
 - SIGN_SECRET
   - used for signing tokens
   - if not set or set to an empty string, then the features that depend on it are disabled
+- GOOGLE_CLIENT_ID
+  - OAuth client id(s) accepted as audience of Google ID tokens at ``POST /auth/sign-in-by-google``
+  - multiple ids can be separated by ``,``
+  - the sign in follows ``MAIL_WHITELIST`` and ``MAIL_SERVER_BLACKLIST`` like the mail login
+  - if not set, then ``/auth/sign-in-by-google`` responds with ``501 Not Implemented``

@@ -44,6 +44,8 @@
 
 * [ServerDataStatus](./serverdatastatus.md) – `https://timelimit.io/ServerDataStatus`
 
+* [SignInByGoogleRequest](./signinbygooglerequest.md) – `https://timelimit.io/SignInByGoogleRequest`
+
 * [SignInByMailCodeRequest](./signinbymailcoderequest.md) – `https://timelimit.io/SignInByMailCodeRequest`
 
 * [SignIntoFamilyRequest](./signintofamilyrequest.md) – `https://timelimit.io/SignIntoFamilyRequest`

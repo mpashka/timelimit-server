@@ -165,6 +165,12 @@ export interface SignInByMailCodeRequest {
   receivedCode: string
 }
 
+// @tag:parent-console
+export interface SignInByGoogleRequest {
+  idToken: string
+  locale: string
+}
+
 export interface IdentityTokenCreatePayload {
   purpose: 'purchase'
   familyId: string

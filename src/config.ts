@@ -22,6 +22,7 @@ interface Config {
   pingInterval: number
   alwaysPro: boolean
   signSecret: string
+  googleClientIds: Array<string>
 }
 
 function parseYesNo (value: string) {
@@ -41,5 +42,7 @@ export const config: Config = {
   disableSignup: parseYesNo(process.env.DISABLE_SIGNUP || 'no'),
   pingInterval: parseInt(process.env.PING_INTERVAL_SEC || '25', 10) * 1000,
   alwaysPro: process.env.ALWAYS_PRO ? parseYesNo(process.env.ALWAYS_PRO) : false,
-  signSecret: process.env.SIGN_SECRET || ''
+  signSecret: process.env.SIGN_SECRET || '',
+  // @tag:parent-console
+  googleClientIds: (process.env.GOOGLE_CLIENT_ID || '').split(',').map((item) => item.trim()).filter((item) => item.length > 0)
 }
