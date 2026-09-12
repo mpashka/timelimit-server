@@ -1461,6 +1461,43 @@ const definitions = {
       "values"
     ]
   },
+  "SerializedUpdateUserUrlFilterAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "UPDATE_USER_URL_FILTER"
+        ]
+      },
+      "userId": {
+        "type": "string"
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "allow": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "block": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "allow",
+      "block",
+      "enabled",
+      "type",
+      "userId"
+    ]
+  },
   "SerializedUpdateUserLimitLoginCategory": {
     "type": "object",
     "properties": {
@@ -2760,6 +2797,9 @@ const definitions = {
       },
       "pbd": {
         "type": "number"
+      },
+      "urlFilter": {
+        "$ref": "#/definitions/UrlFilter"
       }
     },
     "additionalProperties": false,
@@ -2778,6 +2818,32 @@ const definitions = {
       "secondPasswordSalt",
       "timeZone",
       "type"
+    ]
+  },
+  "UrlFilter": {
+    "type": "object",
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "allow": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "block": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "allow",
+      "block",
+      "enabled"
     ]
   },
   "ServerKeyRequest": {
@@ -3238,6 +3304,9 @@ export const isSerializedParentAction: (value: unknown) => value is SerializedPa
     },
     {
       "$ref": "#/definitions/SerializedUpdateUserFlagsAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedUpdateUserUrlFilterAction"
     },
     {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"

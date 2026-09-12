@@ -220,6 +220,8 @@
 
 * [SerializedUpdateUserLimitLoginPreBlockDuration](./serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration`
 
+* [SerializedUpdateUserUrlFilterAction](./serializedparentaction-definitions-serializedupdateuserurlfilteraction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserUrlFilterAction`
+
 * [SerializedUploadDevicePublicKeyAction](./serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction`
 
 * [ServerCategoryNetworkId](./serverdatastatus-definitions-servercategorynetworkid.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerCategoryNetworkId`
@@ -276,6 +278,8 @@
 
 * [Untitled object in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedaddusedtimeactionversion2-properties-i-items.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAddUsedTimeActionVersion2/properties/i/items`
 
+* [UrlFilter](./serverdatastatus-definitions-urlfilter.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter`
+
 ### Arrays
 
 * [Untitled array in ClientPushChangesRequest](./clientpushchangesrequest-properties-actions.md) – `https://timelimit.io/ClientPushChangesRequest#/properties/actions`
@@ -307,6 +311,10 @@
 * [Untitled array in SerializedParentAction](./serializedparentaction-definitions-serializedremovecategoryappsaction-properties-packagenames.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRemoveCategoryAppsAction/properties/packageNames`
 
 * [Untitled array in SerializedParentAction](./serializedparentaction-definitions-serializedupdatecategorysortingaction-properties-categoryids.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateCategorySortingAction/properties/categoryIds`
+
+* [Untitled array in SerializedParentAction](./serializedparentaction-definitions-serializedupdateuserurlfilteraction-properties-allow.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserUrlFilterAction/properties/allow`
+
+* [Untitled array in SerializedParentAction](./serializedparentaction-definitions-serializedupdateuserurlfilteraction-properties-block.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserUrlFilterAction/properties/block`
 
 * [Untitled array in ServerDataStatus](./serverdatastatus-definitions-serverdevicelist-properties-data.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceList/properties/data`
 
@@ -345,6 +353,10 @@
 * [Untitled array in ServerDataStatus](./serverdatastatus-definitions-serverupdatedcategorytasks-properties-tasks.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryTasks/properties/tasks`
 
 * [Untitled array in ServerDataStatus](./serverdatastatus-definitions-serveruserlist-properties-data.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/data`
+
+* [Untitled array in ServerDataStatus](./serverdatastatus-definitions-urlfilter-properties-allow.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/allow`
+
+* [Untitled array in ServerDataStatus](./serverdatastatus-definitions-urlfilter-properties-block.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/block`
 
 * [Untitled array in ServerDataStatus](./serverdatastatus-properties-krq.md) – `https://timelimit.io/ServerDataStatus#/properties/krq`
 

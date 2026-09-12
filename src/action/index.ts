@@ -76,6 +76,7 @@ export { UpdateNetworkTimeVerificationAction } from './updatenetworktimeverifica
 export { UpdateParentNotificationFlagsAction } from './updateparentnotificationflags'
 export { UpdateTimelimitRuleAction } from './updatetimelimitrule'
 export { UpdateUserFlagsAction } from './updateuserflags'
+export { UpdateUserUrlFilterAction } from './updateuserurlfilter'
 export { UpdateUserLimitLoginCategory } from './updateuserlimitlogincategory'
 export { MarkTaskPendingAction } from './marktaskpendingaction'
 export { PingAction } from './ping'

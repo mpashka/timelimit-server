@@ -840,6 +840,9 @@
         },
         "pbd": {
           "type": "number"
+        },
+        "urlFilter": {
+          "$ref": "#/definitions/UrlFilter"
         }
       },
       "additionalProperties": false,
@@ -860,6 +863,33 @@
         "type"
       ],
       "title": "ServerUserEntry"
+    },
+    "UrlFilter": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "block": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "allow",
+        "block",
+        "enabled"
+      ],
+      "title": "UrlFilter"
     },
     "ServerKeyRequest": {
       "type": "object",

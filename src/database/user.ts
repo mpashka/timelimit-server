@@ -67,8 +67,15 @@ export interface UserAttributesVersion6 {
   flags: string
 }
 
+// @tag:url-filter
+export interface UserAttributesVersion7 {
+  // JSON of UrlFilter; null = never set
+  urlFilter: string | null
+}
+
 export type UserAttributes = UserAttributesVersion1 & UserAttributesVersion2 &
-  UserAttributesVersion3 & UserAttributesVersion4 & UserAttributesVersion5 & UserAttributesVersion6
+  UserAttributesVersion3 & UserAttributesVersion4 & UserAttributesVersion5 & UserAttributesVersion6 &
+  UserAttributesVersion7
 
 export type UserModel = Sequelize.Model<UserAttributes> & UserAttributes
 export type UserModelStatic = typeof Sequelize.Model & {
@@ -164,13 +171,22 @@ export const attributesVersion6: SequelizeAttributes<UserAttributesVersion6> = {
   }
 }
 
+export const attributesVersion7: SequelizeAttributes<UserAttributesVersion7> = {
+  urlFilter: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+    defaultValue: null
+  }
+}
+
 export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
   ...attributesVersion3,
   ...attributesVersion4,
   ...attributesVersion5,
-  ...attributesVersion6
+  ...attributesVersion6,
+  ...attributesVersion7
 }
 
 export const createUserModel = (sequelize: Sequelize.Sequelize): UserModelStatic => sequelize.define('User', attributes) as UserModelStatic

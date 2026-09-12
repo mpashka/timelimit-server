@@ -65,6 +65,7 @@ import { SerialiizedUpdateNetworkTimeVerificationAction, UpdateNetworkTimeVerifi
 import { SerializedUpdateParentNotificationFlagsAction, UpdateParentNotificationFlagsAction } from '../updateparentnotificationflags'
 import { SerializedUpdateTimelimitRuleAction, UpdateTimelimitRuleAction } from '../updatetimelimitrule'
 import { SerializedUpdateUserFlagsAction, UpdateUserFlagsAction } from '../updateuserflags'
+import { SerializedUpdateUserUrlFilterAction, UpdateUserUrlFilterAction } from '../updateuserurlfilter'
 import { SerializedUpdateUserLimitLoginCategory, UpdateUserLimitLoginCategory } from '../updateuserlimitlogincategory'
 import { SerializedUpdateUserLimitLoginPreBlockDuration, UpdateUserLimitLoginPreBlockDuration } from '../updateuserlimitloginpreblockduration'
 
@@ -117,6 +118,7 @@ export type SerializedParentAction =
   SerializedUpdateParentNotificationFlagsAction |
   SerializedUpdateTimelimitRuleAction |
   SerializedUpdateUserFlagsAction |
+  SerializedUpdateUserUrlFilterAction |
   SerializedUpdateUserLimitLoginCategory |
   SerializedUpdateUserLimitLoginPreBlockDuration
 
@@ -217,6 +219,8 @@ export const parseParentAction = (action: SerializedParentAction): ParentAction 
     return UpdateTimelimitRuleAction.parse(action)
   } else if (action.type === 'UPDATE_USER_FLAGS') {
     return UpdateUserFlagsAction.parse(action)
+  } else if (action.type === 'UPDATE_USER_URL_FILTER') {
+    return UpdateUserUrlFilterAction.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_CATEGORY') {
     return UpdateUserLimitLoginCategory.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_PRE_BLOCK_DURATION') {

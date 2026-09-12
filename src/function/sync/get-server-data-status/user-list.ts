@@ -16,6 +16,7 @@
  */
 
 import { SimpleDatabaseTransaction } from '../../../database/simple'
+import { UrlFilter } from '../../../model/urlfilter'
 import { ServerUserList } from '../../../object/serverdatastatus'
 import { FamilyEntry } from './family-entry'
 
@@ -40,7 +41,8 @@ export async function getUserList ({ transaction, familyEntry }: {
       'categoryForNotAssignedApps',
       'relaxPrimaryDeviceRule',
       'mailNotificationFlags',
-      'flags'
+      'flags',
+      'urlFilter'
     ],
     transaction: transaction.legacy.transaction
   })).map((item) => ({
@@ -56,7 +58,8 @@ export async function getUserList ({ transaction, familyEntry }: {
     categoryForNotAssignedApps: item.categoryForNotAssignedApps,
     relaxPrimaryDeviceRule: item.relaxPrimaryDeviceRule,
     mailNotificationFlags: item.mailNotificationFlags,
-    flags: item.flags
+    flags: item.flags,
+    urlFilter: item.urlFilter
   }))
 
   const limitLoginCategories = (await transaction.legacy.database.userLimitLoginCategory.findAll({
@@ -106,7 +109,8 @@ export async function getUserList ({ transaction, familyEntry }: {
         blockedTimes: '',
         flags: parseInt(item.flags, 10),
         llc: limitLoginCategory?.categoryId,
-        pbd: limitLoginCategory?.preBlockDuration
+        pbd: limitLoginCategory?.preBlockDuration,
+        urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined // @tag:url-filter
       }
     })
   }

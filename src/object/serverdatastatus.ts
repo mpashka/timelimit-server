@@ -20,6 +20,7 @@ import { SerializedInstalledApp } from '../model/installedapp'
 import { NewPermissionStatus } from '../model/newpermissionstatus'
 import { ProtectionLevel } from '../model/protectionlevel'
 import { RuntimePermissionStatus } from '../model/runtimepermissionstatus'
+import { UrlFilter } from '../model/urlfilter'
 
 export interface ServerDataStatus {
   devices?: ServerDeviceList  // newDeviceList
@@ -69,6 +70,7 @@ export interface ServerUserEntry {
   flags: number
   llc?: string  // limit login category
   pbd?: number  // pre block duration, default is zero
+  urlFilter?: UrlFilter // @tag:url-filter
 }
 
 export interface ServerDeviceData {

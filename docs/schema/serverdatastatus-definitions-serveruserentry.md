@@ -34,6 +34,7 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | [flags](#flags)                                           | `number`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-flags.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/flags")                                           |
 | [llc](#llc)                                               | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-llc.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/llc")                                               |
 | [pbd](#pbd)                                               | `number`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-pbd.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/pbd")                                               |
+| [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 
 ## id
 
@@ -331,3 +332,21 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 ### pbd Type
 
 `number`
+
+## urlFilter
+
+
+
+`urlFilter`
+
+* is optional
+
+* Type: `object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")
+
+### urlFilter Type
+
+`object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))

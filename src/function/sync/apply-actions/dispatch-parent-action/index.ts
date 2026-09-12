@@ -65,6 +65,7 @@ import {
   UpdateParentNotificationFlagsAction,
   UpdateTimelimitRuleAction,
   UpdateUserFlagsAction,
+  UpdateUserUrlFilterAction,
   UpdateUserLimitLoginCategory,
   UpdateUserLimitLoginPreBlockDuration
 } from '../../../../action'
@@ -120,6 +121,7 @@ import { dispatchUpdateNetworkTimeVerification } from './updatenetworktimeverifi
 import { dispatchUpdateParentNotificationFlags } from './updateparentnotificationflags'
 import { dispatchUpdateTimelimitRule } from './updatetimelimitrule'
 import { dispatchUpdateUserFlagsAction } from './updateuserflags'
+import { dispatchUpdateUserUrlFilter } from './updateuserurlfilter'
 import { dispatchUpdateUserLimitLoginCategoryAction } from './updateuserlimitlogincategory'
 import { dispatchUpdateUserLimitPreBlockDuration } from './updateuserlimitloginpreblockduration'
 
@@ -229,6 +231,8 @@ export const dispatchParentAction = async ({
       return dispatchUpdateCategoryTimeWarnings({ action, cache })
     } else if (action instanceof UpdateUserFlagsAction) {
       return dispatchUpdateUserFlagsAction({ action, cache })
+    } else if (action instanceof UpdateUserUrlFilterAction) {
+      return dispatchUpdateUserUrlFilter({ action, cache })
     } else if (action instanceof UpdateUserLimitLoginCategory) {
       return dispatchUpdateUserLimitLoginCategoryAction({ action, cache, parentUserId })
     } else if (action instanceof DeleteChildTaskAction) {

@@ -2882,6 +2882,7 @@ Reference this group by using
 | [flags](#flags-1)                                         | `number`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-flags.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/flags")                                           |
 | [llc](#llc)                                               | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-llc.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/llc")                                               |
 | [pbd](#pbd)                                               | `number`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-pbd.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/pbd")                                               |
+| [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 
 ### id
 
@@ -3179,6 +3180,92 @@ Reference this group by using
 #### pbd Type
 
 `number`
+
+### urlFilter
+
+
+
+`urlFilter`
+
+* is optional
+
+* Type: `object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")
+
+#### urlFilter Type
+
+`object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))
+
+## Definitions group UrlFilter
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/ServerDataStatus#/definitions/UrlFilter"}
+```
+
+| Property            | Type      | Required | Nullable       | Defined by                                                                                                                                                         |
+| :------------------ | :-------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [enabled](#enabled) | `boolean` | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-enabled.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/enabled") |
+| [allow](#allow)     | `array`   | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-allow.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/allow")     |
+| [block](#block)     | `array`   | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-block.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/block")     |
+
+### enabled
+
+
+
+`enabled`
+
+* is required
+
+* Type: `boolean`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-enabled.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/enabled")
+
+#### enabled Type
+
+`boolean`
+
+### allow
+
+
+
+`allow`
+
+* is required
+
+* Type: `string[]`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-allow.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/allow")
+
+#### allow Type
+
+`string[]`
+
+### block
+
+
+
+`block`
+
+* is required
+
+* Type: `string[]`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-urlfilter-properties-block.md "https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/block")
+
+#### block Type
+
+`string[]`
 
 ## Definitions group ServerKeyRequest
 
