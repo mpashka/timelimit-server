@@ -34,6 +34,8 @@
 
 * [RequestWithAuthToken](./requestwithauthtoken.md) – `https://timelimit.io/RequestWithAuthToken`
 
+* [RevokeParentSessionRequest](./revokeparentsessionrequest.md) – `https://timelimit.io/RevokeParentSessionRequest`
+
 * [SendMailLoginCodeRequest](./sendmaillogincoderequest.md) – `https://timelimit.io/SendMailLoginCodeRequest`
 
 * [SerializedAppLogicAction](./serializedapplogicaction.md) – `https://timelimit.io/SerializedAppLogicAction`

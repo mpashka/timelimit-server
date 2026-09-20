@@ -65,8 +65,10 @@ export const generateServerDataStatus = async ({
       familyEntry.hasFullVersion ? parseInt(familyEntry.fullVersionUntil, 10) : 0
     ),
     message,
-    // ponytail: level 10 (url filter) is ours; recheck when upstream raises its level
-    apiLevel: 10
+    // ponytail: levels 10 (url filter) and 11 (parent sessions) are ours; recheck when upstream
+    // raises its level
+    // @tag:parent-console
+    apiLevel: 11
   }
 
   if (familyEntry.deviceListVersion !== clientStatus.devices) {

@@ -48,17 +48,17 @@ export const applyActionsFromDevice = async ({ database, request, websocket, con
   }
 
   return database.transaction(async (transaction) => {
-    const baseInfo = await getApplyActionBaseInfo({ transaction, deviceAuthToken: request.deviceAuthToken })
+    const { subject, hasFullVersion } = await getApplyActionBaseInfo({ transaction, deviceAuthToken: request.deviceAuthToken })
 
     const cache = new Cache({
       transaction,
-      hasFullVersion: baseInfo.hasFullVersion,
-      familyId: baseInfo.familyId,
-      deviceId: baseInfo.deviceId,
+      hasFullVersion,
+      familyId: subject.familyId,
+      deviceId: subject.subjectId,
       connectedDevicesManager
     })
 
-    let { nextSequenceNumber } = baseInfo
+    let { nextSequenceNumber } = subject
 
     for (const action of request.actions) {
       try {
@@ -75,12 +75,13 @@ export const applyActionsFromDevice = async ({ database, request, websocket, con
             await dispatchAppLogicAction({
               action,
               cache,
-              deviceId: baseInfo.deviceId,
+              deviceId: subject.subjectId,
               eventHandler
             })
           } else if (action.type === 'parent') {
             const { isChildLimitAdding, authentication } = await assertActionIntegrity({
-              deviceId: baseInfo.deviceId,
+              deviceId: subject.subjectId,
+              parentSessionUserId: subject.parentUserId,
               cache,
               action
             })
@@ -88,14 +89,15 @@ export const applyActionsFromDevice = async ({ database, request, websocket, con
             await dispatchParentAction({
               action,
               cache,
-              deviceId: baseInfo.deviceId,
+              deviceId: subject.subjectId,
               eventHandler,
               isChildLimitAdding,
               authentication
             })
           } else if (action.type === 'child') {
             await assertActionIntegrity({
-              deviceId: baseInfo.deviceId,
+              deviceId: subject.subjectId,
+              parentSessionUserId: subject.parentUserId,
               cache,
               action
             })
@@ -104,7 +106,7 @@ export const applyActionsFromDevice = async ({ database, request, websocket, con
               action,
               cache,
               childUserId: action.userId,
-              deviceId: baseInfo.deviceId,
+              deviceId: subject.subjectId,
               eventHandler
             })
           } else {
@@ -129,25 +131,17 @@ export const applyActionsFromDevice = async ({ database, request, websocket, con
     }
 
     // save new next sequence number
-    if (nextSequenceNumber !== baseInfo.nextSequenceNumber) {
+    if (nextSequenceNumber !== subject.nextSequenceNumber) {
       eventHandler.countEvent('applyActionsFromDevice updateSequenceNumber')
 
-      await transaction.legacy.database.device.update({
-        nextSequenceNumber
-      }, {
-        where: {
-          familyId: baseInfo.familyId,
-          deviceId: baseInfo.deviceId
-        },
-        transaction: transaction.legacy.transaction
-      })
+      await subject.saveNextSequenceNumber(nextSequenceNumber)
     }
 
     await cache.saveModifiedVersionNumbers()
 
     await notifyClientsAboutChangesDelayed({
-      familyId: baseInfo.familyId,
-      sourceDeviceId: baseInfo.deviceId,
+      familyId: subject.familyId,
+      sourceDeviceId: subject.subjectId,
       websocket,
       transaction,
       generalLevel: cache.triggeredSyncLevel,

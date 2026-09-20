@@ -44,6 +44,7 @@ const types = [
   'SendMailLoginCodeRequest',
   'SignInByMailCodeRequest',
   'SignInByGoogleRequest',
+  'RevokeParentSessionRequest',
   'IdentityTokenPayload',
   'DeleteAccountPayload',
 ]

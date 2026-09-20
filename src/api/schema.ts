@@ -166,6 +166,11 @@ export interface SignInByMailCodeRequest {
 }
 
 // @tag:parent-console
+export interface RevokeParentSessionRequest {
+  sessionToken: string
+}
+
+// @tag:parent-console
 export interface SignInByGoogleRequest {
   idToken: string
   locale: string

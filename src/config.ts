@@ -23,6 +23,7 @@ interface Config {
   alwaysPro: boolean
   signSecret: string
   googleClientIds: Array<string>
+  parentSessionMaxIdleMs: number
 }
 
 function parseYesNo (value: string) {
@@ -44,5 +45,7 @@ export const config: Config = {
   alwaysPro: process.env.ALWAYS_PRO ? parseYesNo(process.env.ALWAYS_PRO) : false,
   signSecret: process.env.SIGN_SECRET || '',
   // @tag:parent-console
-  googleClientIds: (process.env.GOOGLE_CLIENT_ID || '').split(',').map((item) => item.trim()).filter((item) => item.length > 0)
+  googleClientIds: (process.env.GOOGLE_CLIENT_ID || '').split(',').map((item) => item.trim()).filter((item) => item.length > 0),
+  // @tag:parent-console
+  parentSessionMaxIdleMs: parseInt(process.env.PARENT_SESSION_MAX_IDLE_DAYS || '90', 10) * 1000 * 60 * 60 * 24
 }

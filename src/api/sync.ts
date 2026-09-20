@@ -17,21 +17,16 @@
 
 import { json } from 'body-parser'
 import { Router } from 'express'
-import { BadRequest, Unauthorized } from 'http-errors'
+import { BadRequest } from 'http-errors'
 import { VisibleConnectedDevicesManager } from '../connected-devices'
 import { SimpleDatabase } from '../database/simple'
 import { reportDeviceRemoved } from '../function/device/report-device-removed'
 import { applyActionsFromDevice } from '../function/sync/apply-actions'
 import { generateServerDataStatus } from '../function/sync/get-server-data-status'
+import { resolveSubject } from '../function/sync/subject'
 import { EventHandler } from '../monitoring/eventhandler'
 import { WebsocketApi } from '../websocket'
 import { isClientPullChangesRequest, isClientPushChangesRequest, isRequestWithAuthToken } from './validator'
-
-const getRoundedTimestampForLastConnectivity = () => {
-  const now = Date.now()
-
-  return now - (now % (1000 * 60 * 60 * 12 /* 12 hours */))
-}
 
 export const createSyncRouter = ({ database, websocket, connectedDevicesManager, eventHandler }: {
   database: SimpleDatabase
@@ -86,36 +81,14 @@ export const createSyncRouter = ({ database, websocket, connectedDevicesManager,
       }
 
       const serverStatus = await database.transaction(async (transaction) => {
-        const deviceEntryUnsafe = await transaction.legacy.database.device.findOne({
-          where: {
-            deviceAuthToken: body.deviceAuthToken
-          },
-          attributes: ['familyId', 'deviceId', 'lastConnectivity'],
-          transaction: transaction.legacy.transaction
-        })
+        const subject = await resolveSubject({ transaction, authToken: body.deviceAuthToken })
 
-        if (!deviceEntryUnsafe) {
-          throw new Unauthorized()
-        }
-
-        const { familyId, deviceId, lastConnectivity } = deviceEntryUnsafe
-        const now = getRoundedTimestampForLastConnectivity()
-
-        if (parseInt(lastConnectivity, 10) !== now) {
-          await transaction.legacy.database.device.update({
-            lastConnectivity: now.toString(10)
-          }, {
-            where: {
-              deviceAuthToken: body.deviceAuthToken
-            },
-            transaction: transaction.legacy.transaction
-          })
-        }
+        await subject.reportUsage()
 
         return generateServerDataStatus({
           transaction,
-          familyId,
-          deviceId,
+          familyId: subject.familyId,
+          deviceId: subject.subjectId,
           clientStatus: body.status,
           eventHandler
         })

@@ -15,14 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Unauthorized } from 'http-errors'
 import { SimpleDatabaseTransaction } from '../../../database/simple'
+import { resolveSubject, Subject } from '../subject'
 import { SourceFamilyNotFoundException } from './exception/illegal-state'
 
 export interface ApplyActionBaseInfo {
-  familyId: string
-  deviceId: string
-  nextSequenceNumber: number
+  subject: Subject
   hasFullVersion: boolean
 }
 
@@ -30,25 +28,11 @@ export async function getApplyActionBaseInfo ({ transaction, deviceAuthToken }: 
   transaction: SimpleDatabaseTransaction
   deviceAuthToken: string
 }): Promise<ApplyActionBaseInfo> {
-  const deviceEntryUnsafe = await transaction.legacy.database.device.findOne({
-    where: { deviceAuthToken },
-    attributes: ['familyId', 'deviceId', 'nextSequenceNumber'],
-    transaction: transaction.legacy.transaction
-  })
-
-  if (!deviceEntryUnsafe) {
-    throw new Unauthorized()
-  }
-
-  const deviceEntry = {
-    familyId: deviceEntryUnsafe.familyId,
-    deviceId: deviceEntryUnsafe.deviceId,
-    nextSequenceNumber: deviceEntryUnsafe.nextSequenceNumber
-  }
+  const subject = await resolveSubject({ transaction, authToken: deviceAuthToken })
 
   const familyEntryUnsafe = await transaction.legacy.database.family.findOne({
     where: {
-      familyId: deviceEntry.familyId
+      familyId: subject.familyId
     },
     transaction: transaction.legacy.transaction,
     attributes: ['hasFullVersion']
@@ -58,14 +42,8 @@ export async function getApplyActionBaseInfo ({ transaction, deviceAuthToken }: 
     throw new SourceFamilyNotFoundException()
   }
 
-  const familyEntry = {
-    hasFullVersion: familyEntryUnsafe.hasFullVersion
-  }
-
   return {
-    familyId: deviceEntry.familyId,
-    deviceId: deviceEntry.deviceId,
-    nextSequenceNumber: deviceEntry.nextSequenceNumber,
-    hasFullVersion: familyEntry.hasFullVersion
+    subject,
+    hasFullVersion: familyEntryUnsafe.hasFullVersion
   }
 }

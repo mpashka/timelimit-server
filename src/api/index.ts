@@ -26,6 +26,7 @@ import { createAuthRouter } from './auth'
 import { createChildRouter } from './child'
 import { createParentRouter } from './parent'
 import { createPurchaseRouter } from './purchase'
+import { createSessionRouter } from './session'
 import { createSyncRouter } from './sync'
 
 const adminToken = process.env.ADMIN_TOKEN || ''
@@ -50,6 +51,7 @@ export const createApi = ({ database, websocket, connectedDevicesManager, eventH
   app.use('/child', createChildRouter({ database, websocket, eventHandler }))
   app.use('/parent', createParentRouter({ database, websocket, eventHandler }))
   app.use('/purchase', createPurchaseRouter({ database, websocket }))
+  app.use('/session', createSessionRouter({ database }))
   app.use('/sync', createSyncRouter({ database, websocket, connectedDevicesManager, eventHandler }))
 
   app.use(

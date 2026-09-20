@@ -14,5 +14,16 @@ export default defineConfig(
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { caughtErrors: 'none' }]
     }
+  },
+  {
+    files: ['test/**'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        fetch: 'readonly',
+        process: 'readonly',
+        setTimeout: 'readonly'
+      }
+    }
   }
 )

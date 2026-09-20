@@ -27,16 +27,32 @@ import {
 import { ActionObjectTypeNotHandledException } from './exception/illegal-state'
 import { AuthenticationMethod } from './types'
 
-export async function assertActionIntegrity ({ action, cache, deviceId }: {
+export async function assertActionIntegrity ({ action, cache, deviceId, parentSessionUserId }: {
   action: ClientPushChangesRequestAction
   cache: Cache
   deviceId: string
+  // @tag:parent-console
+  // Родитель, под которым вошли в средство управления; у устройства семьи null.
+  // Для сессии 'device' значит то же, что для устройства: предъявитель принадлежит этому родителю.
+  parentSessionUserId: string | null
 }): Promise<{
   isChildLimitAdding: boolean
   authentication: AuthenticationMethod
 }> {
   if (action.type === 'parent') {
-    if (action.integrity === 'device') {
+    if (action.integrity === 'device' && parentSessionUserId !== null) {
+      if (parentSessionUserId !== action.userId) {
+        throw new ParentDeviceActionWithoutParentDeviceException()
+      }
+
+      // this ensures that the parent exists
+      await cache.getSecondPasswordHashOfParent(action.userId)
+
+      return {
+        isChildLimitAdding: false,
+        authentication: 'device'
+      }
+    } else if (action.integrity === 'device') {
       const deviceEntryUnsafe = await cache.transaction.legacy.database.device.findOne({
         attributes: ['currentUserId'],
         where: {
@@ -60,6 +76,11 @@ export async function assertActionIntegrity ({ action, cache, deviceId }: {
         authentication: 'device'
       }
     } else if (action.integrity === 'childDevice') {
+      // сессия родителя детским устройством не бывает, и поблажку для него получить не может
+      if (parentSessionUserId !== null) {
+        throw new ParentDeviceActionWithoutParentDeviceException()
+      }
+
       return {
         isChildLimitAdding: true, // will be checked later
         authentication: 'device'
