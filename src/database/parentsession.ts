@@ -31,6 +31,8 @@ export interface ParentSessionAttributes {
   createdAt: string
   lastUsedAt: string
   nextSequenceNumber: number
+  // счётчик ответов на запрос ключа, адресованный этой сессии; растёт так же, как у устройства
+  nextKeyReplySequenceNumber: string
 }
 
 export type ParentSessionModel = Sequelize.Model<ParentSessionAttributes> & ParentSessionAttributes
@@ -54,6 +56,11 @@ export const attributes: SequelizeAttributes<ParentSessionAttributes> = {
     validate: {
       min: 0
     }
+  },
+  nextKeyReplySequenceNumber: {
+    type: Sequelize.BIGINT,
+    allowNull: false,
+    defaultValue: 1
   }
 }
 

@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, RevokeParentSessionRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -3623,6 +3623,32 @@ export const isSignInByGoogleRequest: (value: unknown) => value is SignInByGoogl
   "required": [
     "idToken",
     "locale"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isCreateFamilyWithParentSessionRequest: (value: unknown) => value is CreateFamilyWithParentSessionRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "mailAuthToken": {
+      "type": "string"
+    },
+    "parentPassword": {
+      "$ref": "#/definitions/PlaintextParentPassword"
+    },
+    "timeZone": {
+      "type": "string"
+    },
+    "parentName": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "mailAuthToken",
+    "parentName",
+    "parentPassword",
+    "timeZone"
   ],
   "definitions": definitions,
   "$schema": "http://json-schema.org/draft-07/schema#"

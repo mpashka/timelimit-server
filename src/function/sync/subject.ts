@@ -18,6 +18,7 @@
 import { Unauthorized } from 'http-errors'
 import { config } from '../../config'
 import { SimpleDatabaseTransaction } from '../../database/simple'
+import { deleteParentSessions } from '../parent-session/cleanup'
 import { parseSessionTokenFromWireFormat } from '../parent-session/token'
 
 // @tag:parent-console
@@ -44,6 +45,54 @@ export async function resolveSubject ({ transaction, authToken }: {
   return sessionToken === null
     ? resolveDevice({ transaction, deviceAuthToken: authToken })
     : resolveParentSession({ transaction, sessionToken })
+}
+
+// @tag:parent-console
+// Счётчик ответов на запрос ключа принадлежит адресату, а не предъявителю: отвечающий называет
+// адресата его subjectId, а не токеном, — поэтому это отдельная функция, а не поле Subject.
+// null означает, что предъявителя с таким id в семье больше нет.
+export async function takeNextKeyReplySequenceNumber ({ transaction, familyId, subjectId }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  subjectId: string
+}): Promise<string | null> {
+  const deviceEntryUnsafe = await transaction.legacy.database.device.findOne({
+    where: { familyId, deviceId: subjectId },
+    attributes: ['nextKeyReplySequenceNumber'],
+    transaction: transaction.legacy.transaction
+  })
+
+  if (deviceEntryUnsafe) {
+    const current = deviceEntryUnsafe.nextKeyReplySequenceNumber
+
+    await transaction.legacy.database.device.update({
+      nextKeyReplySequenceNumber: (parseInt(current, 10) + 1).toString(10)
+    }, {
+      where: { familyId, deviceId: subjectId },
+      transaction: transaction.legacy.transaction
+    })
+
+    return current
+  }
+
+  const sessionEntryUnsafe = await transaction.legacy.database.parentSession.findOne({
+    where: { familyId, sessionId: subjectId },
+    attributes: ['nextKeyReplySequenceNumber'],
+    transaction: transaction.legacy.transaction
+  })
+
+  if (!sessionEntryUnsafe) return null
+
+  const current = sessionEntryUnsafe.nextKeyReplySequenceNumber
+
+  await transaction.legacy.database.parentSession.update({
+    nextKeyReplySequenceNumber: (parseInt(current, 10) + 1).toString(10)
+  }, {
+    where: { familyId, sessionId: subjectId },
+    transaction: transaction.legacy.transaction
+  })
+
+  return current
 }
 
 async function resolveDevice ({ transaction, deviceAuthToken }: {
@@ -108,10 +157,7 @@ async function resolveParentSession ({ transaction, sessionToken }: {
   const { familyId, sessionId, userId, nextSequenceNumber, lastUsedAt } = sessionEntryUnsafe
 
   if (parseInt(lastUsedAt, 10) + config.parentSessionMaxIdleMs < Date.now()) {
-    await transaction.legacy.database.parentSession.destroy({
-      where: { sessionToken },
-      transaction: transaction.legacy.transaction
-    })
+    await deleteParentSessions({ transaction, where: { sessionToken } })
 
     throw new Unauthorized(
       'the parent session was not used for more than ' +

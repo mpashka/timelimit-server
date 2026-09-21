@@ -18,7 +18,7 @@
 import { Conflict } from 'http-errors'
 import { generateServerDataStatus } from '../sync/get-server-data-status'
 import { NewDeviceInfo, PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
-import { SimpleDatabase } from '../../database/simple'
+import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { maxMailNotificationFlags } from '../../database/user'
 import { EventHandler } from '../../monitoring/eventhandler'
 import { ServerDataStatus } from '../../object/serverdatastatus'
@@ -28,6 +28,74 @@ import {
 } from '../../util/token'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
 import { prepareDeviceEntry } from '../device/prepare-device-entry'
+
+// @tag:parent-console
+// Семья и её первый родитель без единого устройства: их заводит и /parent/create-family, добавляя
+// сверху устройство, и /session/create-family, добавляя сверху сессию.
+export async function createFamilyAndFirstParent ({
+  transaction, mailAuthToken, password, timeZone, parentName
+}: {
+  transaction: SimpleDatabaseTransaction
+  mailAuthToken: string
+  password: PlaintextParentPassword
+  timeZone: string
+  parentName: string
+}): Promise<{ familyId: string; userId: string }> {
+  const now = Date.now().toString(10)
+  const mailInfo = await requireMailAndLocaleByAuthToken({ transaction, mailAuthToken, invalidate: true })
+
+  // ensure that no family was created for this mail yet
+  const existingUserEntry = await transaction.legacy.database.user.findOne({
+    where: {
+      mail: mailInfo.mail
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  if (existingUserEntry) {
+    throw new Conflict()
+  }
+
+  const familyId = generateFamilyId()
+  const userId = generateIdWithinFamily()
+
+  // create family
+  await transaction.legacy.database.family.create({
+    familyId,
+    name: '',
+    createdAt: now,
+    userListVersion: generateVersionId(),
+    deviceListVersion: generateVersionId(),
+    // 14 days demo version
+    fullVersionUntil: (Date.now() + 1000 * 60 * 60 * 24 * 14).toString(10),
+    hasFullVersion: true,
+    nextServerKeyRequestSeq: '1',
+    u2fKeysVersion: generateVersionId(),
+    fullVersionDebts: '0'
+  }, { transaction: transaction.legacy.transaction })
+
+  // create parent user
+  await transaction.legacy.database.user.create({
+    familyId,
+    userId,
+    name: parentName,
+    passwordHash: password.hash,
+    secondPasswordHash: password.secondHash,
+    secondPasswordSalt: password.secondSalt,
+    type: 'parent',
+    mail: mailInfo.mail,
+    timeZone,
+    disableTimelimitsUntil: '0',
+    currentDevice: '',
+    categoryForNotAssignedApps: '',
+    relaxPrimaryDeviceRule: false,
+    mailNotificationFlags: maxMailNotificationFlags,
+    blockedTimes: '',
+    flags: '0'
+  }, { transaction: transaction.legacy.transaction })
+
+  return { familyId, userId }
+}
 
 export async function createFamily ({
   database, eventHandler, mailAuthToken, firstParentDevice,
@@ -51,60 +119,12 @@ export async function createFamily ({
   assertPlaintextParentPasswordValid(password)
 
   return database.transaction(async (transaction) => {
-    const now = Date.now().toString(10)
-    const mailInfo = await requireMailAndLocaleByAuthToken({ transaction, mailAuthToken, invalidate: true })
-
-    // ensure that no family was created for this mail yet
-    const existingUserEntry = await transaction.legacy.database.user.findOne({
-      where: {
-        mail: mailInfo.mail
-      },
-      transaction: transaction.legacy.transaction
+    const { familyId, userId } = await createFamilyAndFirstParent({
+      transaction, mailAuthToken, password, timeZone, parentName
     })
 
-    if (existingUserEntry) {
-      throw new Conflict()
-    }
-
-    const familyId = generateFamilyId()
-    const userId = generateIdWithinFamily()
     const deviceId = generateIdWithinFamily()
     const deviceAuthToken = generateAuthToken()
-
-    // create family
-    await transaction.legacy.database.family.create({
-      familyId,
-      name: '',
-      createdAt: now,
-      userListVersion: generateVersionId(),
-      deviceListVersion: generateVersionId(),
-      // 14 days demo version
-      fullVersionUntil: (Date.now() + 1000 * 60 * 60 * 24 * 14).toString(10),
-      hasFullVersion: true,
-      nextServerKeyRequestSeq: '1',
-      u2fKeysVersion: generateVersionId(),
-      fullVersionDebts: '0'
-    }, { transaction: transaction.legacy.transaction })
-
-    // create parent user
-    await transaction.legacy.database.user.create({
-      familyId,
-      userId,
-      name: parentName,
-      passwordHash: password.hash,
-      secondPasswordHash: password.secondHash,
-      secondPasswordSalt: password.secondSalt,
-      type: 'parent',
-      mail: mailInfo.mail,
-      timeZone,
-      disableTimelimitsUntil: '0',
-      currentDevice: '',
-      categoryForNotAssignedApps: '',
-      relaxPrimaryDeviceRule: false,
-      mailNotificationFlags: maxMailNotificationFlags,
-      blockedTimes: '',
-      flags: '0'
-    }, { transaction: transaction.legacy.transaction })
 
     // add parent device
     await transaction.legacy.database.device.create(prepareDeviceEntry({

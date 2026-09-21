@@ -16,7 +16,9 @@
  */
 
 import * as Sequelize from 'sequelize'
+import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
+import { deleteParentSessions } from '../function/parent-session/cleanup'
 
 export function initDeleteOldTokensWorker ({ database }: {
   database: SimpleDatabase
@@ -78,6 +80,17 @@ async function deleteOldTokens ({ database }: {
         }
       },
       transaction: transaction.legacy.transaction
+    })
+
+    // @tag:parent-console
+    // тот же срок, по которому сессию отвергает resolveSubject — иначе строка живёт вечно
+    await deleteParentSessions({
+      transaction,
+      where: {
+        lastUsedAt: {
+          [Sequelize.Op.lt]: (Date.now() - config.parentSessionMaxIdleMs).toString()
+        }
+      }
     })
   })
 }

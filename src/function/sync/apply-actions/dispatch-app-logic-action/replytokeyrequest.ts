@@ -19,6 +19,7 @@ import { ReplyToKeyRequestAction } from '../../../../action'
 import { Cache } from '../cache'
 import { EventHandler } from '../../../../monitoring/eventhandler'
 import { IllegalStateException } from '../exception/illegal-state'
+import { takeNextKeyReplySequenceNumber } from '../../subject'
 
 export async function dispatchReplyToKeyRequestAction ({ deviceId, action, cache, eventHandler }: {
   deviceId: string
@@ -62,41 +63,24 @@ export async function dispatchReplyToKeyRequestAction ({ deviceId, action, cache
     return
   }
 
-  const deviceEntryUnsafe = await cache.transaction.legacy.database.device.findOne({
-    where: {
-      familyId: cache.familyId,
-      deviceId: request.senderDeviceId
-    },
-    transaction: cache.transaction.legacy.transaction,
-    attributes: ['nextKeyReplySequenceNumber']
+  const replyServerSequenceNumber = await takeNextKeyReplySequenceNumber({
+    transaction: cache.transaction,
+    familyId: cache.familyId,
+    subjectId: request.senderDeviceId
   })
 
-  if (!deviceEntryUnsafe) {
+  if (replyServerSequenceNumber === null) {
     throw new IllegalStateException({
-      staticMessage: 'target device entry not found'
+      staticMessage: 'target subject entry not found'
     })
   }
-
-  const deviceEntry = {
-    nextKeyReplySequenceNumber: deviceEntryUnsafe.nextKeyReplySequenceNumber
-  }
-
-  await cache.transaction.legacy.database.device.update({
-    nextKeyReplySequenceNumber: (parseInt(deviceEntry.nextKeyReplySequenceNumber) + 1).toString(10)
-  }, {
-    where: {
-      familyId: cache.familyId,
-      deviceId: request.senderDeviceId
-    },
-    transaction: cache.transaction.legacy.transaction
-  })
 
   await cache.transaction.legacy.database.keyResponse.create({
     familyId: cache.familyId,
     receiverDeviceId: request.senderDeviceId,
     requestServerSequenceNumber: action.requestServerSequenceNumber.toString(10),
     senderDeviceId: deviceId,
-    replyServerSequenceNumber: deviceEntry.nextKeyReplySequenceNumber,
+    replyServerSequenceNumber,
     requestClientSequenceNumber: requestUnsafe.senderSequenceNumber,
     tempKey: action.tempKey,
     encryptedKey: action.encryptedKey,

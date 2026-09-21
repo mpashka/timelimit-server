@@ -4,8 +4,11 @@ import { test } from 'node:test'
 import subjectModule from '../build/function/sync/subject.js'
 import integrityModule from '../build/function/sync/apply-actions/integrity.js'
 
-const { resolveSubject } = subjectModule
+import validatorModule from '../build/api/validator.js'
+
+const { resolveSubject, takeNextKeyReplySequenceNumber } = subjectModule
 const { assertActionIntegrity } = integrityModule
+const { isCreateFamilyWithParentSessionRequest } = validatorModule
 
 const day = 1000 * 60 * 60 * 24
 
@@ -25,8 +28,15 @@ const createTransaction = ({ device = null, session = null }) => {
         },
         parentSession: {
           findOne: async () => session,
+          findAll: async () => session === null ? [] : [{ familyId: 'f123456789', sessionId: 'ses001' }],
           update: async (values) => { updated.push(['parentSession', values]) },
-          destroy: async () => { deleted.push('parentSession') }
+          destroy: async () => { deleted.push('parentSession'); return 1 }
+        },
+        keyRequest: {
+          destroy: async () => { deleted.push('keyRequest') }
+        },
+        deviceDhKey: {
+          destroy: async () => { deleted.push('deviceDhKey') }
         }
       }
     }
@@ -87,7 +97,7 @@ test('a session unused for too long is refused and removed', async () => {
     (ex) => ex.statusCode === 401 && /sign in again/.test(ex.message)
   )
 
-  assert.deepEqual(transaction.deleted, ['parentSession'])
+  assert.deepEqual(transaction.deleted, ['keyRequest', 'deviceDhKey', 'parentSession'])
 })
 
 test('an unknown token is refused, and a session token never falls back to a device', async () => {
@@ -131,4 +141,54 @@ test('a session may act as its own parent, but not as another one', async () => 
     deviceId: 'ses001',
     parentSessionUserId: 'usr001'
   }))
+})
+
+test('the key reply counter is taken from the device when the addressee is one', async () => {
+  const transaction = createTransaction({
+    device: { nextKeyReplySequenceNumber: '4' },
+    session: { nextKeyReplySequenceNumber: '9' }
+  })
+
+  const taken = await takeNextKeyReplySequenceNumber({
+    transaction, familyId: 'f123456789', subjectId: 'dev001'
+  })
+
+  assert.equal(taken, '4')
+  assert.deepEqual(transaction.updated, [['device', { nextKeyReplySequenceNumber: '5' }]])
+})
+
+test('the key reply counter is taken from the parent session when the addressee is one', async () => {
+  const transaction = createTransaction({
+    session: { nextKeyReplySequenceNumber: '9' }
+  })
+
+  const taken = await takeNextKeyReplySequenceNumber({
+    transaction, familyId: 'f123456789', subjectId: 'ses001'
+  })
+
+  assert.equal(taken, '9')
+  assert.deepEqual(transaction.updated, [['parentSession', { nextKeyReplySequenceNumber: '10' }]])
+})
+
+test('an addressee that is neither a device nor a session yields no counter', async () => {
+  const transaction = createTransaction({})
+
+  assert.equal(
+    await takeNextKeyReplySequenceNumber({ transaction, familyId: 'f123456789', subjectId: 'gone01' }),
+    null
+  )
+  assert.deepEqual(transaction.updated, [])
+})
+
+test('creating a family for a parent session takes no device', () => {
+  const body = {
+    mailAuthToken: 'a'.repeat(32),
+    parentPassword: { hash: 'h', secondHash: 's', secondSalt: 'x' },
+    timeZone: 'Europe/Berlin',
+    parentName: 'Parent'
+  }
+
+  assert.equal(isCreateFamilyWithParentSessionRequest(body), true)
+  assert.equal(isCreateFamilyWithParentSessionRequest({ ...body, deviceName: 'phone' }), false)
+  assert.equal(isCreateFamilyWithParentSessionRequest({ ...body, parentDevice: { model: 'test' } }), false)
 })

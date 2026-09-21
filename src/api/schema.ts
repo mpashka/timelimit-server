@@ -166,6 +166,15 @@ export interface SignInByMailCodeRequest {
 }
 
 // @tag:parent-console
+// Семья без устройства: то же, что CreateFamilyByMailTokenRequest, но без полей про устройство.
+export interface CreateFamilyWithParentSessionRequest {
+  mailAuthToken: string
+  parentPassword: PlaintextParentPassword
+  timeZone: string
+  parentName: string
+}
+
+// @tag:parent-console
 export interface RevokeParentSessionRequest {
   sessionToken: string
 }

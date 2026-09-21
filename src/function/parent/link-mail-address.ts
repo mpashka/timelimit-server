@@ -15,16 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Conflict, Unauthorized } from 'http-errors'
+import { Conflict } from 'http-errors'
 import { SimpleDatabase } from '../../database/simple'
 import { generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
+import { resolveSubject } from '../sync/subject'
 import { notifyClientsAboutChangesDelayed } from '../websocket'
 
-export const linkMailAddress = async ({ mailAuthToken, deviceAuthToken, parentUserId, parentPasswordSecondHash, database, websocket }: {
+export const linkMailAddress = async ({ mailAuthToken, authToken, parentUserId, parentPasswordSecondHash, database, websocket }: {
   mailAuthToken: string
-  deviceAuthToken: string
+  authToken: string
   parentUserId: string
   parentPasswordSecondHash: string
   database: SimpleDatabase
@@ -32,18 +33,7 @@ export const linkMailAddress = async ({ mailAuthToken, deviceAuthToken, parentUs
   // no transaction here because this is directly called from an API endpoint
 }) => {
   await database.transaction(async (transaction) => {
-    const deviceEntry = await transaction.legacy.database.device.findOne({
-      where: {
-        deviceAuthToken
-      },
-      transaction: transaction.legacy.transaction
-    })
-
-    if (!deviceEntry) {
-      throw new Unauthorized()
-    }
-
-    const familyId = deviceEntry.familyId
+    const { familyId } = await resolveSubject({ transaction, authToken })
 
     const mailInfo = await requireMailAndLocaleByAuthToken({ mailAuthToken, transaction, invalidate: true })
 

@@ -18,6 +18,7 @@
 import { difference } from 'lodash'
 import * as Sequelize from 'sequelize'
 import { SimpleDatabaseTransaction } from '../../database/simple'
+import { deleteParentSessions } from '../parent-session/cleanup'
 
 export async function deleteFamilies ({ transaction, familiyIds }: {
   transaction: SimpleDatabaseTransaction
@@ -79,6 +80,36 @@ export async function deleteFamilies ({ transaction, familiyIds }: {
 
   // session durations
   await transaction.legacy.database.sessionDuration.destroy({
+    where: {
+      familyId: {
+        [Sequelize.Op.in]: familiyIds
+      }
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  // @tag:parent-console
+  // parentsession — до Users: сессия ссылается на родителя внешним ключом
+  await deleteParentSessions({
+    transaction,
+    where: {
+      familyId: {
+        [Sequelize.Op.in]: familiyIds
+      }
+    }
+  })
+
+  // keyrequest и devicedhkey — строки предъявителей больше не убирает внешний ключ Devices
+  await transaction.legacy.database.keyRequest.destroy({
+    where: {
+      familyId: {
+        [Sequelize.Op.in]: familiyIds
+      }
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  await transaction.legacy.database.deviceDhKey.destroy({
     where: {
       familyId: {
         [Sequelize.Op.in]: familiyIds

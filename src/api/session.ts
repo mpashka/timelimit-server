@@ -17,10 +17,13 @@
 
 import { json } from 'body-parser'
 import { Router } from 'express'
-import { BadRequest } from 'http-errors'
+import { BadRequest, Forbidden } from 'http-errors'
+import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
-import { revokeParentSession, signInParentSession } from '../function/parent-session'
-import { isMailAuthTokenRequestBody, isRevokeParentSessionRequest } from './validator'
+import { createFamilyWithParentSession, revokeParentSession, signInParentSession } from '../function/parent-session'
+import {
+  isCreateFamilyWithParentSessionRequest, isMailAuthTokenRequestBody, isRevokeParentSessionRequest
+} from './validator'
 
 // @tag:parent-console
 // Вход человеком вместо регистрации устройства: средства управления (веб-админка через BFF, CLI,
@@ -40,6 +43,32 @@ export const createSessionRouter = ({ database }: {
       const result = await signInParentSession({
         database,
         mailAuthToken: req.body.mailAuthToken
+      })
+
+      res.json(result)
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // Устройство не заводится: у родителя его может не быть вовсе. Ответ — тот же, что у
+  // /session/sign-in, чтобы вход и регистрация не расходились.
+  router.post('/create-family', json(), async (req, res, next) => {
+    try {
+      if (config.disableSignup) {
+        throw new Forbidden()
+      }
+
+      if (!isCreateFamilyWithParentSessionRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const result = await createFamilyWithParentSession({
+        database,
+        mailAuthToken: req.body.mailAuthToken,
+        password: req.body.parentPassword,
+        parentName: req.body.parentName,
+        timeZone: req.body.timeZone
       })
 
       res.json(result)

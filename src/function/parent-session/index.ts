@@ -16,17 +16,28 @@
  */
 
 import { Conflict, Unauthorized } from 'http-errors'
+import { PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { generateAuthToken, generateIdWithinFamily } from '../../util/token'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
+import { createFamilyAndFirstParent } from '../parent/create-family'
+import { deleteParentSessions } from './cleanup'
 import { parseSessionTokenFromWireFormat, sessionTokenToWireFormat } from './token'
+
+// @tag:parent-console
+export interface ParentSessionInfo {
+  sessionToken: string
+  sessionId: string
+  familyId: string
+  userId: string
+}
 
 // @tag:parent-console
 export const signInParentSession = async ({ database, mailAuthToken }: {
   database: SimpleDatabase
   mailAuthToken: string
   // no transaction here because this is directly called from an API endpoint
-}): Promise<{ sessionToken: string; sessionId: string; familyId: string; userId: string }> => {
+}): Promise<ParentSessionInfo> => {
   return database.transaction(async (transaction) => {
     const mailInfo = await requireMailAndLocaleByAuthToken({ mailAuthToken, transaction, invalidate: true })
 
@@ -43,29 +54,62 @@ export const signInParentSession = async ({ database, mailAuthToken }: {
       throw new Conflict()
     }
 
-    const familyId = userEntryUnsafe.familyId
-    const userId = userEntryUnsafe.userId
-    const sessionToken = generateAuthToken()
-    const sessionId = await generateFreeSubjectId({ familyId, transaction })
-    const now = Date.now().toString(10)
-
-    await transaction.legacy.database.parentSession.create({
-      sessionToken,
-      familyId,
-      sessionId,
-      userId,
-      createdAt: now,
-      lastUsedAt: now,
-      nextSequenceNumber: 0
-    }, { transaction: transaction.legacy.transaction })
-
-    return {
-      sessionToken: sessionTokenToWireFormat(sessionToken),
-      sessionId,
-      familyId,
-      userId
-    }
+    return createSession({
+      transaction,
+      familyId: userEntryUnsafe.familyId,
+      userId: userEntryUnsafe.userId
+    })
   })
+}
+
+// @tag:parent-console
+// Семья без единого устройства: родитель, у которого андроида нет вовсе, заводит семью из
+// средства управления и сразу получает сессию. Устройства появятся позже, кодом подключения.
+export const createFamilyWithParentSession = async ({ database, mailAuthToken, password, timeZone, parentName }: {
+  database: SimpleDatabase
+  mailAuthToken: string
+  password: PlaintextParentPassword
+  timeZone: string
+  parentName: string
+  // no transaction here because this is directly called from an API endpoint
+}): Promise<ParentSessionInfo> => {
+  assertPlaintextParentPasswordValid(password)
+
+  return database.transaction(async (transaction) => {
+    const { familyId, userId } = await createFamilyAndFirstParent({
+      transaction, mailAuthToken, password, timeZone, parentName
+    })
+
+    return createSession({ transaction, familyId, userId })
+  })
+}
+
+async function createSession ({ transaction, familyId, userId }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  userId: string
+}): Promise<ParentSessionInfo> {
+  const sessionToken = generateAuthToken()
+  const sessionId = await generateFreeSubjectId({ familyId, transaction })
+  const now = Date.now().toString(10)
+
+  await transaction.legacy.database.parentSession.create({
+    sessionToken,
+    familyId,
+    sessionId,
+    userId,
+    createdAt: now,
+    lastUsedAt: now,
+    nextSequenceNumber: 0,
+    nextKeyReplySequenceNumber: '1'
+  }, { transaction: transaction.legacy.transaction })
+
+  return {
+    sessionToken: sessionTokenToWireFormat(sessionToken),
+    sessionId,
+    familyId,
+    userId
+  }
 }
 
 // @tag:parent-console
@@ -80,10 +124,7 @@ export const revokeParentSession = async ({ database, sessionToken }: {
   }
 
   return database.transaction(async (transaction) => {
-    const removed = await transaction.legacy.database.parentSession.destroy({
-      where: { sessionToken: storedToken },
-      transaction: transaction.legacy.transaction
-    })
+    const removed = await deleteParentSessions({ transaction, where: { sessionToken: storedToken } })
 
     if (removed === 0) {
       throw new Unauthorized('no session for this token')

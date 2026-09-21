@@ -66,6 +66,23 @@ export async function removeDevice ({ familyId, deviceId, websocket, transaction
     })
   }
 
+  // строки, адресованные предъявителю, больше не убирает внешний ключ Devices
+  await transaction.legacy.database.keyRequest.destroy({
+    where: {
+      familyId,
+      senderDeviceId: deviceId
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  await transaction.legacy.database.deviceDhKey.destroy({
+    where: {
+      familyId,
+      deviceId
+    },
+    transaction: transaction.legacy.transaction
+  })
+
   // remove from the device list
   await deviceEntry.destroy({ transaction: transaction.legacy.transaction })
 

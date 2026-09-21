@@ -29,6 +29,7 @@ import { getStatusByMailToken } from '../function/parent/get-status-by-mail-addr
 import { linkMailAddress } from '../function/parent/link-mail-address'
 import { recoverParentPassword } from '../function/parent/recover-parent-password'
 import { signInIntoFamily } from '../function/parent/sign-in-into-family'
+import { resolveSubject } from '../function/sync/subject'
 import { validateU2fIntegrity, U2fValidationError } from '../function/u2f'
 import { createIdentityToken, MissingSignSecretException } from '../util/identity-token'
 import { WebsocketApi } from '../websocket'
@@ -149,33 +150,26 @@ export const createParentRouter = ({
     }
   })
 
-  async function assertAuthValidAndReturnDetails ({ deviceAuthToken, parentId, secondPasswordHash, transaction }: {
-    deviceAuthToken: string
+  // @tag:parent-console
+  // Предъявитель, а не устройство: сессия родителя годится всюду, где раньше требовался
+  // deviceAuthToken. Устройства ни одна из ручек /parent/* по смыслу не требует — им нужны семья
+  // и родитель, — поэтому отдельного отказа «тут нужно устройство» здесь нет.
+  // Возвращается familyId, а не строка устройства: у сессии её нет.
+  async function assertAuthValidAndReturnDetails ({ authToken, parentId, secondPasswordHash, transaction }: {
+    authToken: string
     parentId: string
     secondPasswordHash: string
     transaction: SimpleDatabaseTransaction
   }) {
-    const deviceEntry = await transaction.legacy.database.device.findOne({
-      where: {
-        deviceAuthToken: deviceAuthToken
-      },
-      transaction: transaction.legacy.transaction
-    })
+    const subject = await resolveSubject({ transaction, authToken })
+    const { familyId, subjectId } = subject
 
-    if (!deviceEntry) {
-      throw new Unauthorized()
-    }
-
-    if (secondPasswordHash === 'device') {
-      if (!deviceEntry.isUserKeptSignedIn) {
-        throw new Unauthorized()
-      }
-
+    const requireParent = async (userId: string) => {
       const parentEntry = await transaction.legacy.database.user.findOne({
         where: {
-          familyId: deviceEntry.familyId,
+          familyId,
           type: 'parent',
-          userId: deviceEntry.currentUserId
+          userId
         },
         transaction: transaction.legacy.transaction
       })
@@ -184,12 +178,34 @@ export const createParentRouter = ({
         throw new Unauthorized()
       }
 
-      return { deviceEntry, parentEntry }
+      return { familyId, parentEntry }
+    }
+
+    if (secondPasswordHash === 'device') {
+      // у сессии сам факт входа и есть «родитель уже подтверждён», как у устройства с
+      // isUserKeptSignedIn; действовать от имени другого родителя она при этом не может
+      if (subject.parentUserId !== null) {
+        if (subject.parentUserId !== parentId) throw new Unauthorized()
+
+        return requireParent(subject.parentUserId)
+      }
+
+      const deviceEntry = await transaction.legacy.database.device.findOne({
+        where: { familyId, deviceId: subjectId },
+        attributes: ['isUserKeptSignedIn', 'currentUserId'],
+        transaction: transaction.legacy.transaction
+      })
+
+      if (!deviceEntry || !deviceEntry.isUserKeptSignedIn) {
+        throw new Unauthorized()
+      }
+
+      return requireParent(deviceEntry.currentUserId)
     } else if (secondPasswordHash.startsWith('u2f:')) {
       try {
         const familyEntryUnsafe = await transaction.legacy.database.family.findOne({
           where: {
-            familyId: deviceEntry.familyId
+            familyId
           },
           transaction: transaction.legacy.transaction,
           attributes: ['hasFullVersion']
@@ -206,8 +222,8 @@ export const createParentRouter = ({
         const u2fResult = await validateU2fIntegrity({
           integrity: secondPasswordHash,
           hasFullVersion,
-          familyId: deviceEntry.familyId,
-          deviceId: deviceEntry.deviceId,
+          familyId,
+          deviceId: subjectId,
           transaction,
           calculateHmac: (secret) => createHmac('sha256', secret)
             .update('direct action')
@@ -216,20 +232,7 @@ export const createParentRouter = ({
 
         if (u2fResult.userId !== parentId) throw new Unauthorized()
 
-        const parentEntry = await transaction.legacy.database.user.findOne({
-          where: {
-            familyId: deviceEntry.familyId,
-            type: 'parent',
-            userId: u2fResult.userId
-          },
-          transaction: transaction.legacy.transaction
-        })
-
-        if (!parentEntry) {
-          throw new Unauthorized()
-        }
-
-        return { deviceEntry, parentEntry }
+        return requireParent(u2fResult.userId)
       } catch (ex) {
         if (ex instanceof U2fValidationError) throw new Unauthorized()
         else throw ex
@@ -237,7 +240,7 @@ export const createParentRouter = ({
     } else {
       const parentEntry = await transaction.legacy.database.user.findOne({
         where: {
-          familyId: deviceEntry.familyId,
+          familyId,
           type: 'parent',
           userId: parentId,
           secondPasswordHash: secondPasswordHash
@@ -249,7 +252,7 @@ export const createParentRouter = ({
         throw new Unauthorized()
       }
 
-      return { deviceEntry, parentEntry }
+      return { familyId, parentEntry }
     }
   }
 
@@ -260,14 +263,14 @@ export const createParentRouter = ({
       }
 
       const { token, deviceId } = await database.transaction(async (transaction) => {
-        const { deviceEntry } = await assertAuthValidAndReturnDetails({
-          deviceAuthToken: req.body.deviceAuthToken,
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: req.body.deviceAuthToken,
           parentId: req.body.parentId,
           secondPasswordHash: req.body.parentPasswordSecondHash,
           transaction
         })
 
-        return createAddDeviceToken({ familyId: deviceEntry.familyId, transaction })
+        return createAddDeviceToken({ familyId, transaction })
       })
 
       res.json({ token, deviceId })
@@ -284,7 +287,7 @@ export const createParentRouter = ({
 
       await linkMailAddress({
         mailAuthToken: req.body.mailAuthToken,
-        deviceAuthToken: req.body.deviceAuthToken,
+        authToken: req.body.deviceAuthToken,
         parentPasswordSecondHash: req.body.parentPasswordSecondHash,
         parentUserId: req.body.parentUserId,
         websocket,
@@ -304,8 +307,8 @@ export const createParentRouter = ({
       }
 
       await database.transaction(async (transaction) => {
-        const { deviceEntry } = await assertAuthValidAndReturnDetails({
-          deviceAuthToken: req.body.deviceAuthToken,
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: req.body.deviceAuthToken,
           parentId: req.body.parentUserId,
           secondPasswordHash: req.body.parentPasswordSecondHash,
           transaction
@@ -313,7 +316,7 @@ export const createParentRouter = ({
 
         await removeDevice({
           transaction,
-          familyId: deviceEntry.familyId,
+          familyId,
           deviceId: req.body.deviceId,
           websocket
         })
@@ -334,8 +337,8 @@ export const createParentRouter = ({
       const body = req.body
 
       await database.transaction(async (transaction) => {
-        const { deviceEntry, parentEntry } = await assertAuthValidAndReturnDetails({
-          deviceAuthToken: body.deviceAuthToken,
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
           transaction
@@ -343,7 +346,7 @@ export const createParentRouter = ({
 
         const token = await createIdentityToken({
           purpose: body.purpose,
-          familyId: deviceEntry.familyId,
+          familyId,
           userId: parentEntry.userId,
           mail: parentEntry.mail
         })

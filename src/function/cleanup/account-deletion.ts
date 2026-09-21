@@ -21,6 +21,7 @@ import { SimpleDatabase } from '../../database/simple'
 import { sendAccountDeletedMail } from '../../util/mail'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
+import { resolveSubject } from '../sync/subject'
 import { deleteFamilies } from './delete-families'
 
 export async function deleteAccount({ request, database, websocket }: {
@@ -29,23 +30,13 @@ export async function deleteAccount({ request, database, websocket }: {
   websocket: WebsocketApi
 }) {
   await database.transaction(async (transaction) => {
-    const deviceEntryUnsafe = await transaction.legacy.database.device.findOne({
-      where: { deviceAuthToken: request.deviceAuthToken },
-      attributes: ['familyId'],
-      transaction: transaction.legacy.transaction
-    })
-
-    if (!deviceEntryUnsafe) {
-      throw new Unauthorized()
-    }
-
-    const deviceEntry = {
-      familyId: deviceEntryUnsafe.familyId
-    }
+    // @tag:parent-console
+    // поле зовётся deviceAuthToken ради выпущенного клиента, но принимается и токен сессии
+    const { familyId } = await resolveSubject({ transaction, authToken: request.deviceAuthToken })
 
     const userEntries = (await transaction.legacy.database.user.findAll({
       where: {
-        familyId: deviceEntry.familyId,
+        familyId,
         type: 'parent'
       },
       attributes: ['mail'],
@@ -80,13 +71,13 @@ export async function deleteAccount({ request, database, websocket }: {
 
     const deviceEntries = (await transaction.legacy.database.device.findAll({
       where: {
-        familyId: deviceEntry.familyId
+        familyId
       },
       transaction: transaction.legacy.transaction,
       attributes: ['deviceAuthToken']
     })).map((item) => ({ deviceAuthToken: item.deviceAuthToken }))
 
-    await deleteFamilies({ transaction, familiyIds: [deviceEntry.familyId] })
+    await deleteFamilies({ transaction, familiyIds: [familyId] })
 
     transaction.enqueueAfterCommit(() => {
       for (const device of deviceEntries) {
