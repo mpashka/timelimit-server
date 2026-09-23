@@ -45,10 +45,12 @@ export async function dispatchAnswerChildRequest ({ action, cache, parentUserId 
   if (action.answer === 'app') {
     await putAppAllowance({ cache, userId: request.userId, packageName: request.packageName, until: action.until, extendOnly: true })
   } else if (action.answer === 'category') {
-    if (request.categoryId === '') throw new ChildRequestRefusedException('the app has no category, allow the app instead')
+    const categoryId = request.categoryId !== '' ? request.categoryId : await categoryForUnassignedApps({ cache, childId: request.userId })
+
+    if (categoryId === '') throw new ChildRequestRefusedException('the app has no category and the child has no category for apps without one')
 
     const category = await database.category.findOne({
-      where: { familyId: cache.familyId, categoryId: request.categoryId, childId: request.userId },
+      where: { familyId: cache.familyId, categoryId, childId: request.userId },
       attributes: ['disableLimitsUntil'],
       transaction
     })
@@ -57,11 +59,11 @@ export async function dispatchAnswerChildRequest ({ action, cache, parentUserId 
 
     if (parseInt(category.disableLimitsUntil, 10) < action.until) {
       await database.category.update({ disableLimitsUntil: action.until.toString(10) }, {
-        where: { familyId: cache.familyId, categoryId: request.categoryId },
+        where: { familyId: cache.familyId, categoryId },
         transaction
       })
 
-      cache.categoriesWithModifiedBaseData.add(request.categoryId)
+      cache.categoriesWithModifiedBaseData.add(categoryId)
     }
   }
 
@@ -74,4 +76,14 @@ export async function dispatchAnswerChildRequest ({ action, cache, parentUserId 
 
   cache.invalidiateUserList = true
   cache.incrementTriggeredSyncLevel(2)
+}
+
+async function categoryForUnassignedApps ({ cache, childId }: { cache: Cache, childId: string }): Promise<string> {
+  const child = await cache.transaction.legacy.database.user.findOne({
+    where: { familyId: cache.familyId, userId: childId },
+    attributes: ['categoryForNotAssignedApps'],
+    transaction: cache.transaction.legacy.transaction
+  })
+
+  return child?.categoryForNotAssignedApps ?? ''
 }
