@@ -777,6 +777,9 @@
           "items": {
             "$ref": "#/definitions/ServerUserEntry"
           }
+        },
+        "parentCodeSecret": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -843,6 +846,18 @@
         },
         "urlFilter": {
           "$ref": "#/definitions/UrlFilter"
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServerChildRequest"
+          }
+        },
+        "appAllowances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServerAppAllowance"
+          }
         }
       },
       "additionalProperties": false,
@@ -890,6 +905,105 @@
         "enabled"
       ],
       "title": "UrlFilter"
+    },
+    "ServerChildRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "deviceId": {
+          "type": "string"
+        },
+        "word": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "number"
+        },
+        "expiresAt": {
+          "type": "number"
+        },
+        "answer": {
+          "$ref": "#/definitions/ChildRequestAnswer"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "categoryId",
+        "createdAt",
+        "deviceId",
+        "expiresAt",
+        "id",
+        "packageName",
+        "word"
+      ],
+      "title": "ServerChildRequest"
+    },
+    "ChildRequestAnswer": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/ChildRequestAnswerKind"
+        },
+        "until": {
+          "type": "number"
+        },
+        "word": {
+          "type": "string"
+        },
+        "parentUserId": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        },
+        "repeatAfter": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "at",
+        "kind",
+        "parentUserId",
+        "repeatAfter",
+        "until",
+        "word"
+      ],
+      "title": "ChildRequestAnswer"
+    },
+    "ChildRequestAnswerKind": {
+      "enum": [
+        "app",
+        "category",
+        "deny"
+      ],
+      "type": "string",
+      "title": "ChildRequestAnswerKind"
+    },
+    "ServerAppAllowance": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "until": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "packageName",
+        "until"
+      ],
+      "title": "ServerAppAllowance"
     },
     "ServerKeyRequest": {
       "type": "object",

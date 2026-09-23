@@ -35,6 +35,8 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | [llc](#llc)                                               | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-llc.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/llc")                                               |
 | [pbd](#pbd)                                               | `number`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-pbd.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/pbd")                                               |
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
+| [requests](#requests)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")                                     |
+| [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")                           |
 
 ## id
 
@@ -350,3 +352,39 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 ### urlFilter Type
 
 `object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))
+
+## requests
+
+
+
+`requests`
+
+* is optional
+
+* Type: `object[]` ([ServerChildRequest](serverdatastatus-definitions-serverchildrequest.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")
+
+### requests Type
+
+`object[]` ([ServerChildRequest](serverdatastatus-definitions-serverchildrequest.md))
+
+## appAllowances
+
+
+
+`appAllowances`
+
+* is optional
+
+* Type: `object[]` ([ServerAppAllowance](serverdatastatus-definitions-serverappallowance.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")
+
+### appAllowances Type
+
+`object[]` ([ServerAppAllowance](serverdatastatus-definitions-serverappallowance.md))

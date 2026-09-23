@@ -15,7 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import * as Sequelize from 'sequelize'
 import { SimpleDatabaseTransaction } from '../../../database/simple'
+import { ServerAppAllowance, ServerChildRequest, childRequestListWindow } from '../../../model/childrequest'
+import { toServerChildRequest } from '../../child-request'
 import { UrlFilter } from '../../../model/urlfilter'
 import { ServerUserList } from '../../../object/serverdatastatus'
 import { FamilyEntry } from './family-entry'
@@ -88,8 +91,29 @@ export async function getUserList ({ transaction, familyEntry }: {
     }
   }
 
+  // @tag:child-request @tag:app-allowance
+  const now = Date.now()
+  const requests = new Map<string, Array<ServerChildRequest>>()
+  const allowances = new Map<string, Array<ServerAppAllowance>>()
+
+  for (const row of await transaction.legacy.database.childRequest.findAll({
+    where: { familyId: familyEntry.familyId, createdAt: { [Sequelize.Op.gte]: (now - childRequestListWindow).toString(10) } },
+    order: [['createdAt', 'DESC']],
+    transaction: transaction.legacy.transaction
+  })) {
+    requests.set(row.userId, [...(requests.get(row.userId) ?? []), toServerChildRequest(row)])
+  }
+
+  for (const row of await transaction.legacy.database.appAllowance.findAll({
+    where: { familyId: familyEntry.familyId, until: { [Sequelize.Op.gt]: now.toString(10) } },
+    transaction: transaction.legacy.transaction
+  })) {
+    allowances.set(row.userId, [...(allowances.get(row.userId) ?? []), { packageName: row.packageName, until: parseInt(row.until, 10) }])
+  }
+
   return {
     version: familyEntry.userListVersion,
+    parentCodeSecret: familyEntry.parentCodeSecret ?? undefined, // @tag:parent-code
     data: users.map((item) => {
       const limitLoginCategory = getLimitLoginCategory(item.userId)
 
@@ -110,7 +134,9 @@ export async function getUserList ({ transaction, familyEntry }: {
         flags: parseInt(item.flags, 10),
         llc: limitLoginCategory?.categoryId,
         pbd: limitLoginCategory?.preBlockDuration,
-        urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined // @tag:url-filter
+        urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined, // @tag:url-filter
+        requests: item.type === 'child' ? requests.get(item.userId) ?? [] : undefined,
+        appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined
       }
     })
   }

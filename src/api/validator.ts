@@ -1498,6 +1498,72 @@ const definitions = {
       "userId"
     ]
   },
+  "SerializedAnswerChildRequestAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "ANSWER_CHILD_REQUEST"
+        ]
+      },
+      "requestId": {
+        "type": "string"
+      },
+      "answer": {
+        "$ref": "#/definitions/ChildRequestAnswerKind"
+      },
+      "until": {
+        "type": "number"
+      },
+      "word": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "answer",
+      "requestId",
+      "type",
+      "until",
+      "word"
+    ]
+  },
+  "ChildRequestAnswerKind": {
+    "enum": [
+      "app",
+      "category",
+      "deny"
+    ],
+    "type": "string"
+  },
+  "SerializedSetAppAllowanceAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "SET_APP_ALLOWANCE"
+        ]
+      },
+      "userId": {
+        "type": "string"
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "until": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "packageName",
+      "type",
+      "until",
+      "userId"
+    ]
+  },
   "SerializedUpdateUserLimitLoginCategory": {
     "type": "object",
     "properties": {
@@ -1710,6 +1776,37 @@ const definitions = {
       "d",
       "i",
       "type"
+    ]
+  },
+  "SerializedCreateChildRequestAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "CREATE_CHILD_REQUEST"
+        ]
+      },
+      "requestId": {
+        "type": "string"
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "word": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "categoryId",
+      "packageName",
+      "requestId",
+      "type",
+      "word"
     ]
   },
   "SerializedFinishKeyRequestAction": {
@@ -2735,6 +2832,9 @@ const definitions = {
         "items": {
           "$ref": "#/definitions/ServerUserEntry"
         }
+      },
+      "parentCodeSecret": {
+        "type": "string"
       }
     },
     "additionalProperties": false,
@@ -2800,6 +2900,18 @@ const definitions = {
       },
       "urlFilter": {
         "$ref": "#/definitions/UrlFilter"
+      },
+      "requests": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerChildRequest"
+        }
+      },
+      "appAllowances": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerAppAllowance"
+        }
       }
     },
     "additionalProperties": false,
@@ -2844,6 +2956,93 @@ const definitions = {
       "allow",
       "block",
       "enabled"
+    ]
+  },
+  "ServerChildRequest": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "deviceId": {
+        "type": "string"
+      },
+      "word": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "number"
+      },
+      "expiresAt": {
+        "type": "number"
+      },
+      "answer": {
+        "$ref": "#/definitions/ChildRequestAnswer"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "categoryId",
+      "createdAt",
+      "deviceId",
+      "expiresAt",
+      "id",
+      "packageName",
+      "word"
+    ]
+  },
+  "ChildRequestAnswer": {
+    "type": "object",
+    "properties": {
+      "kind": {
+        "$ref": "#/definitions/ChildRequestAnswerKind"
+      },
+      "until": {
+        "type": "number"
+      },
+      "word": {
+        "type": "string"
+      },
+      "parentUserId": {
+        "type": "string"
+      },
+      "at": {
+        "type": "number"
+      },
+      "repeatAfter": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "at",
+      "kind",
+      "parentUserId",
+      "repeatAfter",
+      "until",
+      "word"
+    ]
+  },
+  "ServerAppAllowance": {
+    "type": "object",
+    "properties": {
+      "packageName": {
+        "type": "string"
+      },
+      "until": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "packageName",
+      "until"
     ]
   },
   "ServerKeyRequest": {
@@ -3309,6 +3508,12 @@ export const isSerializedParentAction: (value: unknown) => value is SerializedPa
       "$ref": "#/definitions/SerializedUpdateUserUrlFilterAction"
     },
     {
+      "$ref": "#/definitions/SerializedAnswerChildRequestAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetAppAllowanceAction"
+    },
+    {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"
     },
     {
@@ -3328,6 +3533,9 @@ export const isSerializedAppLogicAction: (value: unknown) => value is Serialized
     },
     {
       "$ref": "#/definitions/SerializedAddUsedTimeActionVersion2"
+    },
+    {
+      "$ref": "#/definitions/SerializedCreateChildRequestAction"
     },
     {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"

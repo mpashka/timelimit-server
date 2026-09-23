@@ -17,11 +17,13 @@
 
 import * as Sequelize from 'sequelize'
 import { AddDeviceTokenModelStatic, createAddDeviceTokenModel } from './adddevicetoken'
+import { AppAllowanceModelStatic, createAppAllowanceModel } from './appallowance'
 import { AuthTokenModelStatic, createAuthtokenModel } from './authtoken'
 import { CategoryModelStatic, createCategoryModel } from './category'
 import { CategoryAppModelStatic, createCategoryAppModel } from './categoryapp'
 import { CategoryNetworkIdModelStatic, createCategoryNetworkIdModel } from './categorynetworkid'
 import { CategoryTimeWarningModelStatic, createCategoryTimeWarningModel } from './categorytimewarning'
+import { ChildRequestModelStatic, createChildRequestModel } from './childrequest'
 import { ChildTaskModelStatic, createChildTaskModel } from './childtask'
 import { ConfigModelStatic, createConfigModel } from './config'
 import { createDeviceModel, DeviceModelStatic } from './device'
@@ -48,11 +50,13 @@ export type Transaction = Sequelize.Transaction
 
 export interface Database {
   addDeviceToken: AddDeviceTokenModelStatic
+  appAllowance: AppAllowanceModelStatic
   authtoken: AuthTokenModelStatic
   category: CategoryModelStatic
   categoryApp: CategoryAppModelStatic
   categoryNetworkId: CategoryNetworkIdModelStatic
   categoryTimeWarning: CategoryTimeWarningModelStatic
+  childRequest: ChildRequestModelStatic
   childTask: ChildTaskModelStatic
   config: ConfigModelStatic
   device: DeviceModelStatic
@@ -86,9 +90,11 @@ interface TransactionOptions {
 
 const createDatabase = (sequelize: Sequelize.Sequelize): Database => ({
   addDeviceToken: createAddDeviceTokenModel(sequelize),
+  appAllowance: createAppAllowanceModel(sequelize),
   authtoken: createAuthtokenModel(sequelize),
   category: createCategoryModel(sequelize),
   categoryApp: createCategoryAppModel(sequelize),
+  childRequest: createChildRequestModel(sequelize),
   childTask: createChildTaskModel(sequelize),
   categoryNetworkId: createCategoryNetworkIdModel(sequelize),
   categoryTimeWarning: createCategoryTimeWarningModel(sequelize),

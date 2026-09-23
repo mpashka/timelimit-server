@@ -41,9 +41,14 @@ export interface FamilyAttributesVersion4 {
   fullVersionDebts: string
 }
 
+// @tag:parent-code
+export interface FamilyAttributesVersion5 {
+  parentCodeSecret: string | null
+}
+
 export type FamilyAttributes = FamilyAttributesVersion1 &
   FamilyAttributesVersion2 & FamilyAttributesVersion3 &
-  FamilyAttributesVersion4
+  FamilyAttributesVersion4 & FamilyAttributesVersion5
 
 export type FamilyModel = Sequelize.Model<FamilyAttributes> & FamilyAttributes
 export type FamilyModelStatic = typeof Sequelize.Model & {
@@ -92,11 +97,20 @@ export const attributesVersion4: SequelizeAttributes<FamilyAttributesVersion4> =
   }
 }
 
+export const attributesVersion5: SequelizeAttributes<FamilyAttributesVersion5> = {
+  parentCodeSecret: {
+    type: Sequelize.STRING(32),
+    allowNull: true,
+    defaultValue: null
+  }
+}
+
 export const attributes: SequelizeAttributes<FamilyAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
   ...attributesVersion3,
-  ...attributesVersion4
+  ...attributesVersion4,
+  ...attributesVersion5
 }
 
 export const createFamilyModel = (sequelize: Sequelize.Sequelize): FamilyModelStatic => sequelize.define('Family', attributes) as FamilyModelStatic

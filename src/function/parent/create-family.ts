@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { generateParentCodeSecret } from '../../model/parentcode'
 import { Conflict } from 'http-errors'
 import { generateServerDataStatus } from '../sync/get-server-data-status'
 import { NewDeviceInfo, PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
@@ -71,7 +72,8 @@ export async function createFamilyAndFirstParent ({
     hasFullVersion: true,
     nextServerKeyRequestSeq: '1',
     u2fKeysVersion: generateVersionId(),
-    fullVersionDebts: '0'
+    fullVersionDebts: '0',
+    parentCodeSecret: generateParentCodeSecret() // @tag:parent-code
   }, { transaction: transaction.legacy.transaction })
 
   // create parent user

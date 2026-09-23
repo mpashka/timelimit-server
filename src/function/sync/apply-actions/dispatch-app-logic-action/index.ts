@@ -20,6 +20,7 @@ import {
   AddUsedTimeAction,
   AddUsedTimeActionVersion2,
   AppLogicAction,
+  CreateChildRequestAction,
   FinishKeyRequestAction,
   ForceSyncAction,
   MarkTaskPendingAction,
@@ -39,6 +40,7 @@ import { Cache } from '../cache'
 import { ActionObjectTypeNotHandledException } from '../exception/illegal-state'
 import { dispatchAddUsedTime } from './addusedtime'
 import { dispatchAddUsedTimeVersion2 } from './addusedtime2'
+import { dispatchCreateChildRequest } from './createchildrequest'
 import { dispatchFinishKeyRequestAction } from './finishkeyrequest'
 import { dispatchForceSyncAction } from './forcesync'
 import { dispatchMarkTaskPendingAction } from './marktaskpendingaction'
@@ -63,6 +65,8 @@ export const dispatchAppLogicAction = async ({ action, deviceId, cache, eventHan
     await dispatchAddUsedTime({ deviceId, action, cache })
   } else if (action instanceof AddUsedTimeActionVersion2) {
     await dispatchAddUsedTimeVersion2({ deviceId, action, cache, eventHandler })
+  } else if (action instanceof CreateChildRequestAction) {
+    await dispatchCreateChildRequest({ deviceId, action, cache })
   } else if (action instanceof FinishKeyRequestAction) {
     await dispatchFinishKeyRequestAction({ deviceId, action, cache })
   } else if (action instanceof ForceSyncAction) {

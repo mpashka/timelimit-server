@@ -83,7 +83,7 @@ const userId = session.body.userId
 
 const pulled = await post('/sync/pull-status', { deviceAuthToken: sessionToken, status: emptyStatus() })
 expect('session may pull the family status', pulled.status === 200, pulled.status)
-expect('api level announces the parent session', pulled.body.apiLevel === 11, pulled.body.apiLevel)
+expect('api level announces the parent session', pulled.body.apiLevel >= 11, pulled.body.apiLevel)
 
 const deviceList = await post('/sync/pull-status', {
   deviceAuthToken: family.body.deviceAuthToken,

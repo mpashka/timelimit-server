@@ -21,6 +21,7 @@ import { NewPermissionStatus } from '../model/newpermissionstatus'
 import { ProtectionLevel } from '../model/protectionlevel'
 import { RuntimePermissionStatus } from '../model/runtimepermissionstatus'
 import { UrlFilter } from '../model/urlfilter'
+import { ServerAppAllowance, ServerChildRequest } from '../model/childrequest'
 
 export interface ServerDataStatus {
   devices?: ServerDeviceList  // newDeviceList
@@ -51,6 +52,7 @@ export interface ServerDeviceList {
 export interface ServerUserList {
   version: string
   data: Array<ServerUserEntry>
+  parentCodeSecret?: string // @tag:parent-code
 }
 
 export interface ServerUserEntry {
@@ -71,6 +73,8 @@ export interface ServerUserEntry {
   llc?: string  // limit login category
   pbd?: number  // pre block duration, default is zero
   urlFilter?: UrlFilter // @tag:url-filter
+  requests?: Array<ServerChildRequest> // @tag:child-request
+  appAllowances?: Array<ServerAppAllowance> // @tag:app-allowance
 }
 
 export interface ServerDeviceData {

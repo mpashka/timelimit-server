@@ -66,6 +66,8 @@ import { SerializedUpdateParentNotificationFlagsAction, UpdateParentNotification
 import { SerializedUpdateTimelimitRuleAction, UpdateTimelimitRuleAction } from '../updatetimelimitrule'
 import { SerializedUpdateUserFlagsAction, UpdateUserFlagsAction } from '../updateuserflags'
 import { SerializedUpdateUserUrlFilterAction, UpdateUserUrlFilterAction } from '../updateuserurlfilter'
+import { AnswerChildRequestAction, SerializedAnswerChildRequestAction } from '../answerchildrequest'
+import { SerializedSetAppAllowanceAction, SetAppAllowanceAction } from '../setappallowance'
 import { SerializedUpdateUserLimitLoginCategory, UpdateUserLimitLoginCategory } from '../updateuserlimitlogincategory'
 import { SerializedUpdateUserLimitLoginPreBlockDuration, UpdateUserLimitLoginPreBlockDuration } from '../updateuserlimitloginpreblockduration'
 
@@ -119,6 +121,8 @@ export type SerializedParentAction =
   SerializedUpdateTimelimitRuleAction |
   SerializedUpdateUserFlagsAction |
   SerializedUpdateUserUrlFilterAction |
+  SerializedAnswerChildRequestAction |
+  SerializedSetAppAllowanceAction |
   SerializedUpdateUserLimitLoginCategory |
   SerializedUpdateUserLimitLoginPreBlockDuration
 
@@ -221,6 +225,10 @@ export const parseParentAction = (action: SerializedParentAction): ParentAction 
     return UpdateUserFlagsAction.parse(action)
   } else if (action.type === 'UPDATE_USER_URL_FILTER') {
     return UpdateUserUrlFilterAction.parse(action)
+  } else if (action.type === 'ANSWER_CHILD_REQUEST') {
+    return AnswerChildRequestAction.parse(action)
+  } else if (action.type === 'SET_APP_ALLOWANCE') {
+    return SetAppAllowanceAction.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_CATEGORY') {
     return UpdateUserLimitLoginCategory.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_PRE_BLOCK_DURATION') {

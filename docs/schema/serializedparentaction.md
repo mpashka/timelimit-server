@@ -114,6 +114,10 @@ any of
 
 * [SerializedUpdateUserUrlFilterAction](serializedparentaction-definitions-serializedupdateuserurlfilteraction.md "check type definition")
 
+* [SerializedAnswerChildRequestAction](serializedparentaction-definitions-serializedanswerchildrequestaction.md "check type definition")
+
+* [SerializedSetAppAllowanceAction](serializedparentaction-definitions-serializedsetappallowanceaction.md "check type definition")
+
 * [SerializedUpdateUserLimitLoginCategory](serializedparentaction-definitions-serializedupdateuserlimitlogincategory.md "check type definition")
 
 * [SerializedUpdateUserLimitLoginPreBlockDuration](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration.md "check type definition")
@@ -4835,6 +4839,236 @@ Reference this group by using
 
 `string[]`
 
+## Definitions group SerializedAnswerChildRequestAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction"}
+```
+
+| Property                | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                           |
+| :---------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-49)        | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/type")                     |
+| [requestId](#requestid) | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-requestid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/requestId")           |
+| [answer](#answer)       | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-childrequestanswerkind.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/answer") |
+| [until](#until)         | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-until.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/until")                   |
+| [word](#word)           | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-word.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/word")                     |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value                    | Explanation |
+| :----------------------- | :---------- |
+| `"ANSWER_CHILD_REQUEST"` |             |
+
+### requestId
+
+
+
+`requestId`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-requestid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/requestId")
+
+#### requestId Type
+
+`string`
+
+### answer
+
+
+
+`answer`
+
+* is required
+
+* Type: `string` ([ChildRequestAnswerKind](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-childrequestanswerkind.md))
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-childrequestanswerkind.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/answer")
+
+#### answer Type
+
+`string` ([ChildRequestAnswerKind](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-childrequestanswerkind.md))
+
+#### answer Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value        | Explanation |
+| :----------- | :---------- |
+| `"app"`      |             |
+| `"category"` |             |
+| `"deny"`     |             |
+
+### until
+
+
+
+`until`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-until.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/until")
+
+#### until Type
+
+`number`
+
+### word
+
+
+
+`word`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedanswerchildrequestaction-properties-word.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction/properties/word")
+
+#### word Type
+
+`string`
+
+## Definitions group ChildRequestAnswerKind
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedParentAction#/definitions/ChildRequestAnswerKind"}
+```
+
+| Property | Type | Required | Nullable | Defined by |
+| :------- | :--- | :------- | :------- | :--------- |
+
+## Definitions group SerializedSetAppAllowanceAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction"}
+```
+
+| Property                    | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                               |
+| :-------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-50)            | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/type")               |
+| [userId](#userid-8)         | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/userId")           |
+| [packageName](#packagename) | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-packagename.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/packageName") |
+| [until](#until-1)           | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-until.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/until")             |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value                 | Explanation |
+| :-------------------- | :---------- |
+| `"SET_APP_ALLOWANCE"` |             |
+
+### userId
+
+
+
+`userId`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/userId")
+
+#### userId Type
+
+`string`
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-packagename.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/packageName")
+
+#### packageName Type
+
+`string`
+
+### until
+
+
+
+`until`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedsetappallowanceaction-properties-until.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction/properties/until")
+
+#### until Type
+
+`number`
+
 ## Definitions group SerializedUpdateUserLimitLoginCategory
 
 Reference this group by using
@@ -4845,8 +5079,8 @@ Reference this group by using
 
 | Property                     | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                           |
 | :--------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-49)             | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/type")             |
-| [userId](#userid-8)          | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/userId")         |
+| [type](#type-51)             | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/type")             |
+| [userId](#userid-9)          | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/userId")         |
 | [categoryId](#categoryid-20) | `string` | Optional | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-categoryid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/categoryId") |
 
 ### type
@@ -4921,8 +5155,8 @@ Reference this group by using
 
 | Property                              | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                                                       |
 | :------------------------------------ | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-50)                      | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/type")                         |
-| [userId](#userid-9)                   | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/userId")                     |
+| [type](#type-52)                      | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/type")                         |
+| [userId](#userid-10)                  | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/userId")                     |
 | [preBlockDuration](#preblockduration) | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-preblockduration.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/preBlockDuration") |
 
 ### type

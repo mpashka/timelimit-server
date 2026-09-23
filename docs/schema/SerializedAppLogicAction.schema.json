@@ -10,6 +10,9 @@
       "$ref": "#/definitions/SerializedAddUsedTimeActionVersion2"
     },
     {
+      "$ref": "#/definitions/SerializedCreateChildRequestAction"
+    },
+    {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"
     },
     {
@@ -223,6 +226,38 @@
         "type"
       ],
       "title": "SerializedAddUsedTimeActionVersion2"
+    },
+    "SerializedCreateChildRequestAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "CREATE_CHILD_REQUEST"
+          ]
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "word": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "categoryId",
+        "packageName",
+        "requestId",
+        "type",
+        "word"
+      ],
+      "title": "SerializedCreateChildRequestAction"
     },
     "SerializedFinishKeyRequestAction": {
       "type": "object",

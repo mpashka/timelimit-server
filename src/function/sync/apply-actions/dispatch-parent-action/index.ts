@@ -66,6 +66,8 @@ import {
   UpdateTimelimitRuleAction,
   UpdateUserFlagsAction,
   UpdateUserUrlFilterAction,
+  AnswerChildRequestAction,
+  SetAppAllowanceAction,
   UpdateUserLimitLoginCategory,
   UpdateUserLimitLoginPreBlockDuration
 } from '../../../../action'
@@ -122,6 +124,8 @@ import { dispatchUpdateParentNotificationFlags } from './updateparentnotificatio
 import { dispatchUpdateTimelimitRule } from './updatetimelimitrule'
 import { dispatchUpdateUserFlagsAction } from './updateuserflags'
 import { dispatchUpdateUserUrlFilter } from './updateuserurlfilter'
+import { dispatchAnswerChildRequest } from './answerchildrequest'
+import { dispatchSetAppAllowance } from './setappallowance'
 import { dispatchUpdateUserLimitLoginCategoryAction } from './updateuserlimitlogincategory'
 import { dispatchUpdateUserLimitPreBlockDuration } from './updateuserlimitloginpreblockduration'
 
@@ -233,6 +237,10 @@ export const dispatchParentAction = async ({
       return dispatchUpdateUserFlagsAction({ action, cache })
     } else if (action instanceof UpdateUserUrlFilterAction) {
       return dispatchUpdateUserUrlFilter({ action, cache })
+    } else if (action instanceof AnswerChildRequestAction) {
+      return dispatchAnswerChildRequest({ action, cache, parentUserId })
+    } else if (action instanceof SetAppAllowanceAction) {
+      return dispatchSetAppAllowance({ action, cache })
     } else if (action instanceof UpdateUserLimitLoginCategory) {
       return dispatchUpdateUserLimitLoginCategoryAction({ action, cache, parentUserId })
     } else if (action instanceof DeleteChildTaskAction) {

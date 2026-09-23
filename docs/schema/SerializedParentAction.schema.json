@@ -148,6 +148,12 @@
       "$ref": "#/definitions/SerializedUpdateUserUrlFilterAction"
     },
     {
+      "$ref": "#/definitions/SerializedAnswerChildRequestAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetAppAllowanceAction"
+    },
+    {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"
     },
     {
@@ -1544,6 +1550,75 @@
         "userId"
       ],
       "title": "SerializedUpdateUserUrlFilterAction"
+    },
+    "SerializedAnswerChildRequestAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ANSWER_CHILD_REQUEST"
+          ]
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "answer": {
+          "$ref": "#/definitions/ChildRequestAnswerKind"
+        },
+        "until": {
+          "type": "number"
+        },
+        "word": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "answer",
+        "requestId",
+        "type",
+        "until",
+        "word"
+      ],
+      "title": "SerializedAnswerChildRequestAction"
+    },
+    "ChildRequestAnswerKind": {
+      "enum": [
+        "app",
+        "category",
+        "deny"
+      ],
+      "type": "string",
+      "title": "ChildRequestAnswerKind"
+    },
+    "SerializedSetAppAllowanceAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SET_APP_ALLOWANCE"
+          ]
+        },
+        "userId": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "until": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "packageName",
+        "type",
+        "until",
+        "userId"
+      ],
+      "title": "SerializedSetAppAllowanceAction"
     },
     "SerializedUpdateUserLimitLoginCategory": {
       "type": "object",

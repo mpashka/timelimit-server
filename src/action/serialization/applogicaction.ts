@@ -19,6 +19,7 @@ import { AddInstalledAppsAction, SerializedAddInstalledAppsAction } from '../add
 import { AddUsedTimeAction, SerializedAddUsedTimeAction } from '../addusedtime'
 import { AddUsedTimeActionVersion2, SerializedAddUsedTimeActionVersion2 } from '../addusedtime2'
 import { AppLogicAction } from '../basetypes'
+import { CreateChildRequestAction, SerializedCreateChildRequestAction } from '../createchildrequest'
 import { FinishKeyRequestAction, SerializedFinishKeyRequestAction } from '../finishkeyrequest'
 import { ForceSyncAction, SerializedForceSyncAction } from '../forcesync'
 import { ReplyToKeyRequestAction, SerializedReplyToKeyRequestAction } from '../replytokeyrequest'
@@ -38,6 +39,7 @@ export type SerializedAppLogicAction =
   SerializedAddInstalledAppsAction |
   SerializedAddUsedTimeAction |
   SerializedAddUsedTimeActionVersion2 |
+  SerializedCreateChildRequestAction |
   SerializedFinishKeyRequestAction |
   SerializedForceSyncAction |
   SerializedReplyToKeyRequestAction |
@@ -57,6 +59,8 @@ export const parseAppLogicAction = (serialized: SerializedAppLogicAction): AppLo
     return AddUsedTimeAction.parse(serialized)
   } else if (serialized.type === 'ADD_USED_TIME_V2') {
     return AddUsedTimeActionVersion2.parse(serialized)
+  } else if (serialized.type === 'CREATE_CHILD_REQUEST') {
+    return CreateChildRequestAction.parse(serialized)
   } else if (serialized.type === 'ADD_INSTALLED_APPS') {
     return AddInstalledAppsAction.parse(serialized)
   } else if (serialized.type === 'FINISH_KEY_REQUEST') {

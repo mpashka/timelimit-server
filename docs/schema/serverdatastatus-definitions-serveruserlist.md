@@ -16,10 +16,11 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserList
 
 # ServerUserList Properties
 
-| Property            | Type     | Required | Nullable       | Defined by                                                                                                                                                                   |
-| :------------------ | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [version](#version) | `string` | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-version.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/version") |
-| [data](#data)       | `array`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-data.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/data")       |
+| Property                              | Type     | Required | Nullable       | Defined by                                                                                                                                                                                     |
+| :------------------------------------ | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [version](#version)                   | `string` | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-version.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/version")                   |
+| [data](#data)                         | `array`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-data.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/data")                         |
+| [parentCodeSecret](#parentcodesecret) | `string` | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-parentcodesecret.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/parentCodeSecret") |
 
 ## version
 
@@ -56,3 +57,21 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserList
 ### data Type
 
 `object[]` ([ServerUserEntry](serverdatastatus-definitions-serveruserentry.md))
+
+## parentCodeSecret
+
+
+
+`parentCodeSecret`
+
+* is optional
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserlist-properties-parentcodesecret.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserList/properties/parentCodeSecret")
+
+### parentCodeSecret Type
+
+`string`

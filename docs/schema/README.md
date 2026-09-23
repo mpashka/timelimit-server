@@ -12,6 +12,8 @@
 
 * [CreateFamilyByMailTokenRequest](./createfamilybymailtokenrequest.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest`
 
+* [CreateFamilyWithParentSessionRequest](./createfamilywithparentsessionrequest.md) – `https://timelimit.io/CreateFamilyWithParentSessionRequest`
+
 * [CreateRegisterDeviceTokenRequest](./createregisterdevicetokenrequest.md) – `https://timelimit.io/CreateRegisterDeviceTokenRequest`
 
 * [DeleteAccountPayload](./deleteaccountpayload.md) – `https://timelimit.io/DeleteAccountPayload`
@@ -60,6 +62,8 @@
 
 * [CategoryDataStatus](./clientpullchangesrequest-definitions-categorydatastatus.md) – `https://timelimit.io/ClientPullChangesRequest#/definitions/CategoryDataStatus`
 
+* [ChildRequestAnswer](./serverdatastatus-definitions-childrequestanswer.md) – `https://timelimit.io/ServerDataStatus#/definitions/ChildRequestAnswer`
+
 * [ClientDataStatus](./clientpullchangesrequest-definitions-clientdatastatus.md) – `https://timelimit.io/ClientPullChangesRequest#/definitions/ClientDataStatus`
 
 * [ClientPushChangesRequestAction](./clientpushchangesrequest-definitions-clientpushchangesrequestaction.md) – `https://timelimit.io/ClientPushChangesRequest#/definitions/ClientPushChangesRequestAction`
@@ -77,6 +81,8 @@
 * [NewDeviceInfo](./signintofamilyrequest-definitions-newdeviceinfo.md) – `https://timelimit.io/SignIntoFamilyRequest#/definitions/NewDeviceInfo`
 
 * [PlaintextParentPassword](./createfamilybymailtokenrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest#/definitions/PlaintextParentPassword`
+
+* [PlaintextParentPassword](./createfamilywithparentsessionrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/CreateFamilyWithParentSessionRequest#/definitions/PlaintextParentPassword`
 
 * [PlaintextParentPassword](./recoverparentpasswordrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/RecoverParentPasswordRequest#/definitions/PlaintextParentPassword`
 
@@ -100,6 +106,8 @@
 
 * [SerializedAddUserAction](./serializedparentaction-definitions-serializedadduseraction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedAddUserAction`
 
+* [SerializedAnswerChildRequestAction](./serializedparentaction-definitions-serializedanswerchildrequestaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction`
+
 * [SerializedAppActivityItem](./serializedapplogicaction-definitions-serializedappactivityitem.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppActivityItem`
 
 * [SerializedAppActivityItem](./serverdatastatus-definitions-serializedappactivityitem.md) – `https://timelimit.io/ServerDataStatus#/definitions/SerializedAppActivityItem`
@@ -111,6 +119,8 @@
 * [SerializedChildSignInAction](./serializedchildaction-definitions-serializedchildsigninaction.md) – `https://timelimit.io/SerializedChildAction#/definitions/SerializedChildSignInAction`
 
 * [SerializedCreateCategoryAction](./serializedparentaction-definitions-serializedcreatecategoryaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedCreateCategoryAction`
+
+* [SerializedCreateChildRequestAction](./serializedapplogicaction-definitions-serializedcreatechildrequestaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedCreateChildRequestAction`
 
 * [SerializedCreateTimelimtRuleAction](./serializedparentaction-definitions-serializedcreatetimelimtruleaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedCreateTimelimtRuleAction`
 
@@ -153,6 +163,8 @@
 * [SerializedReviewChildTaskAction](./serializedparentaction-definitions-serializedreviewchildtaskaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedReviewChildTaskAction`
 
 * [SerializedSendKeyRequestAction](./serializedapplogicaction-definitions-serializedsendkeyrequestaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction`
+
+* [SerializedSetAppAllowanceAction](./serializedparentaction-definitions-serializedsetappallowanceaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedSetAppAllowanceAction`
 
 * [SerializedSetCategoryExtraTimeAction](./serializedparentaction-definitions-serializedsetcategoryextratimeaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedSetCategoryExtraTimeAction`
 
@@ -228,7 +240,11 @@
 
 * [SerializedUploadDevicePublicKeyAction](./serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction`
 
+* [ServerAppAllowance](./serverdatastatus-definitions-serverappallowance.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerAppAllowance`
+
 * [ServerCategoryNetworkId](./serverdatastatus-definitions-servercategorynetworkid.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerCategoryNetworkId`
+
+* [ServerChildRequest](./serverdatastatus-definitions-serverchildrequest.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerChildRequest`
 
 * [ServerCryptContainer](./serverdatastatus-definitions-servercryptcontainer.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerCryptContainer`
 
@@ -361,6 +377,10 @@
 * [Untitled array in ServerDataStatus](./serverdatastatus-definitions-urlfilter-properties-allow.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/allow`
 
 * [Untitled array in ServerDataStatus](./serverdatastatus-definitions-urlfilter-properties-block.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter/properties/block`
+
+* [Untitled array in ServerDataStatus](./serverdatastatus-definitions-serveruserentry-properties-requests.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests`
+
+* [Untitled array in ServerDataStatus](./serverdatastatus-definitions-serveruserentry-properties-appallowances.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances`
 
 * [Untitled array in ServerDataStatus](./serverdatastatus-properties-krq.md) – `https://timelimit.io/ServerDataStatus#/properties/krq`
 

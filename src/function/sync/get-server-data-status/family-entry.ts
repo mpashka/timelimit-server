@@ -25,6 +25,7 @@ export interface FamilyEntry {
   hasFullVersion: boolean
   fullVersionUntil: string
   u2fKeysVersion: string
+  parentCodeSecret: string | null
 }
 
 export async function getFamilyEntry ({ transaction, familyId }: {
@@ -40,7 +41,8 @@ export async function getFamilyEntry ({ transaction, familyId }: {
       'userListVersion',
       'hasFullVersion',
       'fullVersionUntil',
-      'u2fKeysVersion'
+      'u2fKeysVersion',
+      'parentCodeSecret'
     ],
     transaction: transaction.legacy.transaction
   })
@@ -55,6 +57,7 @@ export async function getFamilyEntry ({ transaction, familyId }: {
     userListVersion: familyEntryUnsafe.userListVersion,
     hasFullVersion: familyEntryUnsafe.hasFullVersion,
     fullVersionUntil: familyEntryUnsafe.fullVersionUntil,
-    u2fKeysVersion: familyEntryUnsafe.u2fKeysVersion
+    u2fKeysVersion: familyEntryUnsafe.u2fKeysVersion,
+    parentCodeSecret: familyEntryUnsafe.parentCodeSecret
   }
 }
