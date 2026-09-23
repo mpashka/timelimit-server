@@ -43,6 +43,7 @@ import { createTimelimitRuleModel, TimelimitRuleModelStatic } from './timelimitr
 import { createU2fKeyModel, U2fKeyModelStatic } from './u2fkey'
 import { createUsedTimeModel, UsedTimeModelStatic } from './usedtime'
 import { createUserModel, UserModelStatic } from './user'
+import { AppRuleModelStatic, AppUsageModelStatic, NewAppModelStatic, createAppRuleModel, createAppUsageModel, createNewAppModel } from './newui2'
 import { createUserLimitLoginCategoryModel, UserLimitLoginCategoryModelStatic } from './userlimitlogincategory'
 import { shouldRetryWithException } from './utils/serialized'
 
@@ -51,6 +52,9 @@ export type Transaction = Sequelize.Transaction
 export interface Database {
   addDeviceToken: AddDeviceTokenModelStatic
   appAllowance: AppAllowanceModelStatic
+  appRule: AppRuleModelStatic
+  appUsage: AppUsageModelStatic
+  newApp: NewAppModelStatic
   authtoken: AuthTokenModelStatic
   category: CategoryModelStatic
   categoryApp: CategoryAppModelStatic
@@ -91,6 +95,9 @@ interface TransactionOptions {
 const createDatabase = (sequelize: Sequelize.Sequelize): Database => ({
   addDeviceToken: createAddDeviceTokenModel(sequelize),
   appAllowance: createAppAllowanceModel(sequelize),
+  appRule: createAppRuleModel(sequelize),
+  appUsage: createAppUsageModel(sequelize),
+  newApp: createNewAppModel(sequelize),
   authtoken: createAuthtokenModel(sequelize),
   category: createCategoryModel(sequelize),
   categoryApp: createCategoryAppModel(sequelize),

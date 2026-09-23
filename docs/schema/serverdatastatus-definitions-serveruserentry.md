@@ -37,6 +37,8 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 | [requests](#requests)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")                                     |
 | [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")                           |
+| [appRules](#apprules)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appRules")                                     |
+| [newApps](#newapps)                                       | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-newapps.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/newApps")                                       |
 
 ## id
 
@@ -388,3 +390,39 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 ### appAllowances Type
 
 `object[]` ([ServerAppAllowance](serverdatastatus-definitions-serverappallowance.md))
+
+## appRules
+
+
+
+`appRules`
+
+* is optional
+
+* Type: `object[]` ([ServerAppRule](serverdatastatus-definitions-serverapprule.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appRules")
+
+### appRules Type
+
+`object[]` ([ServerAppRule](serverdatastatus-definitions-serverapprule.md))
+
+## newApps
+
+
+
+`newApps`
+
+* is optional
+
+* Type: `object[]` ([ServerNewApp](serverdatastatus-definitions-servernewapp.md))
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-newapps.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/newApps")
+
+### newApps Type
+
+`object[]` ([ServerNewApp](serverdatastatus-definitions-servernewapp.md))

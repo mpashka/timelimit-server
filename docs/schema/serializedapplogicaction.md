@@ -24,6 +24,16 @@ any of
 
 * [SerializedCreateChildRequestAction](serializedapplogicaction-definitions-serializedcreatechildrequestaction.md "check type definition")
 
+* [SerializedGrantByParentCodeAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction.md "check type definition")
+
+* [SerializedSetAppUsageAction](serializedapplogicaction-definitions-serializedsetappusageaction.md "check type definition")
+
+* [SerializedReportNewAppAction](serializedapplogicaction-definitions-serializedreportnewappaction.md "check type definition")
+
+* [SerializedForgetNewAppAction](serializedapplogicaction-definitions-serializedforgetnewappaction.md "check type definition")
+
+* [SerializedSetForegroundAppAction](serializedapplogicaction-definitions-serializedsetforegroundappaction.md "check type definition")
+
 * [SerializedFinishKeyRequestAction](serializedapplogicaction-definitions-serializedfinishkeyrequestaction.md "check type definition")
 
 * [SerializedForceSyncAction](serializedapplogicaction-definitions-serializedforcesyncaction.md "check type definition")
@@ -540,6 +550,520 @@ Reference this group by using
 
 `string`
 
+## Definitions group SerializedGrantByParentCodeAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction"}
+```
+
+| Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                         |
+| :---------------------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-4)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/type")               |
+| [code](#code)                 | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-code.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/code")               |
+| [step](#step)                 | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-step.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/step")               |
+| [grant](#grant)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-grant.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/grant")             |
+| [packageName](#packagename-2) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/packageName") |
+| [categoryId](#categoryid-2)   | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-categoryid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/categoryId")   |
+| [until](#until)               | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-until.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/until")             |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value                    | Explanation |
+| :----------------------- | :---------- |
+| `"GRANT_BY_PARENT_CODE"` |             |
+
+### code
+
+
+
+`code`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-code.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/code")
+
+#### code Type
+
+`string`
+
+### step
+
+
+
+`step`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-step.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/step")
+
+#### step Type
+
+`number`
+
+### grant
+
+
+
+`grant`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-grant.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/grant")
+
+#### grant Type
+
+`string`
+
+#### grant Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value        | Explanation |
+| :----------- | :---------- |
+| `"app"`      |             |
+| `"category"` |             |
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/packageName")
+
+#### packageName Type
+
+`string`
+
+### categoryId
+
+
+
+`categoryId`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-categoryid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/categoryId")
+
+#### categoryId Type
+
+`string`
+
+### until
+
+
+
+`until`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedgrantbyparentcodeaction-properties-until.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedGrantByParentCodeAction/properties/until")
+
+#### until Type
+
+`number`
+
+## Definitions group SerializedSetAppUsageAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction"}
+```
+
+| Property        | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                 |
+| :-------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-5) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/type")   |
+| [day](#day-1)   | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-day.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/day")     |
+| [items](#items) | `array`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-items.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/items") |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value             | Explanation |
+| :---------------- | :---------- |
+| `"SET_APP_USAGE"` |             |
+
+### day
+
+
+
+`day`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-day.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/day")
+
+#### day Type
+
+`number`
+
+### items
+
+
+
+`items`
+
+* is required
+
+* Type: `object[]` ([SerializedAppUsageItem](serializedapplogicaction-definitions-serializedappusageitem.md))
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetappusageaction-properties-items.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/items")
+
+#### items Type
+
+`object[]` ([SerializedAppUsageItem](serializedapplogicaction-definitions-serializedappusageitem.md))
+
+## Definitions group SerializedAppUsageItem
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem"}
+```
+
+| Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                   |
+| :---------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [packageName](#packagename-3) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappusageitem-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem/properties/packageName") |
+| [ms](#ms)                     | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappusageitem-properties-ms.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem/properties/ms")                   |
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappusageitem-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem/properties/packageName")
+
+#### packageName Type
+
+`string`
+
+### ms
+
+
+
+`ms`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappusageitem-properties-ms.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem/properties/ms")
+
+#### ms Type
+
+`number`
+
+## Definitions group SerializedReportNewAppAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction"}
+```
+
+| Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                               |
+| :---------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-6)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/type")               |
+| [packageName](#packagename-4) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/packageName") |
+| [title](#title-1)             | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-title.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/title")             |
+| [section](#section)           | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-section.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/section")         |
+| [installedAt](#installedat)   | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-installedat.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/installedAt") |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value              | Explanation |
+| :----------------- | :---------- |
+| `"REPORT_NEW_APP"` |             |
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/packageName")
+
+#### packageName Type
+
+`string`
+
+### title
+
+
+
+`title`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-title.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/title")
+
+#### title Type
+
+`string`
+
+### section
+
+
+
+`section`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-section.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/section")
+
+#### section Type
+
+`string`
+
+### installedAt
+
+
+
+`installedAt`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreportnewappaction-properties-installedat.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction/properties/installedAt")
+
+#### installedAt Type
+
+`number`
+
+## Definitions group SerializedForgetNewAppAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForgetNewAppAction"}
+```
+
+| Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                               |
+| :---------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-7)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforgetnewappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForgetNewAppAction/properties/type")               |
+| [packageName](#packagename-5) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforgetnewappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForgetNewAppAction/properties/packageName") |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforgetnewappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForgetNewAppAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value              | Explanation |
+| :----------------- | :---------- |
+| `"FORGET_NEW_APP"` |             |
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforgetnewappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForgetNewAppAction/properties/packageName")
+
+#### packageName Type
+
+`string`
+
+## Definitions group SerializedSetForegroundAppAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetForegroundAppAction"}
+```
+
+| Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                       |
+| :---------------------------- | :------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-8)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetforegroundappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetForegroundAppAction/properties/type")               |
+| [packageName](#packagename-6) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetforegroundappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetForegroundAppAction/properties/packageName") |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetforegroundappaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetForegroundAppAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value                  | Explanation |
+| :--------------------- | :---------- |
+| `"SET_FOREGROUND_APP"` |             |
+
+### packageName
+
+
+
+`packageName`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsetforegroundappaction-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetForegroundAppAction/properties/packageName")
+
+#### packageName Type
+
+`string`
+
 ## Definitions group SerializedFinishKeyRequestAction
 
 Reference this group by using
@@ -550,7 +1074,7 @@ Reference this group by using
 
 | Property        | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                         |
 | :-------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-4) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedfinishkeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedFinishKeyRequestAction/properties/type") |
+| [type](#type-9) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedfinishkeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedFinishKeyRequestAction/properties/type") |
 | [dsn](#dsn)     | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedfinishkeyrequestaction-properties-dsn.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedFinishKeyRequestAction/properties/dsn")   |
 
 ### type
@@ -605,9 +1129,9 @@ Reference this group by using
 {"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForceSyncAction"}
 ```
 
-| Property        | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                           |
-| :-------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-5) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforcesyncaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForceSyncAction/properties/type") |
+| Property         | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                           |
+| :--------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-10) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedforcesyncaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedForceSyncAction/properties/type") |
 
 ### type
 
@@ -645,7 +1169,7 @@ Reference this group by using
 
 | Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                           |
 | :---------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-6)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreplytokeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction/properties/type")                 |
+| [type](#type-11)              | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreplytokeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction/properties/type")                 |
 | [rsn](#rsn)                   | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreplytokeyrequestaction-properties-rsn.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction/properties/rsn")                   |
 | [tempKey](#tempkey)           | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreplytokeyrequestaction-properties-tempkey.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction/properties/tempKey")           |
 | [encryptedKey](#encryptedkey) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedreplytokeyrequestaction-properties-encryptedkey.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction/properties/encryptedKey") |
@@ -759,7 +1283,7 @@ Reference this group by using
 
 | Property          | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                           |
 | :---------------- | :------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-7)   | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedmarktaskpendingaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedMarkTaskPendingAction/properties/type")     |
+| [type](#type-12)  | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedmarktaskpendingaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedMarkTaskPendingAction/properties/type")     |
 | [taskId](#taskid) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedmarktaskpendingaction-properties-taskid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedMarkTaskPendingAction/properties/taskId") |
 
 ### type
@@ -816,7 +1340,7 @@ Reference this group by using
 
 | Property              | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                         |
 | :-------------------- | :------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-8)       | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedpingaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedPingAction/properties/type")         |
+| [type](#type-13)      | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedpingaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedPingAction/properties/type")         |
 | [deviceId](#deviceid) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedpingaction-properties-deviceid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedPingAction/properties/deviceId") |
 | [event](#event)       | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedpingaction-properties-pingevent.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedPingAction/properties/event")   |
 | [token](#token)       | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedpingaction-properties-token.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedPingAction/properties/token")       |
@@ -930,12 +1454,12 @@ Reference this group by using
 {"$ref":"https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction"}
 ```
 
-| Property        | Type      | Required | Nullable       | Defined by                                                                                                                                                                                                                               |
-| :-------------- | :-------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-9) | `string`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/type") |
-| [b](#b)         | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-b.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/b")       |
-| [d](#d-1)       | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-d.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/d")       |
-| [w](#w)         | `boolean` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-w.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/w")       |
+| Property         | Type      | Required | Nullable       | Defined by                                                                                                                                                                                                                               |
+| :--------------- | :-------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-14) | `string`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/type") |
+| [b](#b)          | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-b.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/b")       |
+| [d](#d-1)        | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-d.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/d")       |
+| [w](#w)          | `boolean` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateinstalledappsaction-properties-w.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateInstalledAppsAction/properties/w")       |
 
 ### type
 
@@ -1027,7 +1551,7 @@ Reference this group by using
 
 | Property                      | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                               |
 | :---------------------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-10)              | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedremoveinstalledappsaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedRemoveInstalledAppsAction/properties/type")                 |
+| [type](#type-15)              | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedremoveinstalledappsaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedRemoveInstalledAppsAction/properties/type")                 |
 | [packageNames](#packagenames) | `array`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedremoveinstalledappsaction-properties-packagenames.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedRemoveInstalledAppsAction/properties/packageNames") |
 
 ### type
@@ -1084,10 +1608,10 @@ Reference this group by using
 
 | Property                    | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                 |
 | :-------------------------- | :------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-11)            | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/type")             |
+| [type](#type-16)            | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/type")             |
 | [dsn](#dsn-1)               | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-dsn.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/dsn")               |
 | [deviceId](#deviceid-1)     | `string` | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-deviceid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/deviceId")     |
-| [categoryId](#categoryid-2) | `string` | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-categoryid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/categoryId") |
+| [categoryId](#categoryid-3) | `string` | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-categoryid.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/categoryId") |
 | [dataType](#datatype)       | `number` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-datatype.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/dataType")     |
 | [tempKey](#tempkey-1)       | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-tempkey.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/tempKey")       |
 | [signature](#signature-1)   | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsendkeyrequestaction-properties-signature.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSendKeyRequestAction/properties/signature")   |
@@ -1236,7 +1760,7 @@ Reference this group by using
 
 | Property         | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                       |
 | :--------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-12) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsignoutatdeviceaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSignOutAtDeviceAction/properties/type") |
+| [type](#type-17) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedsignoutatdeviceaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSignOutAtDeviceAction/properties/type") |
 
 ### type
 
@@ -1274,7 +1798,7 @@ Reference this group by using
 
 | Property         | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                           |
 | :--------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-13) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serialiezdtrieddisablingdeviceadminaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerialiezdTriedDisablingDeviceAdminAction/properties/type") |
+| [type](#type-18) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serialiezdtrieddisablingdeviceadminaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerialiezdTriedDisablingDeviceAdminAction/properties/type") |
 
 ### type
 
@@ -1312,7 +1836,7 @@ Reference this group by using
 
 | Property                          | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                                   |
 | :-------------------------------- | :------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-14)                  | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateappactivitiesaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateAppActivitiesAction/properties/type")                     |
+| [type](#type-19)                  | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateappactivitiesaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateAppActivitiesAction/properties/type")                     |
 | [removed](#removed)               | `array`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateappactivitiesaction-properties-removed.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateAppActivitiesAction/properties/removed")               |
 | [updatedOrAdded](#updatedoradded) | `array`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdateappactivitiesaction-properties-updatedoradded.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateAppActivitiesAction/properties/updatedOrAdded") |
 
@@ -1464,7 +1988,7 @@ Reference this group by using
 
 | Property                                                    | Type      | Required | Nullable       | Defined by                                                                                                                                                                                                                                                                           |
 | :---------------------------------------------------------- | :-------- | :------- | :------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-15)                                            | `string`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdatedevicestatusaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction/properties/type")                                               |
+| [type](#type-20)                                            | `string`  | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdatedevicestatusaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction/properties/type")                                               |
 | [protectionLevel](#protectionlevel)                         | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdatedevicestatusaction-properties-protectionlevel.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction/properties/protectionLevel")                         |
 | [usageStats](#usagestats)                                   | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdatedevicestatusaction-properties-usagestats.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction/properties/usageStats")                                   |
 | [notificationAccess](#notificationaccess)                   | `string`  | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedupdatedevicestatusaction-properties-notificationaccess.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction/properties/notificationAccess")                   |
@@ -1752,7 +2276,7 @@ Reference this group by using
 
 | Property         | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                   |
 | :--------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-16) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction/properties/type") |
+| [type](#type-21) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction-properties-type.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction/properties/type") |
 | [key](#key)      | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction-properties-key.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction/properties/key")   |
 
 ### type

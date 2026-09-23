@@ -154,6 +154,9 @@
       "$ref": "#/definitions/SerializedSetAppAllowanceAction"
     },
     {
+      "$ref": "#/definitions/SerializedSetAppRuleAction"
+    },
+    {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"
     },
     {
@@ -1619,6 +1622,38 @@
         "userId"
       ],
       "title": "SerializedSetAppAllowanceAction"
+    },
+    "SerializedSetAppRuleAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SET_APP_RULE"
+          ]
+        },
+        "userId": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "days": {
+          "type": "number"
+        },
+        "limitMinutes": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "days",
+        "limitMinutes",
+        "packageName",
+        "type",
+        "userId"
+      ],
+      "title": "SerializedSetAppRuleAction"
     },
     "SerializedUpdateUserLimitLoginCategory": {
       "type": "object",

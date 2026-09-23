@@ -68,6 +68,7 @@ import { SerializedUpdateUserFlagsAction, UpdateUserFlagsAction } from '../updat
 import { SerializedUpdateUserUrlFilterAction, UpdateUserUrlFilterAction } from '../updateuserurlfilter'
 import { AnswerChildRequestAction, SerializedAnswerChildRequestAction } from '../answerchildrequest'
 import { SerializedSetAppAllowanceAction, SetAppAllowanceAction } from '../setappallowance'
+import { SerializedSetAppRuleAction, SetAppRuleAction } from '../setapprule'
 import { SerializedUpdateUserLimitLoginCategory, UpdateUserLimitLoginCategory } from '../updateuserlimitlogincategory'
 import { SerializedUpdateUserLimitLoginPreBlockDuration, UpdateUserLimitLoginPreBlockDuration } from '../updateuserlimitloginpreblockduration'
 
@@ -123,6 +124,7 @@ export type SerializedParentAction =
   SerializedUpdateUserUrlFilterAction |
   SerializedAnswerChildRequestAction |
   SerializedSetAppAllowanceAction |
+  SerializedSetAppRuleAction |
   SerializedUpdateUserLimitLoginCategory |
   SerializedUpdateUserLimitLoginPreBlockDuration
 
@@ -229,6 +231,8 @@ export const parseParentAction = (action: SerializedParentAction): ParentAction 
     return AnswerChildRequestAction.parse(action)
   } else if (action.type === 'SET_APP_ALLOWANCE') {
     return SetAppAllowanceAction.parse(action)
+  } else if (action.type === 'SET_APP_RULE') {
+    return SetAppRuleAction.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_CATEGORY') {
     return UpdateUserLimitLoginCategory.parse(action)
   } else if (action.type === 'UPDATE_USER_LIMIT_LOGIN_PRE_BLOCK_DURATION') {

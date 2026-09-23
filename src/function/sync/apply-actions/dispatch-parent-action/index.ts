@@ -68,6 +68,7 @@ import {
   UpdateUserUrlFilterAction,
   AnswerChildRequestAction,
   SetAppAllowanceAction,
+  SetAppRuleAction,
   UpdateUserLimitLoginCategory,
   UpdateUserLimitLoginPreBlockDuration
 } from '../../../../action'
@@ -126,6 +127,7 @@ import { dispatchUpdateUserFlagsAction } from './updateuserflags'
 import { dispatchUpdateUserUrlFilter } from './updateuserurlfilter'
 import { dispatchAnswerChildRequest } from './answerchildrequest'
 import { dispatchSetAppAllowance } from './setappallowance'
+import { dispatchSetAppRule } from './setapprule'
 import { dispatchUpdateUserLimitLoginCategoryAction } from './updateuserlimitlogincategory'
 import { dispatchUpdateUserLimitPreBlockDuration } from './updateuserlimitloginpreblockduration'
 
@@ -241,6 +243,8 @@ export const dispatchParentAction = async ({
       return dispatchAnswerChildRequest({ action, cache, parentUserId })
     } else if (action instanceof SetAppAllowanceAction) {
       return dispatchSetAppAllowance({ action, cache })
+    } else if (action instanceof SetAppRuleAction) {
+      return dispatchSetAppRule({ action, cache })
     } else if (action instanceof UpdateUserLimitLoginCategory) {
       return dispatchUpdateUserLimitLoginCategoryAction({ action, cache, parentUserId })
     } else if (action instanceof DeleteChildTaskAction) {

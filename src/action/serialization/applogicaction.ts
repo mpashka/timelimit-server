@@ -20,6 +20,10 @@ import { AddUsedTimeAction, SerializedAddUsedTimeAction } from '../addusedtime'
 import { AddUsedTimeActionVersion2, SerializedAddUsedTimeActionVersion2 } from '../addusedtime2'
 import { AppLogicAction } from '../basetypes'
 import { CreateChildRequestAction, SerializedCreateChildRequestAction } from '../createchildrequest'
+import {
+  ForgetNewAppAction, GrantByParentCodeAction, ReportNewAppAction, SerializedForgetNewAppAction, SerializedGrantByParentCodeAction,
+  SerializedReportNewAppAction, SerializedSetAppUsageAction, SerializedSetForegroundAppAction, SetAppUsageAction, SetForegroundAppAction
+} from '../newuiapplogic'
 import { FinishKeyRequestAction, SerializedFinishKeyRequestAction } from '../finishkeyrequest'
 import { ForceSyncAction, SerializedForceSyncAction } from '../forcesync'
 import { ReplyToKeyRequestAction, SerializedReplyToKeyRequestAction } from '../replytokeyrequest'
@@ -40,6 +44,11 @@ export type SerializedAppLogicAction =
   SerializedAddUsedTimeAction |
   SerializedAddUsedTimeActionVersion2 |
   SerializedCreateChildRequestAction |
+  SerializedGrantByParentCodeAction |
+  SerializedSetAppUsageAction |
+  SerializedReportNewAppAction |
+  SerializedForgetNewAppAction |
+  SerializedSetForegroundAppAction |
   SerializedFinishKeyRequestAction |
   SerializedForceSyncAction |
   SerializedReplyToKeyRequestAction |
@@ -61,6 +70,16 @@ export const parseAppLogicAction = (serialized: SerializedAppLogicAction): AppLo
     return AddUsedTimeActionVersion2.parse(serialized)
   } else if (serialized.type === 'CREATE_CHILD_REQUEST') {
     return CreateChildRequestAction.parse(serialized)
+  } else if (serialized.type === 'GRANT_BY_PARENT_CODE') {
+    return GrantByParentCodeAction.parse(serialized)
+  } else if (serialized.type === 'SET_APP_USAGE') {
+    return SetAppUsageAction.parse(serialized)
+  } else if (serialized.type === 'REPORT_NEW_APP') {
+    return ReportNewAppAction.parse(serialized)
+  } else if (serialized.type === 'FORGET_NEW_APP') {
+    return ForgetNewAppAction.parse(serialized)
+  } else if (serialized.type === 'SET_FOREGROUND_APP') {
+    return SetForegroundAppAction.parse(serialized)
   } else if (serialized.type === 'ADD_INSTALLED_APPS') {
     return AddInstalledAppsAction.parse(serialized)
   } else if (serialized.type === 'FINISH_KEY_REQUEST') {

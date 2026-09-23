@@ -143,6 +143,16 @@ export interface RemoveDeviceRequest {
   deviceId: string
 }
 
+// @tag:app-usage
+export interface GetAppUsageRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  userId: string
+  fromDay: number
+  toDay: number
+}
+
 export interface RequestIdentityTokenRequest {
   deviceAuthToken: string
   parentUserId: string

@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, GetAppUsageRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -1564,6 +1564,37 @@ const definitions = {
       "userId"
     ]
   },
+  "SerializedSetAppRuleAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "SET_APP_RULE"
+        ]
+      },
+      "userId": {
+        "type": "string"
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "days": {
+        "type": "number"
+      },
+      "limitMinutes": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "days",
+      "limitMinutes",
+      "packageName",
+      "type",
+      "userId"
+    ]
+  },
   "SerializedUpdateUserLimitLoginCategory": {
     "type": "object",
     "properties": {
@@ -1807,6 +1838,160 @@ const definitions = {
       "requestId",
       "type",
       "word"
+    ]
+  },
+  "SerializedGrantByParentCodeAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "GRANT_BY_PARENT_CODE"
+        ]
+      },
+      "code": {
+        "type": "string"
+      },
+      "step": {
+        "type": "number"
+      },
+      "grant": {
+        "enum": [
+          "app",
+          "category"
+        ],
+        "type": "string"
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "categoryId": {
+        "type": "string"
+      },
+      "until": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "categoryId",
+      "code",
+      "grant",
+      "packageName",
+      "step",
+      "type",
+      "until"
+    ]
+  },
+  "SerializedSetAppUsageAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "SET_APP_USAGE"
+        ]
+      },
+      "day": {
+        "type": "number"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/SerializedAppUsageItem"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "day",
+      "items",
+      "type"
+    ]
+  },
+  "SerializedAppUsageItem": {
+    "type": "object",
+    "properties": {
+      "packageName": {
+        "type": "string"
+      },
+      "ms": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "ms",
+      "packageName"
+    ]
+  },
+  "SerializedReportNewAppAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "REPORT_NEW_APP"
+        ]
+      },
+      "packageName": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "section": {
+        "type": "string"
+      },
+      "installedAt": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "installedAt",
+      "packageName",
+      "section",
+      "title",
+      "type"
+    ]
+  },
+  "SerializedForgetNewAppAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "FORGET_NEW_APP"
+        ]
+      },
+      "packageName": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "packageName",
+      "type"
+    ]
+  },
+  "SerializedSetForegroundAppAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "SET_FOREGROUND_APP"
+        ]
+      },
+      "packageName": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "packageName",
+      "type"
     ]
   },
   "SerializedFinishKeyRequestAction": {
@@ -2912,6 +3097,18 @@ const definitions = {
         "items": {
           "$ref": "#/definitions/ServerAppAllowance"
         }
+      },
+      "appRules": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerAppRule"
+        }
+      },
+      "newApps": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerNewApp"
+        }
       }
     },
     "additionalProperties": false,
@@ -3045,6 +3242,62 @@ const definitions = {
       "until"
     ]
   },
+  "ServerAppRule": {
+    "type": "object",
+    "properties": {
+      "packageName": {
+        "type": "string"
+      },
+      "days": {
+        "type": "number"
+      },
+      "limitMinutes": {
+        "type": "number"
+      },
+      "usedDay": {
+        "type": "number"
+      },
+      "usedMs": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "days",
+      "limitMinutes",
+      "packageName",
+      "usedDay",
+      "usedMs"
+    ]
+  },
+  "ServerNewApp": {
+    "type": "object",
+    "properties": {
+      "packageName": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "section": {
+        "type": "string"
+      },
+      "installedAt": {
+        "type": "number"
+      },
+      "deviceId": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "deviceId",
+      "installedAt",
+      "packageName",
+      "section",
+      "title"
+    ]
+  },
   "ServerKeyRequest": {
     "type": "object",
     "properties": {
@@ -3137,6 +3390,30 @@ const definitions = {
       "deviceId",
       "token",
       "type"
+    ]
+  },
+  "ServerDeviceState": {
+    "type": "object",
+    "properties": {
+      "deviceId": {
+        "type": "string"
+      },
+      "seen": {
+        "type": "number"
+      },
+      "app": {
+        "type": "string"
+      },
+      "appSince": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "app",
+      "appSince",
+      "deviceId",
+      "seen"
     ]
   },
   "ServerDhKey": {
@@ -3514,6 +3791,9 @@ export const isSerializedParentAction: (value: unknown) => value is SerializedPa
       "$ref": "#/definitions/SerializedSetAppAllowanceAction"
     },
     {
+      "$ref": "#/definitions/SerializedSetAppRuleAction"
+    },
+    {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"
     },
     {
@@ -3536,6 +3816,21 @@ export const isSerializedAppLogicAction: (value: unknown) => value is Serialized
     },
     {
       "$ref": "#/definitions/SerializedCreateChildRequestAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedGrantByParentCodeAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetAppUsageAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedReportNewAppAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedForgetNewAppAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetForegroundAppAction"
     },
     {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"
@@ -3871,6 +4166,40 @@ export const isRevokeParentSessionRequest: (value: unknown) => value is RevokePa
   "additionalProperties": false,
   "required": [
     "sessionToken"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isGetAppUsageRequest: (value: unknown) => value is GetAppUsageRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "fromDay": {
+      "type": "number"
+    },
+    "toDay": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "fromDay",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "toDay",
+    "userId"
   ],
   "definitions": definitions,
   "$schema": "http://json-schema.org/draft-07/schema#"

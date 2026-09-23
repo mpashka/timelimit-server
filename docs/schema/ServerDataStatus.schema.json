@@ -73,6 +73,12 @@
         "$ref": "#/definitions/ServerPing"
       }
     },
+    "deviceStates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ServerDeviceState"
+      }
+    },
     "dh": {
       "$ref": "#/definitions/ServerDhKey"
     },
@@ -858,6 +864,18 @@
           "items": {
             "$ref": "#/definitions/ServerAppAllowance"
           }
+        },
+        "appRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServerAppRule"
+          }
+        },
+        "newApps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServerNewApp"
+          }
         }
       },
       "additionalProperties": false,
@@ -1005,6 +1023,64 @@
       ],
       "title": "ServerAppAllowance"
     },
+    "ServerAppRule": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "days": {
+          "type": "number"
+        },
+        "limitMinutes": {
+          "type": "number"
+        },
+        "usedDay": {
+          "type": "number"
+        },
+        "usedMs": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "days",
+        "limitMinutes",
+        "packageName",
+        "usedDay",
+        "usedMs"
+      ],
+      "title": "ServerAppRule"
+    },
+    "ServerNewApp": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "section": {
+          "type": "string"
+        },
+        "installedAt": {
+          "type": "number"
+        },
+        "deviceId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "deviceId",
+        "installedAt",
+        "packageName",
+        "section",
+        "title"
+      ],
+      "title": "ServerNewApp"
+    },
     "ServerKeyRequest": {
       "type": "object",
       "properties": {
@@ -1101,6 +1177,31 @@
         "type"
       ],
       "title": "ServerPing"
+    },
+    "ServerDeviceState": {
+      "type": "object",
+      "properties": {
+        "deviceId": {
+          "type": "string"
+        },
+        "seen": {
+          "type": "number"
+        },
+        "app": {
+          "type": "string"
+        },
+        "appSince": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "app",
+        "appSince",
+        "deviceId",
+        "seen"
+      ],
+      "title": "ServerDeviceState"
     },
     "ServerDhKey": {
       "type": "object",

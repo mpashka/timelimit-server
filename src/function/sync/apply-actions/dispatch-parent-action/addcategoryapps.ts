@@ -187,6 +187,14 @@ export async function dispatchAddCategoryApps ({ action, cache, fromChildSelfLim
     }
   )
 
+  // @tag:new-app
+  const decided = await cache.transaction.legacy.database.newApp.destroy({
+    where: { familyId: cache.familyId, userId: childId, packageName: { [Sequelize.Op.in]: action.packageNames } },
+    transaction: cache.transaction.legacy.transaction
+  })
+
+  if (decided > 0) cache.invalidiateUserList = true
+
   oldCategories.forEach((categoryId) => cache.categoriesWithModifiedApps.add(categoryId))
   cache.categoriesWithModifiedApps.add(action.categoryId)
   cache.incrementTriggeredSyncLevel(2)

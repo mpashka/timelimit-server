@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { reportDeviceSeen } from '../function/device-state'
 import { json } from 'body-parser'
 import { Router } from 'express'
 import { BadRequest } from 'http-errors'
@@ -84,6 +85,8 @@ export const createSyncRouter = ({ database, websocket, connectedDevicesManager,
         const subject = await resolveSubject({ transaction, authToken: body.deviceAuthToken })
 
         await subject.reportUsage()
+
+        if (subject.kind === 'device') reportDeviceSeen(subject.familyId, subject.subjectId) // @tag:device-state
 
         return generateServerDataStatus({
           transaction,

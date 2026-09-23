@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "fromDay": {
+      "type": "number"
+    },
+    "toDay": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "fromDay",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "toDay",
+    "userId"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GetAppUsageRequest",
+  "$id": "https://timelimit.io/GetAppUsageRequest"
+}

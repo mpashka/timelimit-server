@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import * as Sequelize from 'sequelize'
 import { json } from 'body-parser'
 import { createHmac } from 'crypto'
 import { Router } from 'express'
@@ -39,7 +40,7 @@ import {
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
-  isDeleteAccountPayload
+  isDeleteAccountPayload, isGetAppUsageRequest
 } from './validator'
 
 export const createParentRouter = ({
@@ -323,6 +324,36 @@ export const createParentRouter = ({
       })
 
       res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:app-usage
+  router.post('/get-app-usage', json(), async (req, res, next) => {
+    try {
+      const body = req.body
+
+      if (!isGetAppUsageRequest(body) || body.toDay < body.fromDay || body.toDay - body.fromDay > 31) {
+        throw new BadRequest()
+      }
+
+      const items = await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        return (await transaction.legacy.database.appUsage.findAll({
+          where: { familyId, userId: body.userId, day: { [Sequelize.Op.between]: [body.fromDay, body.toDay] } },
+          attributes: ['deviceId', 'day', 'packageName', 'ms'],
+          transaction: transaction.legacy.transaction
+        })).map((row) => ({ deviceId: row.deviceId, day: row.day, packageName: row.packageName, ms: parseInt(row.ms, 10) }))
+      })
+
+      res.json({ items })
     } catch (ex) {
       next(ex)
     }

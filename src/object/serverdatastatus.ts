@@ -37,6 +37,7 @@ export interface ServerDataStatus {
   krq?: Array<ServerKeyRequest> // pendingKeyRequests
   kr?: Array<ServerKeyResponse> // keyResponses
   pings?: Array<ServerPing>
+  deviceStates?: Array<ServerDeviceState> // @tag:device-state
   dh?: ServerDhKey // Diffie Hellman
   u2f?: U2fData
   fullVersion: number     // fullVersionUntil
@@ -75,6 +76,8 @@ export interface ServerUserEntry {
   urlFilter?: UrlFilter // @tag:url-filter
   requests?: Array<ServerChildRequest> // @tag:child-request
   appAllowances?: Array<ServerAppAllowance> // @tag:app-allowance
+  appRules?: Array<ServerAppRule> // @tag:app-rule
+  newApps?: Array<ServerNewApp> // @tag:new-app
 }
 
 export interface ServerDeviceData {
@@ -285,4 +288,30 @@ export interface U2fItem {
   a: number // addedAt
   h: string // key handle, base64
   p: string // public key, base64
+}
+
+// @tag:app-rule
+export interface ServerAppRule {
+  packageName: string
+  days: number
+  limitMinutes: number
+  usedDay: number
+  usedMs: number
+}
+
+// @tag:new-app
+export interface ServerNewApp {
+  packageName: string
+  title: string
+  section: string
+  installedAt: number
+  deviceId: string
+}
+
+// @tag:device-state
+export interface ServerDeviceState {
+  deviceId: string
+  seen: number
+  app: string
+  appSince: number
 }

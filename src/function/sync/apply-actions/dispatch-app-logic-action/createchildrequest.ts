@@ -18,6 +18,7 @@ import { CreateChildRequestAction } from '../../../../action'
 import { childRequestRetention, getNewChildRequestRefusal } from '../../../../model/childrequest'
 import { toServerChildRequest } from '../../../child-request'
 import { Cache } from '../cache'
+import { childOfDevice } from './newui'
 import { ChildRequestRefusedException } from '../exception/child-request'
 
 // @tag:child-request
@@ -37,19 +38,9 @@ export async function dispatchCreateChildRequest ({ deviceId, action, cache }: {
 
   if (known) return
 
-  const device = await database.device.findOne({
-    where: { familyId, deviceId },
-    attributes: ['currentUserId'],
-    transaction: transaction.legacy.transaction
-  })
+  const childId = await childOfDevice({ cache, deviceId })
 
-  const child = device && device.currentUserId !== '' ? await database.user.findOne({
-    where: { familyId, userId: device.currentUserId, type: 'child' },
-    attributes: ['userId'],
-    transaction: transaction.legacy.transaction
-  }) : null
-
-  if (!child) throw new ChildRequestRefusedException('the sender is not a device of a child')
+  if (childId === null) throw new ChildRequestRefusedException('the sender is not a device of a child')
 
   await database.childRequest.destroy({
     where: { familyId, createdAt: { [Sequelize.Op.lt]: (now - childRequestRetention).toString(10) } },
@@ -57,7 +48,7 @@ export async function dispatchCreateChildRequest ({ deviceId, action, cache }: {
   })
 
   const existing = await database.childRequest.findAll({
-    where: { familyId, userId: child.userId, packageName: action.packageName },
+    where: { familyId, userId: childId, packageName: action.packageName },
     transaction: transaction.legacy.transaction
   })
 
@@ -68,7 +59,7 @@ export async function dispatchCreateChildRequest ({ deviceId, action, cache }: {
   await database.childRequest.create({
     familyId,
     requestId: action.requestId,
-    userId: child.userId,
+    userId: childId,
     deviceId,
     packageName: action.packageName,
     categoryId: action.categoryId,

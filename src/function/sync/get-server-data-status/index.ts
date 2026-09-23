@@ -35,6 +35,7 @@ import { getUserList } from './user-list'
 import { getKeyRequests } from './key-requests'
 import { getKeyResponses } from './key-responses'
 import { getU2f } from './u2f'
+import { getDeviceStates } from '../../device-state'
 
 export const generateServerDataStatus = async ({
   transaction, clientStatus, familyId, deviceId, eventHandler
@@ -70,6 +71,13 @@ export const generateServerDataStatus = async ({
     // @tag:parent-console @tag:child-request
     apiLevel: 12
   }
+
+  // @tag:device-state
+  result.deviceStates = getDeviceStates(familyId, (await transaction.legacy.database.device.findAll({
+    where: { familyId },
+    attributes: ['deviceId'],
+    transaction: transaction.legacy.transaction
+  })).map((item) => item.deviceId))
 
   if (familyEntry.deviceListVersion !== clientStatus.devices) {
     result.devices = await getDeviceList({ transaction, familyEntry })

@@ -20,7 +20,7 @@ import { SimpleDatabaseTransaction } from '../../../database/simple'
 import { ServerAppAllowance, ServerChildRequest, childRequestListWindow } from '../../../model/childrequest'
 import { toServerChildRequest } from '../../child-request'
 import { UrlFilter } from '../../../model/urlfilter'
-import { ServerUserList } from '../../../object/serverdatastatus'
+import { ServerAppRule, ServerNewApp, ServerUserList } from '../../../object/serverdatastatus'
 import { FamilyEntry } from './family-entry'
 
 export async function getUserList ({ transaction, familyEntry }: {
@@ -111,6 +111,36 @@ export async function getUserList ({ transaction, familyEntry }: {
     allowances.set(row.userId, [...(allowances.get(row.userId) ?? []), { packageName: row.packageName, until: parseInt(row.until, 10) }])
   }
 
+  // @tag:app-rule @tag:app-usage
+  const rules = new Map<string, Array<ServerAppRule>>()
+  const ruleRows = await transaction.legacy.database.appRule.findAll({ where: { familyId: familyEntry.familyId }, transaction: transaction.legacy.transaction })
+  const usageRows = ruleRows.length === 0 ? [] : await transaction.legacy.database.appUsage.findAll({
+    where: { familyId: familyEntry.familyId, packageName: { [Sequelize.Op.in]: ruleRows.map((row) => row.packageName) } },
+    attributes: ['userId', 'packageName', 'day', 'ms'],
+    transaction: transaction.legacy.transaction
+  })
+
+  for (const row of ruleRows) {
+    const usage = usageRows.filter((item) => item.userId === row.userId && item.packageName === row.packageName)
+    const usedDay = usage.reduce((max, item) => Math.max(max, item.day), 0)
+    const usedMs = usage.filter((item) => item.day === usedDay).reduce((sum, item) => sum + parseInt(item.ms, 10), 0)
+
+    rules.set(row.userId, [...(rules.get(row.userId) ?? []), { packageName: row.packageName, days: row.days, limitMinutes: row.limitMinutes, usedDay, usedMs }])
+  }
+
+  // @tag:new-app
+  const newApps = new Map<string, Array<ServerNewApp>>()
+
+  for (const row of await transaction.legacy.database.newApp.findAll({
+    where: { familyId: familyEntry.familyId },
+    order: [['installedAt', 'DESC']],
+    transaction: transaction.legacy.transaction
+  })) {
+    newApps.set(row.userId, [...(newApps.get(row.userId) ?? []), {
+      packageName: row.packageName, title: row.title, section: row.section, installedAt: parseInt(row.installedAt, 10), deviceId: row.deviceId
+    }])
+  }
+
   return {
     version: familyEntry.userListVersion,
     parentCodeSecret: familyEntry.parentCodeSecret ?? undefined, // @tag:parent-code
@@ -136,7 +166,9 @@ export async function getUserList ({ transaction, familyEntry }: {
         pbd: limitLoginCategory?.preBlockDuration,
         urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined, // @tag:url-filter
         requests: item.type === 'child' ? requests.get(item.userId) ?? [] : undefined,
-        appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined
+        appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined,
+        appRules: item.type === 'child' ? rules.get(item.userId) ?? [] : undefined,
+        newApps: item.type === 'child' ? newApps.get(item.userId) ?? [] : undefined
       }
     })
   }

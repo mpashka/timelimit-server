@@ -13,6 +13,21 @@
       "$ref": "#/definitions/SerializedCreateChildRequestAction"
     },
     {
+      "$ref": "#/definitions/SerializedGrantByParentCodeAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetAppUsageAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedReportNewAppAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedForgetNewAppAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedSetForegroundAppAction"
+    },
+    {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"
     },
     {
@@ -258,6 +273,166 @@
         "word"
       ],
       "title": "SerializedCreateChildRequestAction"
+    },
+    "SerializedGrantByParentCodeAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "GRANT_BY_PARENT_CODE"
+          ]
+        },
+        "code": {
+          "type": "string"
+        },
+        "step": {
+          "type": "number"
+        },
+        "grant": {
+          "enum": [
+            "app",
+            "category"
+          ],
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "until": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "categoryId",
+        "code",
+        "grant",
+        "packageName",
+        "step",
+        "type",
+        "until"
+      ],
+      "title": "SerializedGrantByParentCodeAction"
+    },
+    "SerializedSetAppUsageAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SET_APP_USAGE"
+          ]
+        },
+        "day": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SerializedAppUsageItem"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "day",
+        "items",
+        "type"
+      ],
+      "title": "SerializedSetAppUsageAction"
+    },
+    "SerializedAppUsageItem": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "ms": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "ms",
+        "packageName"
+      ],
+      "title": "SerializedAppUsageItem"
+    },
+    "SerializedReportNewAppAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "REPORT_NEW_APP"
+          ]
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "section": {
+          "type": "string"
+        },
+        "installedAt": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "installedAt",
+        "packageName",
+        "section",
+        "title",
+        "type"
+      ],
+      "title": "SerializedReportNewAppAction"
+    },
+    "SerializedForgetNewAppAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "FORGET_NEW_APP"
+          ]
+        },
+        "packageName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "packageName",
+        "type"
+      ],
+      "title": "SerializedForgetNewAppAction"
+    },
+    "SerializedSetForegroundAppAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SET_FOREGROUND_APP"
+          ]
+        },
+        "packageName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "packageName",
+        "type"
+      ],
+      "title": "SerializedSetForegroundAppAction"
     },
     "SerializedFinishKeyRequestAction": {
       "type": "object",

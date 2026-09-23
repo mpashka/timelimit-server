@@ -46,6 +46,7 @@ const types = [
   'SignInByGoogleRequest',
   'CreateFamilyWithParentSessionRequest',
   'RevokeParentSessionRequest',
+  'GetAppUsageRequest',
   'IdentityTokenPayload',
   'DeleteAccountPayload',
 ]
