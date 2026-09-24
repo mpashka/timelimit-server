@@ -66,7 +66,8 @@ export async function getDeviceList ({ transaction, familyEntry }: {
       mFlags: item.manipulationFlags,
       pk: item.publicKey ? item.publicKey.toString('base64') : undefined,
       pType: item.platformType || undefined,
-      pLevel: item.platformLevel
+      pLevel: item.platformLevel,
+      exFlags: item.experimentalFlags
     }))
   }
 }

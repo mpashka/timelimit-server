@@ -52,6 +52,7 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData
 | [pk](#pk)                                       | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-pk.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/pk")                                       |
 | [pType](#ptype)                                 | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-ptype.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/pType")                                 |
 | [pLevel](#plevel)                               | `number`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-plevel.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/pLevel")                               |
+| [exFlags](#exflags)                             | `number`  | Required | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-exflags.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/exFlags")                             |
 
 ## deviceId
 
@@ -754,5 +755,23 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData
 * defined in: [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-plevel.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/pLevel")
 
 ### pLevel Type
+
+`number`
+
+## exFlags
+
+
+
+`exFlags`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serverdevicedata-properties-exflags.md "https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData/properties/exFlags")
+
+### exFlags Type
 
 `number`

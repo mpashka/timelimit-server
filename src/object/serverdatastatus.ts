@@ -115,6 +115,7 @@ export interface ServerDeviceData {
   pk?: string     // public key
   pType?: string
   pLevel: number
+  exFlags: number // @tag:device-flags
 }
 
 export interface ServerUpdatedCategoryBaseData {

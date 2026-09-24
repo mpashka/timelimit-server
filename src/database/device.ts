@@ -130,12 +130,17 @@ export interface DeviceAttributesVersion15 {
   platformLevel: number
 }
 
+// @tag:device-flags
+export interface DeviceAttributesVersion16 {
+  experimentalFlags: number
+}
+
 export type DeviceAttributes = DeviceAttributesVersion1 & DeviceAttributesVersion2 &
   DeviceAttributesVersion3 & DeviceAttributesVersion4 & DeviceAttributesVersion5 &
   DeviceAttributesVersion6 & DeviceAttributesVersion7 & DeviceAttributesVersion8 &
   DeviceAttributesVersion9 & DeviceAttributesVersion10 & DeviceAttributesVersion11 &
   DeviceAttributesVersion12 & DeviceAttributesVersion13 & DeviceAttributesVersion14 &
-  DeviceAttributesVersion15
+  DeviceAttributesVersion15 & DeviceAttributesVersion16
 
 export type DeviceModel = Sequelize.Model<DeviceAttributes> & DeviceAttributes
 export type DeviceModelStatic = typeof Sequelize.Model & {
@@ -337,6 +342,20 @@ export const attributesVersion15: SequelizeAttributes<DeviceAttributesVersion15>
   }
 }
 
+export const maxExperimentalFlags = 0x7fffffff
+
+export const attributesVersion16: SequelizeAttributes<DeviceAttributesVersion16> = {
+  experimentalFlags: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+      min: 0,
+      max: maxExperimentalFlags
+    }
+  }
+}
+
 export const attributes: SequelizeAttributes<DeviceAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
@@ -352,7 +371,8 @@ export const attributes: SequelizeAttributes<DeviceAttributes> = {
   ...attributesVersion12,
   ...attributesVersion13,
   ...attributesVersion14,
-  ...attributesVersion15
+  ...attributesVersion15,
+  ...attributesVersion16
 }
 
 export const createDeviceModel = (sequelize: Sequelize.Sequelize): DeviceModelStatic => sequelize.define('Device', attributes) as DeviceModelStatic

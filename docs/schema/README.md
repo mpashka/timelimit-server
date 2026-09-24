@@ -234,6 +234,8 @@
 
 * [SerializedUpdateChildTaskAction](./serializedparentaction-definitions-serializedupdatechildtaskaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateChildTaskAction`
 
+* [SerializedUpdateDeviceExperimentalFlagsAction](./serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction`
+
 * [SerializedUpdateDeviceNameAction](./serializedparentaction-definitions-serializedupdatedevicenameaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceNameAction`
 
 * [SerializedUpdateDeviceStatusAction](./serializedapplogicaction-definitions-serializedupdatedevicestatusaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUpdateDeviceStatusAction`

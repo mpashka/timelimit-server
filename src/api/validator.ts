@@ -1595,6 +1595,33 @@ const definitions = {
       "userId"
     ]
   },
+  "SerializedUpdateDeviceExperimentalFlagsAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "UPDATE_DEVICE_EXPERIMENTAL_FLAGS"
+        ]
+      },
+      "deviceId": {
+        "type": "string"
+      },
+      "mask": {
+        "type": "number"
+      },
+      "value": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "deviceId",
+      "mask",
+      "type",
+      "value"
+    ]
+  },
   "SerializedUpdateUserLimitLoginCategory": {
     "type": "object",
     "properties": {
@@ -2536,6 +2563,9 @@ const definitions = {
       },
       "pLevel": {
         "type": "number"
+      },
+      "exFlags": {
+        "type": "number"
       }
     },
     "additionalProperties": false,
@@ -2552,6 +2582,7 @@ const definitions = {
       "defUser",
       "defUserTimeout",
       "deviceId",
+      "exFlags",
       "hAppVersion",
       "hNotificationAccess",
       "hOverlay",
@@ -3792,6 +3823,9 @@ export const isSerializedParentAction: (value: unknown) => value is SerializedPa
     },
     {
       "$ref": "#/definitions/SerializedSetAppRuleAction"
+    },
+    {
+      "$ref": "#/definitions/SerializedUpdateDeviceExperimentalFlagsAction"
     },
     {
       "$ref": "#/definitions/SerializedUpdateUserLimitLoginCategory"

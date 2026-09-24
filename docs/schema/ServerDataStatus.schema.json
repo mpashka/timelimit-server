@@ -230,6 +230,9 @@
         },
         "pLevel": {
           "type": "number"
+        },
+        "exFlags": {
+          "type": "number"
         }
       },
       "additionalProperties": false,
@@ -246,6 +249,7 @@
         "defUser",
         "defUserTimeout",
         "deviceId",
+        "exFlags",
         "hAppVersion",
         "hNotificationAccess",
         "hOverlay",

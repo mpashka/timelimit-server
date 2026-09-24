@@ -120,6 +120,8 @@ any of
 
 * [SerializedSetAppRuleAction](serializedparentaction-definitions-serializedsetappruleaction.md "check type definition")
 
+* [SerializedUpdateDeviceExperimentalFlagsAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction.md "check type definition")
+
 * [SerializedUpdateUserLimitLoginCategory](serializedparentaction-definitions-serializedupdateuserlimitlogincategory.md "check type definition")
 
 * [SerializedUpdateUserLimitLoginPreBlockDuration](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration.md "check type definition")
@@ -5185,6 +5187,101 @@ Reference this group by using
 
 `number`
 
+## Definitions group SerializedUpdateDeviceExperimentalFlagsAction
+
+Reference this group by using
+
+```json
+{"$ref":"https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction"}
+```
+
+| Property                 | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                                     |
+| :----------------------- | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [type](#type-52)         | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/type")         |
+| [deviceId](#deviceid-10) | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-deviceid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/deviceId") |
+| [mask](#mask)            | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-mask.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/mask")         |
+| [value](#value)          | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-value.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/value")       |
+
+### type
+
+
+
+`type`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/type")
+
+#### type Type
+
+`string`
+
+#### type Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value                                | Explanation |
+| :----------------------------------- | :---------- |
+| `"UPDATE_DEVICE_EXPERIMENTAL_FLAGS"` |             |
+
+### deviceId
+
+
+
+`deviceId`
+
+* is required
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-deviceid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/deviceId")
+
+#### deviceId Type
+
+`string`
+
+### mask
+
+
+
+`mask`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-mask.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/mask")
+
+#### mask Type
+
+`number`
+
+### value
+
+
+
+`value`
+
+* is required
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedParentAction](serializedparentaction-definitions-serializedupdatedeviceexperimentalflagsaction-properties-value.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateDeviceExperimentalFlagsAction/properties/value")
+
+#### value Type
+
+`number`
+
 ## Definitions group SerializedUpdateUserLimitLoginCategory
 
 Reference this group by using
@@ -5195,7 +5292,7 @@ Reference this group by using
 
 | Property                     | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                           |
 | :--------------------------- | :------- | :------- | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-52)             | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/type")             |
+| [type](#type-53)             | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/type")             |
 | [userId](#userid-10)         | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/userId")         |
 | [categoryId](#categoryid-20) | `string` | Optional | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitlogincategory-properties-categoryid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginCategory/properties/categoryId") |
 
@@ -5271,7 +5368,7 @@ Reference this group by using
 
 | Property                              | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                                                                                       |
 | :------------------------------------ | :------- | :------- | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [type](#type-53)                      | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/type")                         |
+| [type](#type-54)                      | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-type.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/type")                         |
 | [userId](#userid-11)                  | `string` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-userid.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/userId")                     |
 | [preBlockDuration](#preblockduration) | `number` | Required | cannot be null | [SerializedParentAction](serializedparentaction-definitions-serializedupdateuserlimitloginpreblockduration-properties-preblockduration.md "https://timelimit.io/SerializedParentAction#/definitions/SerializedUpdateUserLimitLoginPreBlockDuration/properties/preBlockDuration") |
 

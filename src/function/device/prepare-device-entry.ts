@@ -68,5 +68,6 @@ export const prepareDeviceEntry = ({ familyId, userId, deviceAuthToken, deviceId
   publicKey: null,
   nextKeyReplySequenceNumber: '1',
   platformType: null,
-  platformLevel: 0
+  platformLevel: 0,
+  experimentalFlags: 0
 })

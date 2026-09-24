@@ -69,7 +69,7 @@ export const generateServerDataStatus = async ({
     // ponytail: levels 10 (url filter), 11 (parent sessions) and 12 (child requests, app
     // allowances, parent code) are ours; recheck when upstream raises its level
     // @tag:parent-console @tag:child-request
-    apiLevel: 12
+    apiLevel: 13
   }
 
   // @tag:device-state
