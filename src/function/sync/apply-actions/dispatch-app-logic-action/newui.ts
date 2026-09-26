@@ -15,7 +15,7 @@
  */
 import * as Sequelize from 'sequelize'
 import {
-  ForgetNewAppAction, GrantByParentCodeAction, ReportNewAppAction, SetAppUsageAction, SetForegroundAppAction
+  ForgetNewAppAction, GrantByParentCodeAction, ReportAppIconsAction, ReportNewAppAction, SetAppUsageAction, SetForegroundAppAction
 } from '../../../../action'
 import { parentCodeAt, parentCodeStepMs } from '../../../../model/parentcode'
 import { reportForegroundApp } from '../../../device-state'
@@ -160,6 +160,25 @@ export async function dispatchReportNewApp ({ deviceId, action, cache }: { devic
 
   cache.invalidiateUserList = true
   cache.incrementTriggeredSyncLevel(2)
+}
+
+// @tag:app-icon
+export async function dispatchReportAppIcons ({ action, cache }: { action: ReportAppIconsAction, cache: Cache }) {
+  const database = cache.transaction.legacy.database
+  const transaction = cache.transaction.legacy.transaction
+
+  for (const item of action.items) {
+    const where = { familyId: cache.familyId, packageName: item.packageName }
+    const existing = await database.appIcon.findOne({ where, transaction })
+
+    if (existing) {
+      existing.title = item.title
+      existing.icon = item.icon
+      await existing.save({ transaction })
+    } else {
+      await database.appIcon.create({ ...where, title: item.title, icon: item.icon }, { transaction })
+    }
+  }
 }
 
 // @tag:new-app

@@ -191,3 +191,47 @@ export interface SerializedSetForegroundAppAction {
   type: 'SET_FOREGROUND_APP'
   packageName: string
 }
+
+const maxAppIconItems = 5
+const maxAppIconLength = 65536
+const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+
+// @tag:app-icon
+export class ReportAppIconsAction extends AppLogicAction {
+  readonly items: Array<SerializedAppIconItem>
+
+  constructor ({ items }: { items: Array<SerializedAppIconItem> }) {
+    super()
+
+    const actionType = 'ReportAppIconsAction'
+
+    if (items.length === 0 || items.length > maxAppIconItems) fail(actionType, 'items must have 1 to ' + maxAppIconItems + ' entries')
+
+    const seen = new Set<string>()
+
+    for (const item of items) {
+      assertPackageName({ actionType, packageName: item.packageName })
+      if (item.title.length > 100) fail(actionType, 'title longer than 100 chars')
+      if (item.icon.length > maxAppIconLength || !/^[A-Za-z0-9+/]+={0,2}$/.test(item.icon)) fail(actionType, 'icon must be base64 up to ' + maxAppIconLength + ' chars')
+      if (!Buffer.from(item.icon, 'base64').subarray(0, pngSignature.length).equals(pngSignature)) fail(actionType, 'icon must be a PNG')
+      if (seen.has(item.packageName)) fail(actionType, 'duplicate packageName')
+      seen.add(item.packageName)
+    }
+
+    this.items = items
+  }
+
+  static parse = ({ items }: SerializedReportAppIconsAction) => new ReportAppIconsAction({ items })
+}
+
+export interface SerializedAppIconItem {
+  packageName: string
+  title: string
+  /** base64 of a 96x96 PNG */
+  icon: string
+}
+
+export interface SerializedReportAppIconsAction {
+  type: 'REPORT_APP_ICONS'
+  items: Array<SerializedAppIconItem>
+}

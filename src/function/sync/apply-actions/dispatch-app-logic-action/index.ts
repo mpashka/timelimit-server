@@ -23,6 +23,7 @@ import {
   CreateChildRequestAction,
   ForgetNewAppAction,
   GrantByParentCodeAction,
+  ReportAppIconsAction,
   ReportNewAppAction,
   SetAppUsageAction,
   SetForegroundAppAction,
@@ -46,7 +47,7 @@ import { ActionObjectTypeNotHandledException } from '../exception/illegal-state'
 import { dispatchAddUsedTime } from './addusedtime'
 import { dispatchAddUsedTimeVersion2 } from './addusedtime2'
 import { dispatchCreateChildRequest } from './createchildrequest'
-import { dispatchForgetNewApp, dispatchGrantByParentCode, dispatchReportNewApp, dispatchSetAppUsage, dispatchSetForegroundApp } from './newui'
+import { dispatchForgetNewApp, dispatchGrantByParentCode, dispatchReportAppIcons, dispatchReportNewApp, dispatchSetAppUsage, dispatchSetForegroundApp } from './newui'
 import { dispatchFinishKeyRequestAction } from './finishkeyrequest'
 import { dispatchForceSyncAction } from './forcesync'
 import { dispatchMarkTaskPendingAction } from './marktaskpendingaction'
@@ -79,6 +80,8 @@ export const dispatchAppLogicAction = async ({ action, deviceId, cache, eventHan
     await dispatchSetAppUsage({ deviceId, action, cache })
   } else if (action instanceof ReportNewAppAction) {
     await dispatchReportNewApp({ deviceId, action, cache })
+  } else if (action instanceof ReportAppIconsAction) {
+    await dispatchReportAppIcons({ action, cache })
   } else if (action instanceof ForgetNewAppAction) {
     await dispatchForgetNewApp({ deviceId, action, cache })
   } else if (action instanceof SetForegroundAppAction) {

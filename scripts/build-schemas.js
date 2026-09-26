@@ -47,6 +47,7 @@ const types = [
   'CreateFamilyWithParentSessionRequest',
   'RevokeParentSessionRequest',
   'GetAppUsageRequest',
+  'GetAppIconsRequest',
   'IdentityTokenPayload',
   'DeleteAccountPayload',
 ]

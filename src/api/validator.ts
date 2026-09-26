@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, GetAppUsageRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, GetAppUsageRequest, GetAppIconsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -2021,6 +2021,49 @@ const definitions = {
       "type"
     ]
   },
+  "SerializedReportAppIconsAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "REPORT_APP_ICONS"
+        ]
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/SerializedAppIconItem"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "items",
+      "type"
+    ]
+  },
+  "SerializedAppIconItem": {
+    "type": "object",
+    "properties": {
+      "packageName": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "icon": {
+        "description": "base64 of a 96x96 PNG",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "icon",
+      "packageName",
+      "title"
+    ]
+  },
   "SerializedFinishKeyRequestAction": {
     "type": "object",
     "properties": {
@@ -3867,6 +3910,9 @@ export const isSerializedAppLogicAction: (value: unknown) => value is Serialized
       "$ref": "#/definitions/SerializedSetForegroundAppAction"
     },
     {
+      "$ref": "#/definitions/SerializedReportAppIconsAction"
+    },
+    {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"
     },
     {
@@ -4234,6 +4280,35 @@ export const isGetAppUsageRequest: (value: unknown) => value is GetAppUsageReque
     "parentUserId",
     "toDay",
     "userId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isGetAppIconsRequest: (value: unknown) => value is GetAppIconsRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "packageNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "packageNames",
+    "parentPasswordSecondHash",
+    "parentUserId"
   ],
   "definitions": definitions,
   "$schema": "http://json-schema.org/draft-07/schema#"

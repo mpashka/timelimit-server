@@ -28,6 +28,9 @@
       "$ref": "#/definitions/SerializedSetForegroundAppAction"
     },
     {
+      "$ref": "#/definitions/SerializedReportAppIconsAction"
+    },
+    {
       "$ref": "#/definitions/SerializedFinishKeyRequestAction"
     },
     {
@@ -433,6 +436,51 @@
         "type"
       ],
       "title": "SerializedSetForegroundAppAction"
+    },
+    "SerializedReportAppIconsAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "REPORT_APP_ICONS"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SerializedAppIconItem"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "items",
+        "type"
+      ],
+      "title": "SerializedReportAppIconsAction"
+    },
+    "SerializedAppIconItem": {
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "icon": {
+          "description": "base64 of a 96x96 PNG",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "icon",
+        "packageName",
+        "title"
+      ],
+      "title": "SerializedAppIconItem"
     },
     "SerializedFinishKeyRequestAction": {
       "type": "object",

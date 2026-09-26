@@ -153,6 +153,14 @@ export interface GetAppUsageRequest {
   toDay: number
 }
 
+// @tag:app-icon
+export interface GetAppIconsRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  packageNames: Array<string>
+}
+
 export interface RequestIdentityTokenRequest {
   deviceAuthToken: string
   parentUserId: string

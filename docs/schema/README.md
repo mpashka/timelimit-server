@@ -20,6 +20,8 @@
 
 * [FinishPurchaseByGooglePlayRequest](./finishpurchasebygoogleplayrequest.md) – `https://timelimit.io/FinishPurchaseByGooglePlayRequest`
 
+* [GetAppIconsRequest](./getappiconsrequest.md) – `https://timelimit.io/GetAppIconsRequest`
+
 * [GetAppUsageRequest](./getappusagerequest.md) – `https://timelimit.io/GetAppUsageRequest`
 
 * [IdentityTokenPayload](./identitytokenpayload.md) – `https://timelimit.io/IdentityTokenPayload`
@@ -114,6 +116,8 @@
 
 * [SerializedAppActivityItem](./serverdatastatus-definitions-serializedappactivityitem.md) – `https://timelimit.io/ServerDataStatus#/definitions/SerializedAppActivityItem`
 
+* [SerializedAppIconItem](./serializedapplogicaction-definitions-serializedappiconitem.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem`
+
 * [SerializedAppUsageItem](./serializedapplogicaction-definitions-serializedappusageitem.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppUsageItem`
 
 * [SerializedChangeParentPasswordAction](./serializedparentaction-definitions-serializedchangeparentpasswordaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedChangeParentPasswordAction`
@@ -165,6 +169,8 @@
 * [SerializedRenameChildAction](./serializedparentaction-definitions-serializedrenamechildaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRenameChildAction`
 
 * [SerializedReplyToKeyRequestAction](./serializedapplogicaction-definitions-serializedreplytokeyrequestaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReplyToKeyRequestAction`
+
+* [SerializedReportAppIconsAction](./serializedapplogicaction-definitions-serializedreportappiconsaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportAppIconsAction`
 
 * [SerializedReportNewAppAction](./serializedapplogicaction-definitions-serializedreportnewappaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportNewAppAction`
 
@@ -330,6 +336,8 @@
 
 * [Untitled array in DeleteAccountPayload](./deleteaccountpayload-properties-mailauthtokens.md) – `https://timelimit.io/DeleteAccountPayload#/properties/mailAuthTokens`
 
+* [Untitled array in GetAppIconsRequest](./getappiconsrequest-properties-packagenames.md) – `https://timelimit.io/GetAppIconsRequest#/properties/packageNames`
+
 * [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedaddinstalledappsaction-properties-apps.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAddInstalledAppsAction/properties/apps`
 
 * [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedaddusedtimeactionversion2-properties-i.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAddUsedTimeActionVersion2/properties/i`
@@ -343,6 +351,8 @@
 * [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedaddusedtimeactionversion2-properties-i-items-properties-sdl-items.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAddUsedTimeActionVersion2/properties/i/items/properties/sdl/items`
 
 * [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedsetappusageaction-properties-items.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedSetAppUsageAction/properties/items`
+
+* [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedreportappiconsaction-properties-items.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedReportAppIconsAction/properties/items`
 
 * [Untitled array in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedremoveinstalledappsaction-properties-packagenames.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedRemoveInstalledAppsAction/properties/packageNames`
 

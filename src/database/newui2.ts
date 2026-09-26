@@ -90,3 +90,23 @@ export const createNewAppModel = (sequelize: Sequelize.Sequelize): NewAppModelSt
   installedAt: { ...timestampColumn },
   deviceId: { ...idWithinFamilyColumn }
 } satisfies SequelizeAttributes<NewAppAttributes>) as NewAppModelStatic
+
+// @tag:app-icon
+export interface AppIconAttributes {
+  familyId: string
+  packageName: string
+  title: string
+  icon: string
+}
+
+export type AppIconModel = Sequelize.Model<AppIconAttributes> & AppIconAttributes
+export type AppIconModelStatic = typeof Sequelize.Model & {
+  new (values?: object, options?: Sequelize.BuildOptions): AppIconModel;
+}
+
+export const createAppIconModel = (sequelize: Sequelize.Sequelize): AppIconModelStatic => sequelize.define('AppIcon', {
+  familyId: { ...familyIdColumn, primaryKey: true },
+  packageName: { ...packageNameColumn, primaryKey: true },
+  title: { type: Sequelize.STRING(100), allowNull: false },
+  icon: { type: Sequelize.TEXT, allowNull: false }
+} satisfies SequelizeAttributes<AppIconAttributes>) as AppIconModelStatic

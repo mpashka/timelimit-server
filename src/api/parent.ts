@@ -40,8 +40,10 @@ import {
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
-  isDeleteAccountPayload, isGetAppUsageRequest
+  isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest
 } from './validator'
+
+const maxAppIconsPerRequest = 500
 
 export const createParentRouter = ({
   database, websocket, eventHandler
@@ -351,6 +353,38 @@ export const createParentRouter = ({
           attributes: ['deviceId', 'day', 'packageName', 'ms'],
           transaction: transaction.legacy.transaction
         })).map((row) => ({ deviceId: row.deviceId, day: row.day, packageName: row.packageName, ms: parseInt(row.ms, 10) }))
+      })
+
+      res.json({ items })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:app-icon
+  router.post('/get-app-icons', json(), async (req, res, next) => {
+    try {
+      const body = req.body
+
+      if (!isGetAppIconsRequest(body) || body.packageNames.length > maxAppIconsPerRequest) {
+        throw new BadRequest()
+      }
+
+      const items = await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        if (body.packageNames.length === 0) return []
+
+        return (await transaction.legacy.database.appIcon.findAll({
+          where: { familyId, packageName: { [Sequelize.Op.in]: body.packageNames } },
+          attributes: ['packageName', 'title', 'icon'],
+          transaction: transaction.legacy.transaction
+        })).map((row) => ({ packageName: row.packageName, title: row.title, icon: row.icon }))
       })
 
       res.json({ items })

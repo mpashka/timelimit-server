@@ -21,7 +21,7 @@ import { AddUsedTimeActionVersion2, SerializedAddUsedTimeActionVersion2 } from '
 import { AppLogicAction } from '../basetypes'
 import { CreateChildRequestAction, SerializedCreateChildRequestAction } from '../createchildrequest'
 import {
-  ForgetNewAppAction, GrantByParentCodeAction, ReportNewAppAction, SerializedForgetNewAppAction, SerializedGrantByParentCodeAction,
+  ForgetNewAppAction, GrantByParentCodeAction, ReportAppIconsAction, ReportNewAppAction, SerializedReportAppIconsAction, SerializedForgetNewAppAction, SerializedGrantByParentCodeAction,
   SerializedReportNewAppAction, SerializedSetAppUsageAction, SerializedSetForegroundAppAction, SetAppUsageAction, SetForegroundAppAction
 } from '../newuiapplogic'
 import { FinishKeyRequestAction, SerializedFinishKeyRequestAction } from '../finishkeyrequest'
@@ -48,6 +48,7 @@ export type SerializedAppLogicAction =
   SerializedSetAppUsageAction |
   SerializedReportNewAppAction |
   SerializedForgetNewAppAction |
+  SerializedReportAppIconsAction |
   SerializedSetForegroundAppAction |
   SerializedFinishKeyRequestAction |
   SerializedForceSyncAction |
@@ -76,6 +77,8 @@ export const parseAppLogicAction = (serialized: SerializedAppLogicAction): AppLo
     return SetAppUsageAction.parse(serialized)
   } else if (serialized.type === 'REPORT_NEW_APP') {
     return ReportNewAppAction.parse(serialized)
+  } else if (serialized.type === 'REPORT_APP_ICONS') {
+    return ReportAppIconsAction.parse(serialized)
   } else if (serialized.type === 'FORGET_NEW_APP') {
     return ForgetNewAppAction.parse(serialized)
   } else if (serialized.type === 'SET_FOREGROUND_APP') {
