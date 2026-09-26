@@ -2055,6 +2055,10 @@ const definitions = {
       "icon": {
         "description": "base64 of a 96x96 PNG",
         "type": "string"
+      },
+      "versionCode": {
+        "description": "versionCode of the app on the tablet; the icon of the newer app wins",
+        "type": "number"
       }
     },
     "additionalProperties": false,

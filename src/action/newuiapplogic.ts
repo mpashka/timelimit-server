@@ -214,6 +214,10 @@ export class ReportAppIconsAction extends AppLogicAction {
       if (item.title.length > 100) fail(actionType, 'title longer than 100 chars')
       if (item.icon.length > maxAppIconLength || !/^[A-Za-z0-9+/]+={0,2}$/.test(item.icon)) fail(actionType, 'icon must be base64 up to ' + maxAppIconLength + ' chars')
       if (!Buffer.from(item.icon, 'base64').subarray(0, pngSignature.length).equals(pngSignature)) fail(actionType, 'icon must be a PNG')
+      if (item.versionCode !== undefined) {
+        assertSafeInteger({ actionType, field: 'versionCode', value: item.versionCode })
+        if (item.versionCode < 0) fail(actionType, 'versionCode must not be negative')
+      }
       if (seen.has(item.packageName)) fail(actionType, 'duplicate packageName')
       seen.add(item.packageName)
     }
@@ -229,7 +233,13 @@ export interface SerializedAppIconItem {
   title: string
   /** base64 of a 96x96 PNG */
   icon: string
+  /** versionCode of the app on the tablet; the icon of the newer app wins */
+  versionCode?: number
 }
+
+// an item without versionCode counts as the oldest one; on a tie the last one wins
+export const isAppIconReplacedBy = ({ storedVersionCode, incomingVersionCode }: { storedVersionCode: number | null, incomingVersionCode: number | undefined }) =>
+  (incomingVersionCode ?? -1) >= (storedVersionCode ?? -1)
 
 export interface SerializedReportAppIconsAction {
   type: 'REPORT_APP_ICONS'

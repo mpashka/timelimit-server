@@ -21,6 +21,7 @@ https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem
 | [packageName](#packagename) | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappiconitem-properties-packagename.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem/properties/packageName") |
 | [title](#title)             | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappiconitem-properties-title.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem/properties/title")             |
 | [icon](#icon)               | `string` | Required | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappiconitem-properties-icon.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem/properties/icon")               |
+| [versionCode](#versioncode) | `number` | Optional | cannot be null | [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappiconitem-properties-versioncode.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem/properties/versionCode") |
 
 ## packageName
 
@@ -75,3 +76,21 @@ base64 of a 96x96 PNG
 ### icon Type
 
 `string`
+
+## versionCode
+
+versionCode of the app on the tablet; the icon of the newer app wins
+
+`versionCode`
+
+* is optional
+
+* Type: `number`
+
+* cannot be null
+
+* defined in: [SerializedAppLogicAction](serializedapplogicaction-definitions-serializedappiconitem-properties-versioncode.md "https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppIconItem/properties/versionCode")
+
+### versionCode Type
+
+`number`

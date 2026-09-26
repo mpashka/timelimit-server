@@ -17,6 +17,7 @@ import * as Sequelize from 'sequelize'
 import {
   ForgetNewAppAction, GrantByParentCodeAction, ReportAppIconsAction, ReportNewAppAction, SetAppUsageAction, SetForegroundAppAction
 } from '../../../../action'
+import { isAppIconReplacedBy } from '../../../../action/newuiapplogic'
 import { parentCodeAt, parentCodeStepMs } from '../../../../model/parentcode'
 import { reportForegroundApp } from '../../../device-state'
 import { putAppAllowance } from '../dispatch-parent-action/setappallowance'
@@ -171,12 +172,19 @@ export async function dispatchReportAppIcons ({ action, cache }: { action: Repor
     const where = { familyId: cache.familyId, packageName: item.packageName }
     const existing = await database.appIcon.findOne({ where, transaction })
 
+    const versionCode = item.versionCode === undefined ? null : item.versionCode.toString()
+
     if (existing) {
-      existing.title = item.title
-      existing.icon = item.icon
-      await existing.save({ transaction })
+      const storedVersionCode = existing.versionCode === null ? null : Number(existing.versionCode)
+
+      if (isAppIconReplacedBy({ storedVersionCode, incomingVersionCode: item.versionCode })) {
+        existing.title = item.title
+        existing.icon = item.icon
+        existing.versionCode = versionCode
+        await existing.save({ transaction })
+      }
     } else {
-      await database.appIcon.create({ ...where, title: item.title, icon: item.icon }, { transaction })
+      await database.appIcon.create({ ...where, title: item.title, icon: item.icon, versionCode }, { transaction })
     }
   }
 }

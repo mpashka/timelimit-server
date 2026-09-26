@@ -97,6 +97,7 @@ export interface AppIconAttributes {
   packageName: string
   title: string
   icon: string
+  versionCode: string | null
 }
 
 export type AppIconModel = Sequelize.Model<AppIconAttributes> & AppIconAttributes
@@ -108,5 +109,6 @@ export const createAppIconModel = (sequelize: Sequelize.Sequelize): AppIconModel
   familyId: { ...familyIdColumn, primaryKey: true },
   packageName: { ...packageNameColumn, primaryKey: true },
   title: { type: Sequelize.STRING(100), allowNull: false },
-  icon: { type: Sequelize.TEXT, allowNull: false }
+  icon: { type: Sequelize.TEXT, allowNull: false },
+  versionCode: { type: Sequelize.BIGINT, allowNull: true }
 } satisfies SequelizeAttributes<AppIconAttributes>) as AppIconModelStatic
