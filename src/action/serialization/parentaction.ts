@@ -33,6 +33,7 @@ import { UnknownActionTypeException } from '../meta/exception'
 import { RemoveCategoryAppsAction, SerializedRemoveCategoryAppsAction } from '../removecategoryapps'
 import { RemoveParentU2fKeyAction, SerializedRemoveParentU2fKeyAction } from '../removeu2fkey'
 import { RemoveUserAction, SerializedRemoveUserAction } from '../removeuser'
+import { RenameAdultAction, SerializedRenameAdultAction } from '../renameadult'
 import { RenameChildAction, SerializedRenameChildAction } from '../renamechild'
 import { ResetCategoryNetworkIdsAction, SerializeResetCategoryNetworkIdsAction } from '../resetcategorynetworkids'
 import { ReviewChildTaskAction, SerializedReviewChildTaskAction } from '../reviewchildtaskaction'
@@ -90,6 +91,7 @@ export type SerializedParentAction =
   SerializedRemoveCategoryAppsAction |
   SerializedRemoveParentU2fKeyAction |
   SerializedRemoveUserAction |
+  SerializedRenameAdultAction |
   SerializedRenameChildAction |
   SerializeResetCategoryNetworkIdsAction |
   SerializedReviewChildTaskAction |
@@ -163,6 +165,8 @@ export const parseParentAction = (action: SerializedParentAction): ParentAction 
     return RemoveParentU2fKeyAction.parse(action)
   } else if (action.type === 'REMOVE_USER') {
     return RemoveUserAction.parse(action)
+  } else if (action.type === 'RENAME_ADULT') {
+    return RenameAdultAction.parse(action)
   } else if (action.type === 'RENAME_CHILD') {
     return RenameChildAction.parse(action)
   } else if (action.type === 'RESET_CATEGORY_NETWORK_IDS') {

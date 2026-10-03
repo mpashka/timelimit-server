@@ -17,7 +17,7 @@
 
 import { Unauthorized } from 'http-errors'
 import { DeleteAccountPayload } from '../../api/schema'
-import { SimpleDatabase } from '../../database/simple'
+import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { sendAccountDeletedMail } from '../../util/mail'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
@@ -69,28 +69,38 @@ export async function deleteAccount({ request, database, websocket }: {
       if (!authenticatedMailAddresses.has(mail)) throw new Unauthorized()
     })
 
-    const deviceEntries = (await transaction.legacy.database.device.findAll({
-      where: {
-        familyId
-      },
-      transaction: transaction.legacy.transaction,
-      attributes: ['deviceAuthToken']
-    })).map((item) => ({ deviceAuthToken: item.deviceAuthToken }))
+    await deleteFamilyAndNotify({ transaction, familyId, websocket, mailReceivers: [...registeredMailAddresses] })
+  })
+}
 
-    await deleteFamilies({ transaction, familiyIds: [familyId] })
+// @tag:adult-role
+export async function deleteFamilyAndNotify ({ transaction, familyId, websocket, mailReceivers }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  websocket: WebsocketApi
+  mailReceivers: Array<string>
+}) {
+  const deviceEntries = (await transaction.legacy.database.device.findAll({
+    where: {
+      familyId
+    },
+    transaction: transaction.legacy.transaction,
+    attributes: ['deviceAuthToken']
+  })).map((item) => ({ deviceAuthToken: item.deviceAuthToken }))
 
-    transaction.enqueueAfterCommit(() => {
-      for (const device of deviceEntries) {
-        websocket.triggerSyncByDeviceAuthToken({
-          deviceAuthToken: device.deviceAuthToken,
-          isImportant: true
-        })
-      }
+  await deleteFamilies({ transaction, familiyIds: [familyId] })
 
-      registeredMailAddresses.forEach((receiver) => {
-        sendAccountDeletedMail({ receiver }).catch((ex) => {
-          console.warn('failure while sending account deletion confirmation', ex)
-        })
+  transaction.enqueueAfterCommit(() => {
+    for (const device of deviceEntries) {
+      websocket.triggerSyncByDeviceAuthToken({
+        deviceAuthToken: device.deviceAuthToken,
+        isImportant: true
+      })
+    }
+
+    mailReceivers.forEach((receiver) => {
+      sendAccountDeletedMail({ receiver }).catch((ex) => {
+        console.warn('failure while sending account deletion confirmation', ex)
       })
     })
   })

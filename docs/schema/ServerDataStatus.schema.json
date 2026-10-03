@@ -857,6 +857,14 @@
         "urlFilter": {
           "$ref": "#/definitions/UrlFilter"
         },
+        "adultRole": {
+          "enum": [
+            "admin",
+            "manager",
+            "member"
+          ],
+          "type": "string"
+        },
         "requests": {
           "type": "array",
           "items": {

@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/definitions/AdultRole"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "role",
+    "userId"
+  ],
+  "definitions": {
+    "AdultRole": {
+      "enum": [
+        "admin",
+        "manager",
+        "member"
+      ],
+      "type": "string",
+      "title": "AdultRole"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SetAdultRoleRequest",
+  "$id": "https://timelimit.io/SetAdultRoleRequest"
+}

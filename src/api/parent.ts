@@ -23,13 +23,14 @@ import { BadRequest, Forbidden, Unauthorized } from 'http-errors'
 import { config } from '../config'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../database/simple'
 import { deleteAccount } from '../function/cleanup/account-deletion'
+import { deleteFamilyByAdmin, leaveFamily, removeAdult, setAdultRole } from '../function/family-adults'
 import { removeDevice } from '../function/device/remove-device'
 import { createAddDeviceToken } from '../function/parent/create-add-device-token'
 import { createFamily } from '../function/parent/create-family'
 import { getStatusByMailToken } from '../function/parent/get-status-by-mail-address'
 import { linkMailAddress } from '../function/parent/link-mail-address'
 import {
-  findReceivedParentInvitation, inviteParent, listParentInvitations, revokeParentInvitation
+  findOwnFamilySize, findReceivedParentInvitation, inviteParent, listParentInvitations, revokeParentInvitation
 } from '../function/parent-invitation'
 import { recoverParentPassword } from '../function/parent/recover-parent-password'
 import { signInIntoFamily } from '../function/parent/sign-in-into-family'
@@ -37,11 +38,13 @@ import { resolveSubject } from '../function/sync/subject'
 import { validateU2fIntegrity, U2fValidationError } from '../function/u2f'
 import { createIdentityToken, MissingSignSecretException } from '../util/identity-token'
 import { WebsocketApi } from '../websocket'
+import { AdultRole, adultRoleRefusal } from '../model/adultrole'
 import { EventHandler } from '../monitoring/eventhandler'
 import {
   isCreateFamilyByMailTokenRequest,
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
-  isListParentInvitationsRequest, isParentInvitationRequest,
+  isListParentInvitationsRequest, isParentInvitationRequest, isInviteParentRequest,
+  isSetAdultRoleRequest, isRemoveAdultRequest, isLeaveFamilyRequest, isDeleteFamilyRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
   isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest, isGetLaunchableAppsRequest
@@ -65,18 +68,23 @@ export const createParentRouter = ({
       }
 
       const { mailAuthToken } = req.body
-      const { status, mail, invitation } = await database.transaction(async (transaction) => {
+      const { status, mail, invitation, ownFamily } = await database.transaction(async (transaction) => {
         const { status, mail } = await getStatusByMailToken({ transaction, mailAuthToken })
         // @tag:parent-invitation
-        const invitation = status === 'without family' ? await findReceivedParentInvitation({ transaction, mail }) : null
+        const invitation = await findReceivedParentInvitation({ transaction, mail })
+        const ownFamilySize = invitation && status === 'with family' ? await findOwnFamilySize({ transaction, mail }) : null
+        const ownFamily = ownFamilySize
+          ? { children: ownFamilySize.children, devices: ownFamilySize.devices, adults: ownFamilySize.adults }
+          : null
 
-        return { status, mail, invitation }
+        return { status, mail, invitation, ownFamily }
       })
 
       res.json({
         status,
         mail,
         invitation,
+        ownFamily,
         canCreateFamily: !config.disableSignup,
         alwaysPro: config.alwaysPro
       })
@@ -167,7 +175,24 @@ export const createParentRouter = ({
   // deviceAuthToken. Устройства ни одна из ручек /parent/* по смыслу не требует — им нужны семья
   // и родитель, — поэтому отдельного отказа «тут нужно устройство» здесь нет.
   // Возвращается familyId, а не строка устройства: у сессии её нет.
-  async function assertAuthValidAndReturnDetails ({ authToken, parentId, secondPasswordHash, transaction }: {
+  // @tag:adult-role
+  // Единственная проверка роли для /parent/*: каждая ручка называет нужную ей роль.
+  async function assertAuthValidAndReturnDetails ({ requiredRole, ...auth }: {
+    authToken: string
+    parentId: string
+    secondPasswordHash: string
+    transaction: SimpleDatabaseTransaction
+    requiredRole: AdultRole
+  }) {
+    const details = await findParentByAuth(auth)
+    const refusal = adultRoleRefusal({ actual: details.parentEntry.adultRole, required: requiredRole, what: 'this request' })
+
+    if (refusal !== null) throw new Forbidden(refusal)
+
+    return details
+  }
+
+  async function findParentByAuth ({ authToken, parentId, secondPasswordHash, transaction }: {
     authToken: string
     parentId: string
     secondPasswordHash: string
@@ -275,7 +300,7 @@ export const createParentRouter = ({
   // @tag:parent-invitation
   router.post('/invite-parent', json(), async (req, res, next) => {
     try {
-      if (!isParentInvitationRequest(req.body)) {
+      if (!isInviteParentRequest(req.body)) {
         throw new BadRequest()
       }
 
@@ -286,10 +311,11 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'admin'
         })
 
-        return inviteParent({ transaction, familyId, invitedByUserId: parentEntry.userId, mail: body.mail })
+        return inviteParent({ transaction, familyId, invitedByUserId: parentEntry.userId, mail: body.mail, role: body.role ?? 'manager' })
       })
 
       res.json(invitation)
@@ -312,7 +338,8 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'member'
         })
 
         return listParentInvitations({ transaction, familyId })
@@ -338,10 +365,119 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'admin'
         })
 
         await revokeParentInvitation({ transaction, familyId, mail: body.mail })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:adult-role
+  router.post('/set-adult-role', json(), async (req, res, next) => {
+    try {
+      if (!isSetAdultRoleRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await setAdultRole({ transaction, websocket, familyId, userId: body.userId, role: body.role })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:adult-role
+  router.post('/remove-adult', json(), async (req, res, next) => {
+    try {
+      if (!isRemoveAdultRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await removeAdult({ transaction, websocket, familyId, actorUserId: parentEntry.userId, userId: body.userId })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:adult-role
+  router.post('/leave-family', json(), async (req, res, next) => {
+    try {
+      if (!isLeaveFamilyRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'member'
+        })
+
+        await leaveFamily({ transaction, websocket, familyId, userId: parentEntry.userId })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:adult-role
+  router.post('/delete-family', json(), async (req, res, next) => {
+    try {
+      if (!isDeleteFamilyRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await deleteFamilyByAdmin({ transaction, websocket, familyId, admin: parentEntry, mailAuthToken: body.mailAuthToken })
       })
 
       res.json({ ok: true })
@@ -361,7 +497,8 @@ export const createParentRouter = ({
           authToken: req.body.deviceAuthToken,
           parentId: req.body.parentId,
           secondPasswordHash: req.body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'manager'
         })
 
         return createAddDeviceToken({ familyId, transaction })
@@ -405,7 +542,8 @@ export const createParentRouter = ({
           authToken: req.body.deviceAuthToken,
           parentId: req.body.parentUserId,
           secondPasswordHash: req.body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'manager'
         })
 
         await removeDevice({
@@ -436,7 +574,8 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'member'
         })
 
         return (await transaction.legacy.database.appUsage.findAll({
@@ -466,7 +605,8 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'member'
         })
 
         if (body.packageNames.length === 0) return []
@@ -499,7 +639,8 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'member'
         })
 
         return (await transaction.legacy.database.appIconDevice.findAll({
@@ -528,7 +669,8 @@ export const createParentRouter = ({
           authToken: body.deviceAuthToken,
           parentId: body.parentUserId,
           secondPasswordHash: body.parentPasswordSecondHash,
-          transaction
+          transaction,
+          requiredRole: 'admin'
         })
 
         const token = await createIdentityToken({

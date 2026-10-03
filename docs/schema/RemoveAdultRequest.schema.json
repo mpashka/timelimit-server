@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "userId"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RemoveAdultRequest",
+  "$id": "https://timelimit.io/RemoveAdultRequest"
+}

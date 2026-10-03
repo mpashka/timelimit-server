@@ -8,7 +8,7 @@
 //   node test/manual-parent-invitation-smoke.mjs /tmp/server.log
 import { readFileSync } from 'node:fs'
 
-const base = 'http://127.0.0.1:8099'
+const base = process.env.BASE_URL ?? 'http://127.0.0.1:8099'
 const logFile = process.argv[2]
 
 const post = async (path, body) => {

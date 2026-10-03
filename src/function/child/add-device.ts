@@ -85,6 +85,7 @@ export const addChildDevice = async ({ database, eventHandler, websocket, reques
 
     const data = await generateServerDataStatus({
       transaction,
+      viewerParentUserId: null,
       clientStatus: createEmptyClientDataStatus({ clientLevel: request.clientLevel || null }),
       familyId: entry.familyId,
       deviceId,

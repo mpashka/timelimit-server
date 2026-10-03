@@ -20,6 +20,8 @@
 
 * [DeleteAccountPayload](./deleteaccountpayload.md) – `https://timelimit.io/DeleteAccountPayload`
 
+* [DeleteFamilyRequest](./deletefamilyrequest.md) – `https://timelimit.io/DeleteFamilyRequest`
+
 * [FinishPurchaseByGooglePlayRequest](./finishpurchasebygoogleplayrequest.md) – `https://timelimit.io/FinishPurchaseByGooglePlayRequest`
 
 * [GetAppIconsRequest](./getappiconsrequest.md) – `https://timelimit.io/GetAppIconsRequest`
@@ -29,6 +31,10 @@
 * [GetLaunchableAppsRequest](./getlaunchableappsrequest.md) – `https://timelimit.io/GetLaunchableAppsRequest`
 
 * [IdentityTokenPayload](./identitytokenpayload.md) – `https://timelimit.io/IdentityTokenPayload`
+
+* [InviteParentRequest](./inviteparentrequest.md) – `https://timelimit.io/InviteParentRequest`
+
+* [LeaveFamilyRequest](./leavefamilyrequest.md) – `https://timelimit.io/LeaveFamilyRequest`
 
 * [LinkParentMailAddressRequest](./linkparentmailaddressrequest.md) – `https://timelimit.io/LinkParentMailAddressRequest`
 
@@ -41,6 +47,8 @@
 * [RecoverParentPasswordRequest](./recoverparentpasswordrequest.md) – `https://timelimit.io/RecoverParentPasswordRequest`
 
 * [RegisterChildDeviceRequest](./registerchilddevicerequest.md) – `https://timelimit.io/RegisterChildDeviceRequest`
+
+* [RemoveAdultRequest](./removeadultrequest.md) – `https://timelimit.io/RemoveAdultRequest`
 
 * [RemoveDeviceRequest](./removedevicerequest.md) – `https://timelimit.io/RemoveDeviceRequest`
 
@@ -59,6 +67,8 @@
 * [SerializedParentAction](./serializedparentaction.md) – `https://timelimit.io/SerializedParentAction`
 
 * [ServerDataStatus](./serverdatastatus.md) – `https://timelimit.io/ServerDataStatus`
+
+* [SetAdultRoleRequest](./setadultrolerequest.md) – `https://timelimit.io/SetAdultRoleRequest`
 
 * [SignInByGoogleRequest](./signinbygooglerequest.md) – `https://timelimit.io/SignInByGoogleRequest`
 
@@ -175,6 +185,8 @@
 * [SerializedRemoveParentU2fKeyAction](./serializedparentaction-definitions-serializedremoveparentu2fkeyaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRemoveParentU2fKeyAction`
 
 * [SerializedRemoveUserAction](./serializedparentaction-definitions-serializedremoveuseraction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRemoveUserAction`
+
+* [SerializedRenameAdultAction](./serializedparentaction-definitions-serializedrenameadultaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRenameAdultAction`
 
 * [SerializedRenameChildAction](./serializedparentaction-definitions-serializedrenamechildaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedRenameChildAction`
 

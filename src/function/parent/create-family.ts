@@ -93,7 +93,8 @@ export async function createFamilyAndFirstParent ({
     relaxPrimaryDeviceRule: false,
     mailNotificationFlags: maxMailNotificationFlags,
     blockedTimes: '',
-    flags: '0'
+    flags: '0',
+      adultRole: 'admin' // @tag:adult-role
   }, { transaction: transaction.legacy.transaction })
 
   return { familyId, userId }
@@ -141,6 +142,7 @@ export async function createFamily ({
 
     const data = await generateServerDataStatus({
       transaction,
+      viewerParentUserId: null,
       clientStatus: createEmptyClientDataStatus({ clientLevel }),
       familyId,
       deviceId,

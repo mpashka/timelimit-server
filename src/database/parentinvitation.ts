@@ -16,7 +16,8 @@
  */
 
 import * as Sequelize from 'sequelize'
-import { familyIdColumn, idWithinFamilyColumn, timestampColumn } from './columns'
+import { AdultRole, adultRoles } from '../model/adultrole'
+import { createEnumColumn, familyIdColumn, idWithinFamilyColumn, timestampColumn } from './columns'
 import { SequelizeAttributes } from './types'
 
 // @tag:parent-invitation
@@ -28,6 +29,7 @@ export interface ParentInvitationAttributes {
   familyId: string
   invitedByUserId: string
   createdAt: string
+  role: AdultRole // @tag:adult-role
 }
 
 export type ParentInvitationModel = Sequelize.Model<ParentInvitationAttributes> & ParentInvitationAttributes
@@ -43,7 +45,12 @@ export const attributes: SequelizeAttributes<ParentInvitationAttributes> = {
   },
   familyId: { ...familyIdColumn },
   invitedByUserId: { ...idWithinFamilyColumn },
-  createdAt: { ...timestampColumn }
+  createdAt: { ...timestampColumn },
+  // @tag:adult-role
+  role: {
+    ...createEnumColumn([...adultRoles]),
+    defaultValue: 'manager'
+  }
 }
 
 export const createParentInvitationModel = (sequelize: Sequelize.Sequelize): ParentInvitationModelStatic => sequelize.define('ParentInvitation', attributes) as ParentInvitationModelStatic

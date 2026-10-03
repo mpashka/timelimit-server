@@ -14,7 +14,7 @@ import { Buffer } from 'node:buffer'
 import { readFileSync } from 'node:fs'
 import pg from 'pg'
 
-const base = 'http://127.0.0.1:8099'
+const base = process.env.BASE_URL ?? 'http://127.0.0.1:8099'
 const logFile = process.argv[2]
 
 const db = new pg.Client({ connectionString: process.env.DATABASE_URL })

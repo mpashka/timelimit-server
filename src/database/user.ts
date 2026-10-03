@@ -17,6 +17,7 @@
 
 import * as Sequelize from 'sequelize'
 import { UserFlags } from '../model/userflags'
+import { AdultRole, adultRoles } from '../model/adultrole'
 import { serializedBitmaskRegex } from '../util/bitmask'
 import { optionalPasswordRegex, optionalSaltRegex } from '../util/password'
 import { booleanColumn, createEnumColumn, familyIdColumn, idWithinFamilyColumn, labelColumn, optionalIdWithinFamilyColumn, timestampColumn } from './columns'
@@ -73,9 +74,14 @@ export interface UserAttributesVersion7 {
   urlFilter: string | null
 }
 
+// @tag:adult-role
+export interface UserAttributesVersion8 {
+  adultRole: AdultRole
+}
+
 export type UserAttributes = UserAttributesVersion1 & UserAttributesVersion2 &
   UserAttributesVersion3 & UserAttributesVersion4 & UserAttributesVersion5 & UserAttributesVersion6 &
-  UserAttributesVersion7
+  UserAttributesVersion7 & UserAttributesVersion8
 
 export type UserModel = Sequelize.Model<UserAttributes> & UserAttributes
 export type UserModelStatic = typeof Sequelize.Model & {
@@ -179,6 +185,15 @@ export const attributesVersion7: SequelizeAttributes<UserAttributesVersion7> = {
   }
 }
 
+// @tag:adult-role
+// По умолчанию admin: так все родители, заведённые до ролей, остались при прежних правах.
+export const attributesVersion8: SequelizeAttributes<UserAttributesVersion8> = {
+  adultRole: {
+    ...createEnumColumn([...adultRoles]),
+    defaultValue: 'admin'
+  }
+}
+
 export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
@@ -186,7 +201,8 @@ export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion4,
   ...attributesVersion5,
   ...attributesVersion6,
-  ...attributesVersion7
+  ...attributesVersion7,
+  ...attributesVersion8
 }
 
 export const createUserModel = (sequelize: Sequelize.Sequelize): UserModelStatic => sequelize.define('User', attributes) as UserModelStatic

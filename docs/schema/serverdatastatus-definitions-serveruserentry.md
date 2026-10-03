@@ -35,6 +35,7 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | [llc](#llc)                                               | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-llc.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/llc")                                               |
 | [pbd](#pbd)                                               | `number`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-pbd.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/pbd")                                               |
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
+| [adultRole](#adultrole)                                   | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-adultrole.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/adultRole")                                   |
 | [requests](#requests)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")                                     |
 | [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")                           |
 | [appRules](#apprules)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appRules")                                     |
@@ -354,6 +355,34 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 ### urlFilter Type
 
 `object` ([UrlFilter](serverdatastatus-definitions-urlfilter.md))
+
+## adultRole
+
+
+
+`adultRole`
+
+* is optional
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-adultrole.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/adultRole")
+
+### adultRole Type
+
+`string`
+
+### adultRole Constraints
+
+**enum**: the value of this property must be equal to one of the following values:
+
+| Value       | Explanation |
+| :---------- | :---------- |
+| `"admin"`   |             |
+| `"manager"` |             |
+| `"member"`  |             |
 
 ## requests
 

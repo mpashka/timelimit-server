@@ -20,6 +20,7 @@ import { SerializedInstalledApp } from '../model/installedapp'
 import { NewPermissionStatus } from '../model/newpermissionstatus'
 import { ProtectionLevel } from '../model/protectionlevel'
 import { RuntimePermissionStatus } from '../model/runtimepermissionstatus'
+import { AdultRole } from '../model/adultrole'
 import { UrlFilter } from '../model/urlfilter'
 import { ServerAppAllowance, ServerChildRequest } from '../model/childrequest'
 
@@ -74,6 +75,7 @@ export interface ServerUserEntry {
   llc?: string  // limit login category
   pbd?: number  // pre block duration, default is zero
   urlFilter?: UrlFilter // @tag:url-filter
+  adultRole?: AdultRole // @tag:adult-role
   requests?: Array<ServerChildRequest> // @tag:child-request
   appAllowances?: Array<ServerAppAllowance> // @tag:app-allowance
   appRules?: Array<ServerAppRule> // @tag:app-rule

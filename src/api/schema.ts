@@ -15,6 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { AdultRole } from '../model/adultrole'
 import { ClientDataStatus } from '../object/clientdatastatus'
 import { optionalPasswordRegex, optionalSaltRegex } from '../util/password'
 
@@ -210,6 +211,47 @@ export interface ParentInvitationRequest {
   parentUserId: string
   parentPasswordSecondHash: string
   mail: string
+}
+
+// @tag:parent-invitation @tag:adult-role
+export interface InviteParentRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  mail: string
+  role?: AdultRole
+}
+
+// @tag:adult-role
+export interface SetAdultRoleRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  userId: string
+  role: AdultRole
+}
+
+// @tag:adult-role
+export interface RemoveAdultRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  userId: string
+}
+
+// @tag:adult-role
+export interface LeaveFamilyRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+}
+
+// @tag:adult-role
+export interface DeleteFamilyRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  mailAuthToken: string
 }
 
 // @tag:parent-invitation

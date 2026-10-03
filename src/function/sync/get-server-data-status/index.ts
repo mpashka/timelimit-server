@@ -38,12 +38,14 @@ import { getU2f } from './u2f'
 import { getDeviceStates } from '../../device-state'
 
 export const generateServerDataStatus = async ({
-  transaction, clientStatus, familyId, deviceId, eventHandler
+  transaction, clientStatus, familyId, deviceId, viewerParentUserId, eventHandler
 }: {
   transaction: SimpleDatabaseTransaction
   clientStatus: ClientDataStatus
   familyId: string
   deviceId: string
+  // взрослый, под которым вошла сессия; у устройства семьи null
+  viewerParentUserId: string | null
   eventHandler: EventHandler
 }): Promise<ServerDataStatus> => {
   const clientLevel = clientStatus.clientLevel || 0
@@ -84,7 +86,7 @@ export const generateServerDataStatus = async ({
   }
 
   if (familyEntry.userListVersion !== clientStatus.users) {
-    result.users = await getUserList({ transaction, familyEntry })
+    result.users = await getUserList({ transaction, familyEntry, viewerParentUserId })
   }
 
   const categoryDataToSync = await getCategoryDataToSync({ transaction, familyEntry, categoriesStatus: clientStatus.categories })

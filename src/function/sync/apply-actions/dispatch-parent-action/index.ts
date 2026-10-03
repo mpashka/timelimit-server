@@ -33,6 +33,7 @@ import {
   RemoveParentU2fKeyAction,
   RemoveUserAction,
   ReportU2fLoginAction,
+  RenameAdultAction,
   RenameChildAction,
   ResetCategoryNetworkIdsAction,
   ReviewChildTaskAction,
@@ -93,6 +94,7 @@ import { dispatchRemoveCategoryApps } from './removecategoryapps'
 import { dispatchRemoveU2f } from './removeu2fkey'
 import { dispatchRemoveUser } from './removeuser'
 import { dispatchReportU2fLogin } from './reportu2flogin'
+import { dispatchRenameAdult } from './renameadult'
 import { dispatchRenameChild } from './renamechild'
 import { dispatchResetCategoryNetworkIds } from './resetcategorynetworkids'
 import { dispatchReviewChildTaskAction } from './reviewchildtaskaction'
@@ -229,6 +231,8 @@ export const dispatchParentAction = async ({
       return dispatchReportU2fLogin({ action, cache, authentication })
     } else if (action instanceof ResetCategoryNetworkIdsAction) {
       return dispatchResetCategoryNetworkIds({ action, cache })
+    } else if (action instanceof RenameAdultAction) {
+      return dispatchRenameAdult({ action, cache })
     } else if (action instanceof RenameChildAction) {
       return dispatchRenameChild({ action, cache })
     } else if (action instanceof ChangeParentPasswordAction) {

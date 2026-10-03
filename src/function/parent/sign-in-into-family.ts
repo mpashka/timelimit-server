@@ -101,6 +101,7 @@ export const signInIntoFamily = async ({ database, eventHandler, mailAuthToken, 
 
     const data = await generateServerDataStatus({
       transaction,
+      viewerParentUserId: null,
       clientStatus: createEmptyClientDataStatus({ clientLevel }),
       familyId: userEntry.familyId,
       deviceId,

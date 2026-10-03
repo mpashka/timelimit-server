@@ -92,6 +92,7 @@ export const createSyncRouter = ({ database, websocket, connectedDevicesManager,
           transaction,
           familyId: subject.familyId,
           deviceId: subject.subjectId,
+          viewerParentUserId: subject.parentUserId, // @tag:adult-role
           clientStatus: body.status,
           eventHandler
         })

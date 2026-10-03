@@ -49,6 +49,9 @@
       "$ref": "#/definitions/SerializedRemoveUserAction"
     },
     {
+      "$ref": "#/definitions/SerializedRenameAdultAction"
+    },
+    {
       "$ref": "#/definitions/SerializedRenameChildAction"
     },
     {
@@ -675,6 +678,30 @@
         "userId"
       ],
       "title": "SerializedRemoveUserAction"
+    },
+    "SerializedRenameAdultAction": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "RENAME_ADULT"
+          ]
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type",
+        "userId"
+      ],
+      "title": "SerializedRenameAdultAction"
     },
     "SerializedRenameChildAction": {
       "type": "object",

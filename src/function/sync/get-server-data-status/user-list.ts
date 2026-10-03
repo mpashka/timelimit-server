@@ -23,9 +23,10 @@ import { UrlFilter } from '../../../model/urlfilter'
 import { ServerAppRule, ServerNewApp, ServerUserList } from '../../../object/serverdatastatus'
 import { FamilyEntry } from './family-entry'
 
-export async function getUserList ({ transaction, familyEntry }: {
+export async function getUserList ({ transaction, familyEntry, viewerParentUserId }: {
   transaction: SimpleDatabaseTransaction
   familyEntry: FamilyEntry
+  viewerParentUserId: string | null
 }): Promise<ServerUserList> {
   const users = (await transaction.legacy.database.user.findAll({
     where: {
@@ -45,7 +46,8 @@ export async function getUserList ({ transaction, familyEntry }: {
       'relaxPrimaryDeviceRule',
       'mailNotificationFlags',
       'flags',
-      'urlFilter'
+      'urlFilter',
+      'adultRole'
     ],
     transaction: transaction.legacy.transaction
   })).map((item) => ({
@@ -62,8 +64,13 @@ export async function getUserList ({ transaction, familyEntry }: {
     relaxPrimaryDeviceRule: item.relaxPrimaryDeviceRule,
     mailNotificationFlags: item.mailNotificationFlags,
     flags: item.flags,
-    urlFilter: item.urlFilter
+    urlFilter: item.urlFilter,
+    adultRole: item.adultRole
   }))
+
+  // @tag:adult-role @tag:parent-code
+  // Код родителя даёт «+время» на планшете — а член семьи только смотрит.
+  const isViewerMember = users.some((item) => item.userId === viewerParentUserId && item.adultRole === 'member')
 
   const limitLoginCategories = (await transaction.legacy.database.userLimitLoginCategory.findAll({
     where: {
@@ -143,7 +150,7 @@ export async function getUserList ({ transaction, familyEntry }: {
 
   return {
     version: familyEntry.userListVersion,
-    parentCodeSecret: familyEntry.parentCodeSecret ?? undefined, // @tag:parent-code
+    parentCodeSecret: isViewerMember ? undefined : familyEntry.parentCodeSecret ?? undefined, // @tag:parent-code
     data: users.map((item) => {
       const limitLoginCategory = getLimitLoginCategory(item.userId)
 
@@ -164,6 +171,7 @@ export async function getUserList ({ transaction, familyEntry }: {
         flags: parseInt(item.flags, 10),
         llc: limitLoginCategory?.categoryId,
         pbd: limitLoginCategory?.preBlockDuration,
+        adultRole: item.type === 'parent' ? item.adultRole : undefined, // @tag:adult-role
         urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined, // @tag:url-filter
         requests: item.type === 'child' ? requests.get(item.userId) ?? [] : undefined,
         appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined,

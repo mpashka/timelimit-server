@@ -19,10 +19,12 @@ import { Conflict } from 'http-errors'
 import { PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { maxMailNotificationFlags } from '../../database/user'
+import { AdultRole } from '../../model/adultrole'
 import { sanitizeMailAddress } from '../../util/mail'
 import { generateIdWithinFamily, generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
+import { deleteFamilies } from '../cleanup/delete-families'
 import { ParentSessionInfo, createSession } from '../parent-session'
 import { notifyClientsAboutChangesDelayed } from '../websocket'
 
@@ -30,20 +32,32 @@ import { notifyClientsAboutChangesDelayed } from '../websocket'
 export interface ParentInvitationInfo {
   mail: string
   createdAt: number
+  role: AdultRole // @tag:adult-role
 }
 
 // @tag:parent-invitation
 export interface ReceivedParentInvitation {
   inviterName: string
   inviterMail: string
+  role: AdultRole // @tag:adult-role
 }
 
 // @tag:parent-invitation
-export async function inviteParent ({ transaction, familyId, invitedByUserId, mail: rawMail }: {
+export interface OwnFamilySize {
+  familyId: string
+  children: number
+  devices: number
+  adults: number
+}
+
+// @tag:parent-invitation
+// Адрес со своей семьёй приглашать можно: что с ней делать, решает согласие (acceptParentInvitation).
+export async function inviteParent ({ transaction, familyId, invitedByUserId, mail: rawMail, role }: {
   transaction: SimpleDatabaseTransaction
   familyId: string
   invitedByUserId: string
   mail: string
+  role: AdultRole
 }): Promise<ParentInvitationInfo> {
   const mail = invitationAddressOf(rawMail)
 
@@ -57,10 +71,8 @@ export async function inviteParent ({ transaction, familyId, invitedByUserId, ma
     transaction: transaction.legacy.transaction
   })
 
-  if (existingUser) {
-    throw new Conflict(existingUser.familyId === familyId
-      ? mail + ' is already a parent of this family'
-      : mail + ' already belongs to another family')
+  if (existingUser?.familyId === familyId) {
+    throw new Conflict(mail + ' is already a parent of this family')
   }
 
   const existingInvitation = await transaction.legacy.database.parentInvitation.findOne({
@@ -73,7 +85,11 @@ export async function inviteParent ({ transaction, familyId, invitedByUserId, ma
       throw new Conflict(mail + ' is already invited into another family')
     }
 
-    return { mail, createdAt: parseInt(existingInvitation.createdAt, 10) }
+    if (existingInvitation.role !== role) {
+      await existingInvitation.update({ role }, { transaction: transaction.legacy.transaction })
+    }
+
+    return { mail, createdAt: parseInt(existingInvitation.createdAt, 10), role }
   }
 
   const createdAt = Date.now()
@@ -82,10 +98,11 @@ export async function inviteParent ({ transaction, familyId, invitedByUserId, ma
     mail,
     familyId,
     invitedByUserId,
-    createdAt: createdAt.toString(10)
+    createdAt: createdAt.toString(10),
+    role
   }, { transaction: transaction.legacy.transaction })
 
-  return { mail, createdAt }
+  return { mail, createdAt, role }
 }
 
 // @tag:parent-invitation
@@ -99,7 +116,7 @@ export async function listParentInvitations ({ transaction, familyId }: {
     transaction: transaction.legacy.transaction
   })
 
-  return rows.map((row) => ({ mail: row.mail, createdAt: parseInt(row.createdAt, 10) }))
+  return rows.map((row) => ({ mail: row.mail, createdAt: parseInt(row.createdAt, 10), role: row.role }))
 }
 
 // @tag:parent-invitation
@@ -136,7 +153,28 @@ export async function findReceivedParentInvitation ({ transaction, mail }: {
     transaction: transaction.legacy.transaction
   })
 
-  return { inviterName: inviter?.name ?? '', inviterMail: inviter?.mail ?? '' }
+  return { inviterName: inviter?.name ?? '', inviterMail: inviter?.mail ?? '', role: invitation.role }
+}
+
+// @tag:parent-invitation
+export async function findOwnFamilySize ({ transaction, mail }: {
+  transaction: SimpleDatabaseTransaction
+  mail: string
+}): Promise<OwnFamilySize | null> {
+  const { database, transaction: legacyTransaction } = transaction.legacy
+
+  const user = await database.user.findOne({ where: { mail }, attributes: ['familyId'], transaction: legacyTransaction })
+
+  if (!user) return null
+
+  const { familyId } = user
+
+  return {
+    familyId,
+    children: await database.user.count({ where: { familyId, type: 'child' }, transaction: legacyTransaction }),
+    devices: await database.device.count({ where: { familyId }, transaction: legacyTransaction }),
+    adults: await database.user.count({ where: { familyId, type: 'parent' }, transaction: legacyTransaction })
+  }
 }
 
 // @tag:parent-invitation
@@ -166,6 +204,7 @@ export async function isMailAddressKnownToServer ({ transaction, mail }: {
 // @tag:parent-invitation
 // Пароль необязателен: в средство управления родитель входит почтой или Google, а пароль нужен
 // только режиму родителя на устройстве. Задать его позже — /parent/recover-parent-password.
+// Своя пустая семья удаляется молча; непустую удаляют или покидают в своей веб-админке, не отсюда.
 export const acceptParentInvitation = async ({ database, websocket, mailAuthToken, parentName, timeZone, password }: {
   database: SimpleDatabase
   websocket: WebsocketApi
@@ -189,6 +228,17 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
       throw new Conflict('no invitation for ' + mail + ': it was revoked or already used')
     }
 
+    const ownFamily = await findOwnFamilySize({ transaction, mail })
+
+    if (ownFamily) {
+      if (ownFamily.children > 0 || ownFamily.devices > 0 || ownFamily.adults > 1) {
+        throw new Conflict('you already have your own family with ' + ownFamily.children + ' children and ' +
+          ownFamily.devices + ' devices — delete it or leave it first in your own web console')
+      }
+
+      await deleteFamilies({ transaction, familiyIds: [ownFamily.familyId] })
+    }
+
     const { familyId } = invitation
     const userId = await generateFreeUserId({ transaction, familyId })
 
@@ -208,7 +258,8 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
       relaxPrimaryDeviceRule: false,
       mailNotificationFlags: maxMailNotificationFlags,
       blockedTimes: '',
-      flags: '0'
+      flags: '0',
+      adultRole: invitation.role // @tag:adult-role
     }, { transaction: transaction.legacy.transaction })
 
     await invitation.destroy({ transaction: transaction.legacy.transaction })

@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "mail": {
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "admin",
+        "manager",
+        "member"
+      ],
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "mail",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "InviteParentRequest",
+  "$id": "https://timelimit.io/InviteParentRequest"
+}

@@ -20,6 +20,9 @@ import { InternalServerError } from 'http-errors'
 import { difference } from 'lodash'
 import * as Sequelize from 'sequelize'
 import { RemoveUserAction } from '../../../../action'
+import { SimpleDatabaseTransaction } from '../../../../database/simple'
+import { UserModel } from '../../../../database/user'
+import { deleteParentSessions } from '../../../parent-session/cleanup'
 import { Cache } from '../cache'
 import { ApplyActionException } from '../exception/index'
 import { ApplyActionIntegrityException } from '../exception/integrity'
@@ -59,127 +62,132 @@ export async function dispatchRemoveUser ({ action, cache, parentUserId }: {
       throw new ApplyActionIntegrityException({ staticMessage: 'invalid authentication value for removing a user' })
     }
 
-    if (user.mail !== '') {
-      const usersWithLinkedMail = await cache.transaction.legacy.database.user.count({
-        transaction: cache.transaction.legacy.transaction,
-        where: {
-          familyId: cache.familyId,
-          type: 'parent',
-          mail: {
-            [Sequelize.Op.not]: ''
-          }
-        }
-      })
-
-      if (usersWithLinkedMail <= 1) {
-        throw new ApplyActionException({ staticMessage: 'this user is the last one with a linked mail address' })
-      }
-    }
-
-    const usersWithLimitLoginCategories = (await cache.transaction.legacy.database.userLimitLoginCategory.findAll({
-      transaction: cache.transaction.legacy.transaction,
-      where: {
-        familyId: cache.familyId
-      },
-      attributes: ['userId']
-    })).map((item) => item.userId)
-
-    const allParentUserIds = (await cache.transaction.legacy.database.user.findAll({
-      transaction: cache.transaction.legacy.transaction,
-      where: {
-        familyId: cache.familyId,
-        type: 'parent'
-      },
-      attributes: ['userId']
-    })).map((item) => item.userId)
-
-    const allOtherParentUserIds = allParentUserIds.filter((item) => item !== action.userId)
-
-    if (difference(allOtherParentUserIds, usersWithLimitLoginCategories).length === 0) {
-      throw new ApplyActionException({ staticMessage: 'can not delete the last user without limit login category' })
-    }
+    await assertParentRemovable({ transaction: cache.transaction, familyId: cache.familyId, user })
   }
 
-  if (user.type === 'child') {
-    const categories = await cache.transaction.legacy.database.category.findAll({
-      where: {
-        familyId: cache.familyId,
-        childId: action.userId
-      },
-      transaction: cache.transaction.legacy.transaction
-    })
+  const { devicesChanged } = await removeUserFromFamily({ transaction: cache.transaction, familyId: cache.familyId, user })
 
-    await cache.transaction.legacy.database.categoryApp.destroy({
-      where: {
-        familyId: cache.familyId,
-        categoryId: {
-          [Sequelize.Op.in]: categories.map((category) => category.categoryId)
-        }
-      },
-      transaction: cache.transaction.legacy.transaction
-    })
-
-    await cache.transaction.legacy.database.timelimitRule.destroy({
-      where: {
-        familyId: cache.familyId,
-        categoryId: {
-          [Sequelize.Op.in]: categories.map((category) => category.categoryId)
-        }
-      },
-      transaction: cache.transaction.legacy.transaction
-    })
-
-    await cache.transaction.legacy.database.usedTime.destroy({
-      where: {
-        familyId: cache.familyId,
-        categoryId: {
-          [Sequelize.Op.in]: categories.map((category) => category.categoryId)
-        }
-      },
-      transaction: cache.transaction.legacy.transaction
-    })
-
-    await cache.transaction.legacy.database.category.destroy({
-      where: {
-        familyId: cache.familyId,
-        categoryId: {
-          [Sequelize.Op.in]: categories.map((category) => category.categoryId)
-        }
-      },
-      transaction: cache.transaction.legacy.transaction
-    })
-  }
-
-  const [updatedDevices1] = await cache.transaction.legacy.database.device.update({
-    currentUserId: '',
-    isUserKeptSignedIn: false
-  }, {
-    where: {
-      familyId: cache.familyId,
-      currentUserId: action.userId
-    },
-    transaction: cache.transaction.legacy.transaction
-  })
-
-  const [updatedDevices2] = await cache.transaction.legacy.database.device.update({
-    defaultUserId: ''
-  }, {
-    where: {
-      familyId: cache.familyId,
-      defaultUserId: action.userId
-    },
-    transaction: cache.transaction.legacy.transaction
-  })
-
-  if (updatedDevices1 > 0 || updatedDevices2 > 0) {
+  if (devicesChanged) {
     cache.invalidiateDeviceList = true
   }
-
-  await user.destroy({ transaction: cache.transaction.legacy.transaction })
 
   cache.invalidiateUserList = true
   cache.incrementTriggeredSyncLevel(2)
 
   cache.doesUserExist.cache.set(action.userId, false)
   cache.getSecondPasswordHashOfParent.cache.delete(action.userId)
+}
+
+// @tag:adult-role
+export async function assertParentRemovable ({ transaction, familyId, user }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  user: UserModel
+}) {
+  if (user.mail !== '') {
+    const usersWithLinkedMail = await transaction.legacy.database.user.count({
+      transaction: transaction.legacy.transaction,
+      where: {
+        familyId,
+        type: 'parent',
+        mail: {
+          [Sequelize.Op.not]: ''
+        }
+      }
+    })
+
+    if (usersWithLinkedMail <= 1) {
+      throw new ApplyActionException({ staticMessage: 'this user is the last one with a linked mail address' })
+    }
+  }
+
+  const usersWithLimitLoginCategories = (await transaction.legacy.database.userLimitLoginCategory.findAll({
+    transaction: transaction.legacy.transaction,
+    where: {
+      familyId
+    },
+    attributes: ['userId']
+  })).map((item) => item.userId)
+
+  const allParentUserIds = (await transaction.legacy.database.user.findAll({
+    transaction: transaction.legacy.transaction,
+    where: {
+      familyId,
+      type: 'parent'
+    },
+    attributes: ['userId']
+  })).map((item) => item.userId)
+
+  const allOtherParentUserIds = allParentUserIds.filter((item) => item !== user.userId)
+
+  if (difference(allOtherParentUserIds, usersWithLimitLoginCategories).length === 0) {
+    throw new ApplyActionException({ staticMessage: 'can not delete the last user without limit login category' })
+  }
+}
+
+// @tag:adult-role
+export async function removeUserFromFamily ({ transaction, familyId, user }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  user: UserModel
+}): Promise<{ devicesChanged: boolean }> {
+  if (user.type === 'child') {
+    const categories = await transaction.legacy.database.category.findAll({
+      where: {
+        familyId,
+        childId: user.userId
+      },
+      transaction: transaction.legacy.transaction
+    })
+
+    const categoryIds = { [Sequelize.Op.in]: categories.map((category) => category.categoryId) }
+
+    await transaction.legacy.database.categoryApp.destroy({
+      where: { familyId, categoryId: categoryIds },
+      transaction: transaction.legacy.transaction
+    })
+
+    await transaction.legacy.database.timelimitRule.destroy({
+      where: { familyId, categoryId: categoryIds },
+      transaction: transaction.legacy.transaction
+    })
+
+    await transaction.legacy.database.usedTime.destroy({
+      where: { familyId, categoryId: categoryIds },
+      transaction: transaction.legacy.transaction
+    })
+
+    await transaction.legacy.database.category.destroy({
+      where: { familyId, categoryId: categoryIds },
+      transaction: transaction.legacy.transaction
+    })
+  } else {
+    // сессии уходят и по внешнему ключу, но их запросы ключей и ключи Диффи — Хеллмана — только так
+    await deleteParentSessions({ transaction, where: { familyId, userId: user.userId } })
+  }
+
+  const [updatedDevices1] = await transaction.legacy.database.device.update({
+    currentUserId: '',
+    isUserKeptSignedIn: false
+  }, {
+    where: {
+      familyId,
+      currentUserId: user.userId
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  const [updatedDevices2] = await transaction.legacy.database.device.update({
+    defaultUserId: ''
+  }, {
+    where: {
+      familyId,
+      defaultUserId: user.userId
+    },
+    transaction: transaction.legacy.transaction
+  })
+
+  await user.destroy({ transaction: transaction.legacy.transaction })
+
+  return { devicesChanged: updatedDevices1 > 0 || updatedDevices2 > 0 }
 }

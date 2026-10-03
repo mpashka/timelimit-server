@@ -48,17 +48,17 @@ const createTransaction = ({ user = null, invitation = null }) => {
   }
 }
 
-test('an invitation never takes an address that a family already owns or has invited', async () => {
-  const invite = (transaction) => inviteParent({ transaction, familyId: 'f000000001', invitedByUserId: 'usr001', mail: ' Mama@Example.com ' })
+test('an invitation never takes an address of this family or one invited elsewhere, but takes one with its own family', async () => {
+  const invite = (transaction) => inviteParent({ transaction, familyId: 'f000000001', invitedByUserId: 'usr001', mail: ' Mama@Example.com ', role: 'manager' })
 
-  await assert.rejects(() => invite(createTransaction({ user: { familyId: 'f000000002' } })), (ex) => ex.statusCode === 409)
+  await assert.rejects(() => invite(createTransaction({ user: { familyId: 'f000000001' } })), (ex) => ex.statusCode === 409)
   await assert.rejects(() => invite(createTransaction({ invitation: { familyId: 'f000000002', createdAt: '1' } })), (ex) => ex.statusCode === 409)
 
-  const again = createTransaction({ invitation: { familyId: 'f000000001', createdAt: '5' } })
-  assert.deepEqual(await invite(again), { mail: 'mama@example.com', createdAt: 5 })
+  const again = createTransaction({ invitation: { familyId: 'f000000001', createdAt: '5', role: 'manager' } })
+  assert.deepEqual(await invite(again), { mail: 'mama@example.com', createdAt: 5, role: 'manager' })
   assert.equal(again.created.length, 0)
 
-  const fresh = createTransaction({})
-  await invite(fresh)
-  assert.equal(fresh.created[0].mail, 'mama@example.com')
+  const ownFamily = createTransaction({ user: { familyId: 'f000000002' } })
+  await invite(ownFamily)
+  assert.equal(ownFamily.created[0].mail, 'mama@example.com')
 })

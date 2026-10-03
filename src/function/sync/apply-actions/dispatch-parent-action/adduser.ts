@@ -44,7 +44,8 @@ export async function dispatchAddUser ({ action, cache }: {
     relaxPrimaryDeviceRule: false,
     mailNotificationFlags: 0,
     blockedTimes: '',
-    flags: '0'
+    flags: '0',
+    adultRole: 'manager' // @tag:adult-role
   }, { transaction: cache.transaction.legacy.transaction })
 
   cache.invalidiateUserList = true

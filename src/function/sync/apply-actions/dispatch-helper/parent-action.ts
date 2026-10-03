@@ -20,6 +20,7 @@ import { ClientPushChangesRequestAction } from '../../../../api/schema'
 import { isSerializedParentAction } from '../../../../api/validator'
 import { UserFlags } from '../../../../model/userflags'
 import { EventHandler } from '../../../../monitoring/eventhandler'
+import { assertAdultRoleAllowsParentAction } from '../adult-role'
 import { Cache } from '../cache'
 import { dispatchParentAction as dispatchParentActionInternal } from '../dispatch-parent-action'
 import { SourceDeviceNotFoundException } from '../exception/illegal-state'
@@ -98,6 +99,8 @@ export async function dispatchParentAction ({
           authentication
         })
       } else {
+        await assertAdultRoleAllowsParentAction({ action: parsedAction, actorUserId: action.userId, cache }) // @tag:adult-role
+
         await dispatchParentActionInternal({
           action: parsedAction,
           cache,

@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, ParentInvitationRequest, ListParentInvitationsRequest, AcceptParentInvitationRequest, GetAppUsageRequest, GetAppIconsRequest, GetLaunchableAppsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, ParentInvitationRequest, InviteParentRequest, SetAdultRoleRequest, RemoveAdultRequest, LeaveFamilyRequest, DeleteFamilyRequest, ListParentInvitationsRequest, AcceptParentInvitationRequest, GetAppUsageRequest, GetAppIconsRequest, GetLaunchableAppsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -646,6 +646,29 @@ const definitions = {
     },
     "additionalProperties": false,
     "required": [
+      "type",
+      "userId"
+    ]
+  },
+  "SerializedRenameAdultAction": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "RENAME_ADULT"
+        ]
+      },
+      "userId": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "name",
       "type",
       "userId"
     ]
@@ -2482,6 +2505,14 @@ const definitions = {
       "type"
     ]
   },
+  "AdultRole": {
+    "enum": [
+      "admin",
+      "manager",
+      "member"
+    ],
+    "type": "string"
+  },
   "ServerDeviceList": {
     "type": "object",
     "properties": {
@@ -3164,6 +3195,14 @@ const definitions = {
       "urlFilter": {
         "$ref": "#/definitions/UrlFilter"
       },
+      "adultRole": {
+        "enum": [
+          "admin",
+          "manager",
+          "member"
+        ],
+        "type": "string"
+      },
       "requests": {
         "type": "array",
         "items": {
@@ -3764,6 +3803,9 @@ export const isSerializedParentAction: (value: unknown) => value is SerializedPa
       "$ref": "#/definitions/SerializedRemoveUserAction"
     },
     {
+      "$ref": "#/definitions/SerializedRenameAdultAction"
+    },
+    {
       "$ref": "#/definitions/SerializedRenameChildAction"
     },
     {
@@ -4274,6 +4316,144 @@ export const isParentInvitationRequest: (value: unknown) => value is ParentInvit
   "required": [
     "deviceAuthToken",
     "mail",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isInviteParentRequest: (value: unknown) => value is InviteParentRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "mail": {
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "admin",
+        "manager",
+        "member"
+      ],
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "mail",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isSetAdultRoleRequest: (value: unknown) => value is SetAdultRoleRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "#/definitions/AdultRole"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "role",
+    "userId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isRemoveAdultRequest: (value: unknown) => value is RemoveAdultRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId",
+    "userId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isLeaveFamilyRequest: (value: unknown) => value is LeaveFamilyRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isDeleteFamilyRequest: (value: unknown) => value is DeleteFamilyRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "mailAuthToken": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "mailAuthToken",
     "parentPasswordSecondHash",
     "parentUserId"
   ],
