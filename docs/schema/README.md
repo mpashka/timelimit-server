@@ -26,6 +26,8 @@
 
 * [GetAppUsageRequest](./getappusagerequest.md) – `https://timelimit.io/GetAppUsageRequest`
 
+* [GetLaunchableAppsRequest](./getlaunchableappsrequest.md) – `https://timelimit.io/GetLaunchableAppsRequest`
+
 * [IdentityTokenPayload](./identitytokenpayload.md) – `https://timelimit.io/IdentityTokenPayload`
 
 * [LinkParentMailAddressRequest](./linkparentmailaddressrequest.md) – `https://timelimit.io/LinkParentMailAddressRequest`

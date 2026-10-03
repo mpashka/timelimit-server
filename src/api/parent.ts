@@ -44,7 +44,7 @@ import {
   isListParentInvitationsRequest, isParentInvitationRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
-  isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest
+  isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest, isGetLaunchableAppsRequest
 } from './validator'
 
 const maxAppIconsPerRequest = 500
@@ -476,6 +476,37 @@ export const createParentRouter = ({
           attributes: ['packageName', 'title', 'icon'],
           transaction: transaction.legacy.transaction
         })).map((row) => ({ packageName: row.packageName, title: row.title, icon: row.icon }))
+      })
+
+      res.json({ items })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // Which tablet has which app on its home screen: a tablet sends an icon only for those (REPORT_APP_ICONS)
+  // @tag:app-service
+  router.post('/get-launchable-apps', json(), async (req, res, next) => {
+    try {
+      const body = req.body
+
+      if (!isGetLaunchableAppsRequest(body)) {
+        throw new BadRequest()
+      }
+
+      const items = await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        return (await transaction.legacy.database.appIconDevice.findAll({
+          where: { familyId },
+          attributes: ['deviceId', 'packageName'],
+          transaction: transaction.legacy.transaction
+        })).map((row) => ({ deviceId: row.deviceId, packageName: row.packageName }))
       })
 
       res.json({ items })

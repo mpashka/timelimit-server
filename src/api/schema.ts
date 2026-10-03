@@ -161,6 +161,13 @@ export interface GetAppIconsRequest {
   packageNames: Array<string>
 }
 
+// @tag:app-service
+export interface GetLaunchableAppsRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+}
+
 export interface RequestIdentityTokenRequest {
   deviceAuthToken: string
   parentUserId: string

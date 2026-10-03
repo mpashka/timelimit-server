@@ -44,7 +44,7 @@ import { createTimelimitRuleModel, TimelimitRuleModelStatic } from './timelimitr
 import { createU2fKeyModel, U2fKeyModelStatic } from './u2fkey'
 import { createUsedTimeModel, UsedTimeModelStatic } from './usedtime'
 import { createUserModel, UserModelStatic } from './user'
-import { AppIconModelStatic, AppRuleModelStatic, AppUsageModelStatic, NewAppModelStatic, createAppIconModel, createAppRuleModel, createAppUsageModel, createNewAppModel } from './newui2'
+import { AppIconDeviceModelStatic, AppIconModelStatic, AppRuleModelStatic, AppUsageModelStatic, NewAppModelStatic, createAppIconDeviceModel, createAppIconModel, createAppRuleModel, createAppUsageModel, createNewAppModel } from './newui2'
 import { createUserLimitLoginCategoryModel, UserLimitLoginCategoryModelStatic } from './userlimitlogincategory'
 import { shouldRetryWithException } from './utils/serialized'
 
@@ -54,6 +54,7 @@ export interface Database {
   addDeviceToken: AddDeviceTokenModelStatic
   appAllowance: AppAllowanceModelStatic
   appIcon: AppIconModelStatic
+  appIconDevice: AppIconDeviceModelStatic
   appRule: AppRuleModelStatic
   appUsage: AppUsageModelStatic
   newApp: NewAppModelStatic
@@ -99,6 +100,7 @@ const createDatabase = (sequelize: Sequelize.Sequelize): Database => ({
   addDeviceToken: createAddDeviceTokenModel(sequelize),
   appAllowance: createAppAllowanceModel(sequelize),
   appIcon: createAppIconModel(sequelize),
+  appIconDevice: createAppIconDeviceModel(sequelize),
   appRule: createAppRuleModel(sequelize),
   appUsage: createAppUsageModel(sequelize),
   newApp: createNewAppModel(sequelize),

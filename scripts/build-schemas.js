@@ -51,6 +51,7 @@ const types = [
   'AcceptParentInvitationRequest',
   'GetAppUsageRequest',
   'GetAppIconsRequest',
+  'GetLaunchableAppsRequest',
   'IdentityTokenPayload',
   'DeleteAccountPayload',
 ]

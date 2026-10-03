@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, ParentInvitationRequest, ListParentInvitationsRequest, AcceptParentInvitationRequest, GetAppUsageRequest, GetAppIconsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, ParentInvitationRequest, ListParentInvitationsRequest, AcceptParentInvitationRequest, GetAppUsageRequest, GetAppIconsRequest, GetLaunchableAppsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -4384,6 +4384,28 @@ export const isGetAppIconsRequest: (value: unknown) => value is GetAppIconsReque
   "required": [
     "deviceAuthToken",
     "packageNames",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isGetLaunchableAppsRequest: (value: unknown) => value is GetLaunchableAppsRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
     "parentPasswordSecondHash",
     "parentUserId"
   ],

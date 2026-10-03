@@ -81,7 +81,7 @@ export const dispatchAppLogicAction = async ({ action, deviceId, cache, eventHan
   } else if (action instanceof ReportNewAppAction) {
     await dispatchReportNewApp({ deviceId, action, cache })
   } else if (action instanceof ReportAppIconsAction) {
-    await dispatchReportAppIcons({ action, cache })
+    await dispatchReportAppIcons({ deviceId, action, cache })
   } else if (action instanceof ForgetNewAppAction) {
     await dispatchForgetNewApp({ deviceId, action, cache })
   } else if (action instanceof SetForegroundAppAction) {

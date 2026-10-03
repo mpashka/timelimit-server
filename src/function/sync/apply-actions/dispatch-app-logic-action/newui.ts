@@ -164,7 +164,7 @@ export async function dispatchReportNewApp ({ deviceId, action, cache }: { devic
 }
 
 // @tag:app-icon
-export async function dispatchReportAppIcons ({ action, cache }: { action: ReportAppIconsAction, cache: Cache }) {
+export async function dispatchReportAppIcons ({ deviceId, action, cache }: { deviceId: string, action: ReportAppIconsAction, cache: Cache }) {
   const database = cache.transaction.legacy.database
   const transaction = cache.transaction.legacy.transaction
 
@@ -186,6 +186,10 @@ export async function dispatchReportAppIcons ({ action, cache }: { action: Repor
     } else {
       await database.appIcon.create({ ...where, title: item.title, icon: item.icon, versionCode }, { transaction })
     }
+
+    // ponytail: a tablet never reports an app gone from its home screen, so the pair outlives an uninstall —
+    // harmless here: the app is merely not marked service; a remove-from-home-screen report would fix it
+    await database.appIconDevice.findOrCreate({ where: { ...where, deviceId }, transaction })
   }
 }
 
