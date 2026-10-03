@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Conflict, NotFound } from 'http-errors'
+import { Conflict } from 'http-errors'
 import { PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { maxMailNotificationFlags } from '../../database/user'
@@ -114,7 +114,7 @@ export async function revokeParentInvitation ({ transaction, familyId, mail }: {
   })
 
   if (removed === 0) {
-    throw new NotFound('no invitation for ' + mail + ' in this family')
+    throw new Conflict('no invitation for ' + mail + ' in this family')
   }
 }
 
@@ -186,7 +186,7 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
     })
 
     if (!invitation) {
-      throw new NotFound('no invitation for ' + mail + ': it was revoked or already used')
+      throw new Conflict('no invitation for ' + mail + ': it was revoked or already used')
     }
 
     const { familyId } = invitation
