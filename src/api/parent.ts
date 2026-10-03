@@ -28,6 +28,9 @@ import { createAddDeviceToken } from '../function/parent/create-add-device-token
 import { createFamily } from '../function/parent/create-family'
 import { getStatusByMailToken } from '../function/parent/get-status-by-mail-address'
 import { linkMailAddress } from '../function/parent/link-mail-address'
+import {
+  findReceivedParentInvitation, inviteParent, listParentInvitations, revokeParentInvitation
+} from '../function/parent-invitation'
 import { recoverParentPassword } from '../function/parent/recover-parent-password'
 import { signInIntoFamily } from '../function/parent/sign-in-into-family'
 import { resolveSubject } from '../function/sync/subject'
@@ -38,6 +41,7 @@ import { EventHandler } from '../monitoring/eventhandler'
 import {
   isCreateFamilyByMailTokenRequest,
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
+  isListParentInvitationsRequest, isParentInvitationRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
   isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest
@@ -61,13 +65,18 @@ export const createParentRouter = ({
       }
 
       const { mailAuthToken } = req.body
-      const { status, mail } = await database.transaction(async (transaction) => {
-        return getStatusByMailToken({ transaction, mailAuthToken })
+      const { status, mail, invitation } = await database.transaction(async (transaction) => {
+        const { status, mail } = await getStatusByMailToken({ transaction, mailAuthToken })
+        // @tag:parent-invitation
+        const invitation = status === 'without family' ? await findReceivedParentInvitation({ transaction, mail }) : null
+
+        return { status, mail, invitation }
       })
 
       res.json({
         status,
         mail,
+        invitation,
         canCreateFamily: !config.disableSignup,
         alwaysPro: config.alwaysPro
       })
@@ -241,6 +250,10 @@ export const createParentRouter = ({
         else throw ex
       }
     } else {
+      // @tag:parent-invitation
+      // у родителя без пароля хэш пустой — пустое значение подтверждением быть не может
+      if (secondPasswordHash === '') throw new Unauthorized()
+
       const parentEntry = await transaction.legacy.database.user.findOne({
         where: {
           familyId,
@@ -258,6 +271,84 @@ export const createParentRouter = ({
       return { familyId, parentEntry }
     }
   }
+
+  // @tag:parent-invitation
+  router.post('/invite-parent', json(), async (req, res, next) => {
+    try {
+      if (!isParentInvitationRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      const invitation = await database.transaction(async (transaction) => {
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        return inviteParent({ transaction, familyId, invitedByUserId: parentEntry.userId, mail: body.mail })
+      })
+
+      res.json(invitation)
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:parent-invitation
+  router.post('/list-parent-invitations', json(), async (req, res, next) => {
+    try {
+      if (!isListParentInvitationsRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      const invitations = await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        return listParentInvitations({ transaction, familyId })
+      })
+
+      res.json({ invitations })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:parent-invitation
+  router.post('/revoke-parent-invitation', json(), async (req, res, next) => {
+    try {
+      if (!isParentInvitationRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction
+        })
+
+        await revokeParentInvitation({ transaction, familyId, mail: body.mail })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
 
   router.post('/create-add-device-token', json(), async (req, res, next) => {
     try {

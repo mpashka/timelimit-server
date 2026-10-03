@@ -1,5 +1,5 @@
 // tslint:disable 
-import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, GetAppUsageRequest, GetAppIconsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
+import { ClientPushChangesRequest, ClientPullChangesRequest, MailAuthTokenRequestBody, CreateFamilyByMailTokenRequest, SignIntoFamilyRequest, RecoverParentPasswordRequest, RegisterChildDeviceRequest, SerializedParentAction, SerializedAppLogicAction, SerializedChildAction, CreateRegisterDeviceTokenRequest, CanDoPurchaseRequest, FinishPurchaseByGooglePlayRequest, LinkParentMailAddressRequest, UpdatePrimaryDeviceRequest, RemoveDeviceRequest, RequestIdentityTokenRequest, RequestWithAuthToken, SendMailLoginCodeRequest, SignInByMailCodeRequest, SignInByGoogleRequest, CreateFamilyWithParentSessionRequest, RevokeParentSessionRequest, ParentInvitationRequest, ListParentInvitationsRequest, AcceptParentInvitationRequest, GetAppUsageRequest, GetAppIconsRequest, IdentityTokenPayload, DeleteAccountPayload } from './schema'
 import Ajv from 'ajv'
 const ajv = new Ajv()
 
@@ -4250,6 +4250,79 @@ export const isRevokeParentSessionRequest: (value: unknown) => value is RevokePa
   "additionalProperties": false,
   "required": [
     "sessionToken"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isParentInvitationRequest: (value: unknown) => value is ParentInvitationRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "mail": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "mail",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isListParentInvitationsRequest: (value: unknown) => value is ListParentInvitationsRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceAuthToken",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": definitions,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+})
+export const isAcceptParentInvitationRequest: (value: unknown) => value is AcceptParentInvitationRequest = ajv.compile({
+  "type": "object",
+  "properties": {
+    "mailAuthToken": {
+      "type": "string"
+    },
+    "parentName": {
+      "type": "string"
+    },
+    "timeZone": {
+      "type": "string"
+    },
+    "parentPassword": {
+      "$ref": "#/definitions/PlaintextParentPassword"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "mailAuthToken",
+    "parentName",
+    "timeZone"
   ],
   "definitions": definitions,
   "$schema": "http://json-schema.org/draft-07/schema#"

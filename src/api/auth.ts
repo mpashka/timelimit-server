@@ -21,6 +21,7 @@ import { BadRequest, NotImplemented, Unauthorized } from 'http-errors'
 import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
 import { createAuthTokenByMailAddress } from '../function/authentication'
+import { isMailAddressKnownToServer } from '../function/parent-invitation'
 import { sendLoginCode, signInByMailCode } from '../function/authentication/login-by-mail'
 import { GoogleIdTokenException, verifyGoogleIdToken } from '../util/google-id-token'
 import { isMailAddressCoveredByWhitelist, isMailServerBlacklisted, sanitizeMailAddress } from '../util/mail'
@@ -32,6 +33,10 @@ import {
 
 export const createAuthRouter = (database: SimpleDatabase) => {
   const router = Router()
+
+  // @tag:parent-invitation
+  const isMailAddressAllowed = async (mail: string) => isMailAddressCoveredByWhitelist(mail) ||
+    await database.transaction((transaction) => isMailAddressKnownToServer({ transaction, mail }))
 
   router.post('/send-mail-login-code-v2', json(), async (req, res, next) => {
     try {
@@ -45,7 +50,7 @@ export const createAuthRouter = (database: SimpleDatabase) => {
         throw new BadRequest()
       }
 
-      if (!isMailAddressCoveredByWhitelist(mail)) {
+      if (!await isMailAddressAllowed(mail)) {
         res.json({ mailAddressNotWhitelisted: true })
       } else if (isMailServerBlacklisted(mail)) {
         res.json({ mailServerBlacklisted: true })
@@ -109,7 +114,7 @@ export const createAuthRouter = (database: SimpleDatabase) => {
         throw new BadRequest()
       }
 
-      if (!isMailAddressCoveredByWhitelist(mail)) {
+      if (!await isMailAddressAllowed(mail)) {
         res.json({ mailAddressNotWhitelisted: true })
       } else if (isMailServerBlacklisted(mail)) {
         res.json({ mailServerBlacklisted: true })

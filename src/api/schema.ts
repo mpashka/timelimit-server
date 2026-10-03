@@ -197,6 +197,29 @@ export interface RevokeParentSessionRequest {
   sessionToken: string
 }
 
+// @tag:parent-invitation
+export interface ParentInvitationRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  mail: string
+}
+
+// @tag:parent-invitation
+export interface ListParentInvitationsRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+}
+
+// @tag:parent-invitation
+export interface AcceptParentInvitationRequest {
+  mailAuthToken: string
+  parentName: string
+  timeZone: string
+  parentPassword?: PlaintextParentPassword
+}
+
 // @tag:parent-console
 export interface SignInByGoogleRequest {
   idToken: string

@@ -2,6 +2,8 @@
 
 ## Top-level Schemas
 
+* [AcceptParentInvitationRequest](./acceptparentinvitationrequest.md) – `https://timelimit.io/AcceptParentInvitationRequest`
+
 * [CanDoPurchaseRequest](./candopurchaserequest.md) – `https://timelimit.io/CanDoPurchaseRequest`
 
 * [CanRecoverPasswordRequest](./canrecoverpasswordrequest.md) – `https://timelimit.io/CanRecoverPasswordRequest`
@@ -28,7 +30,11 @@
 
 * [LinkParentMailAddressRequest](./linkparentmailaddressrequest.md) – `https://timelimit.io/LinkParentMailAddressRequest`
 
+* [ListParentInvitationsRequest](./listparentinvitationsrequest.md) – `https://timelimit.io/ListParentInvitationsRequest`
+
 * [MailAuthTokenRequestBody](./mailauthtokenrequestbody.md) – `https://timelimit.io/MailAuthTokenRequestBody`
+
+* [ParentInvitationRequest](./parentinvitationrequest.md) – `https://timelimit.io/ParentInvitationRequest`
 
 * [RecoverParentPasswordRequest](./recoverparentpasswordrequest.md) – `https://timelimit.io/RecoverParentPasswordRequest`
 
@@ -83,6 +89,8 @@
 * [NewDeviceInfo](./registerchilddevicerequest-definitions-newdeviceinfo.md) – `https://timelimit.io/RegisterChildDeviceRequest#/definitions/NewDeviceInfo`
 
 * [NewDeviceInfo](./signintofamilyrequest-definitions-newdeviceinfo.md) – `https://timelimit.io/SignIntoFamilyRequest#/definitions/NewDeviceInfo`
+
+* [PlaintextParentPassword](./acceptparentinvitationrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/AcceptParentInvitationRequest#/definitions/PlaintextParentPassword`
 
 * [PlaintextParentPassword](./createfamilybymailtokenrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest#/definitions/PlaintextParentPassword`
 

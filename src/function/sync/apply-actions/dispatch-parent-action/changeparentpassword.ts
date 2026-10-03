@@ -37,6 +37,13 @@ export async function dispatchChangeParentPassword ({ action, cache }: {
     throw new MissingUserException()
   }
 
+  // @tag:parent-invitation
+  // без старого пароля подпись смены считается от пустой строки и подделывается любым устройством;
+  // пароль такому родителю задаётся через почту — /parent/recover-parent-password
+  if (parentEntry.secondPasswordHash === '') {
+    throw new ApplyActionException({ staticMessage: 'the parent has no password to change' })
+  }
+
   try {
     action.assertIntegrityValid({ oldPasswordSecondHash: parentEntry.secondPasswordHash })
   } catch (ex) {

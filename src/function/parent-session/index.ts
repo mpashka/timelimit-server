@@ -84,7 +84,7 @@ export const createFamilyWithParentSession = async ({ database, mailAuthToken, p
   })
 }
 
-async function createSession ({ transaction, familyId, userId }: {
+export async function createSession ({ transaction, familyId, userId }: {
   transaction: SimpleDatabaseTransaction
   familyId: string
   userId: string

@@ -20,17 +20,21 @@ import { Router } from 'express'
 import { BadRequest, Forbidden } from 'http-errors'
 import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
+import { acceptParentInvitation, declineParentInvitation } from '../function/parent-invitation'
 import { createFamilyWithParentSession, revokeParentSession, signInParentSession } from '../function/parent-session'
+import { WebsocketApi } from '../websocket'
 import {
-  isCreateFamilyWithParentSessionRequest, isMailAuthTokenRequestBody, isRevokeParentSessionRequest
+  isAcceptParentInvitationRequest, isCreateFamilyWithParentSessionRequest, isMailAuthTokenRequestBody,
+  isRevokeParentSessionRequest
 } from './validator'
 
 // @tag:parent-console
 // Вход человеком вместо регистрации устройства: средства управления (веб-админка через BFF, CLI,
 // MCP) устройствами семьи не являются и ходят на сервер под тем, кто вошёл.
 // Контракт — docs/implementation/web-admin.md, «Вход пользователем».
-export const createSessionRouter = ({ database }: {
+export const createSessionRouter = ({ database, websocket }: {
   database: SimpleDatabase
+  websocket: WebsocketApi
 }) => {
   const router = Router()
 
@@ -72,6 +76,43 @@ export const createSessionRouter = ({ database }: {
       })
 
       res.json(result)
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:parent-invitation
+  router.post('/accept-invitation', json(), async (req, res, next) => {
+    try {
+      if (!isAcceptParentInvitationRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const result = await acceptParentInvitation({
+        database,
+        websocket,
+        mailAuthToken: req.body.mailAuthToken,
+        parentName: req.body.parentName,
+        timeZone: req.body.timeZone,
+        password: req.body.parentPassword ?? null
+      })
+
+      res.json(result)
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:parent-invitation
+  router.post('/decline-invitation', json(), async (req, res, next) => {
+    try {
+      if (!isMailAuthTokenRequestBody(req.body)) {
+        throw new BadRequest()
+      }
+
+      await declineParentInvitation({ database, mailAuthToken: req.body.mailAuthToken })
+
+      res.json({ ok: true })
     } catch (ex) {
       next(ex)
     }

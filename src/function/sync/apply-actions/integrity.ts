@@ -119,6 +119,10 @@ export async function assertActionIntegrity ({ action, cache, deviceId, parentSe
       // password method with hmac
       const parentSecondHash = await cache.getSecondPasswordHashOfParent(action.userId)
 
+      // @tag:parent-invitation
+      // у родителя без пароля ключ подписи пустой и известен всем
+      if (parentSecondHash === '') throw new InvalidParentActionIntegrityValue()
+
       const correctResponse = calculateActionHmac({
         action,
         deviceId,
@@ -138,6 +142,10 @@ export async function assertActionIntegrity ({ action, cache, deviceId, parentSe
     } else {
       // legacy password method
       const parentSecondHash = await cache.getSecondPasswordHashOfParent(action.userId)
+
+      // @tag:parent-invitation
+      // у родителя без пароля ключ подписи пустой и известен всем
+      if (parentSecondHash === '') throw new InvalidParentActionIntegrityValue()
 
       const integrityData = action.sequenceNumber.toString(10) +
                   deviceId +

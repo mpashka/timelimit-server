@@ -35,6 +35,7 @@ import { createKeyResponseModel, KeyResponseModelStatic } from './keyresponse'
 import { createMailLoginTokenModel, MailLoginTokenModelStatic } from './maillogintoken'
 import { createUmzug } from './migration/umzug'
 import { createOldDeviceModel, OldDeviceModelStatic } from './olddevice'
+import { createParentInvitationModel, ParentInvitationModelStatic } from './parentinvitation'
 import { createParentSessionModel, ParentSessionModelStatic } from './parentsession'
 import { createPingModel, PingModelStatic } from './ping'
 import { createPurchaseModel, PurchaseModelStatic } from './purchase'
@@ -72,6 +73,7 @@ export interface Database {
   keyResponse: KeyResponseModelStatic
   mailLoginToken: MailLoginTokenModelStatic
   oldDevice: OldDeviceModelStatic
+  parentInvitation: ParentInvitationModelStatic
   parentSession: ParentSessionModelStatic
   ping: PingModelStatic
   purchase: PurchaseModelStatic
@@ -116,6 +118,7 @@ const createDatabase = (sequelize: Sequelize.Sequelize): Database => ({
   keyResponse: createKeyResponseModel(sequelize),
   mailLoginToken: createMailLoginTokenModel(sequelize),
   oldDevice: createOldDeviceModel(sequelize),
+  parentInvitation: createParentInvitationModel(sequelize),
   parentSession: createParentSessionModel(sequelize),
   ping: createPingModel(sequelize),
   purchase: createPurchaseModel(sequelize),
