@@ -61,8 +61,13 @@ const types = [
   'DeleteAccountPayload',
 ]
 
+// Answers: published as schemas, but not validated — the server writes them, it does not read them.
 const docOnlyTypes = [
-  'ServerDataStatus'
+  'ServerDataStatus',
+  'AddDeviceResponse',
+  'StatusOfMailAddressResponse',
+  'CreateAddDeviceTokenResponse',
+  'ParentSessionInfo'
 ]
 
 const allTypes = [

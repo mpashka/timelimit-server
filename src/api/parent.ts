@@ -39,6 +39,7 @@ import { validateU2fIntegrity, U2fValidationError } from '../function/u2f'
 import { createIdentityToken, MissingSignSecretException } from '../util/identity-token'
 import { WebsocketApi } from '../websocket'
 import { AdultRole, adultRoleRefusal } from '../model/adultrole'
+import { AddDeviceResponse, CreateAddDeviceTokenResponse, StatusOfMailAddressResponse } from '../object/apiresponse'
 import { EventHandler } from '../monitoring/eventhandler'
 import {
   isCreateFamilyByMailTokenRequest,
@@ -80,14 +81,16 @@ export const createParentRouter = ({
         return { status, mail, invitation, ownFamily }
       })
 
-      res.json({
+      const answer: StatusOfMailAddressResponse = {
         status,
         mail,
         invitation,
         ownFamily,
         canCreateFamily: !config.disableSignup,
         alwaysPro: config.alwaysPro
-      })
+      }
+
+      res.json(answer)
     } catch (ex) {
       next(ex)
     }
@@ -115,11 +118,13 @@ export const createParentRouter = ({
         clientLevel: req.body.clientLevel || null
       })
 
-      res.json({
+      const answer: AddDeviceResponse = {
         deviceAuthToken: result.deviceAuthToken,
         ownDeviceId: result.deviceId,
         data: result.data
-      })
+      }
+
+      res.json(answer)
     } catch (ex) {
       next(ex)
     }
@@ -141,11 +146,13 @@ export const createParentRouter = ({
         websocket
       })
 
-      res.json({
+      const answer: AddDeviceResponse = {
         deviceAuthToken: result.deviceAuthToken,
         ownDeviceId: result.deviceId,
         data: result.data
-      })
+      }
+
+      res.json(answer)
     } catch (ex) {
       next(ex)
     }
@@ -504,7 +511,9 @@ export const createParentRouter = ({
         return createAddDeviceToken({ familyId, transaction })
       })
 
-      res.json({ token, deviceId })
+      const answer: CreateAddDeviceTokenResponse = { token, deviceId }
+
+      res.json(answer)
     } catch (ex) {
       next(ex)
     }

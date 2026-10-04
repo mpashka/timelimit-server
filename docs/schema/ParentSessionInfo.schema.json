@@ -1,0 +1,29 @@
+{
+  "description": "Answer of every `POST /session/*` that opens a session. @tag:parent-console",
+  "type": "object",
+  "properties": {
+    "sessionToken": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "familyId": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "familyId",
+    "sessionId",
+    "sessionToken",
+    "userId"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ParentSessionInfo",
+  "$id": "https://timelimit.io/ParentSessionInfo"
+}

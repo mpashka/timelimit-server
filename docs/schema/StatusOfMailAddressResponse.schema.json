@@ -1,0 +1,113 @@
+{
+  "description": "`POST /parent/get-status-by-mail-address`.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "$ref": "#/definitions/MailAddressStatus"
+    },
+    "mail": {
+      "type": "string"
+    },
+    "canCreateFamily": {
+      "type": "boolean"
+    },
+    "alwaysPro": {
+      "type": "boolean"
+    },
+    "invitation": {
+      "description": "Absent on a server without parent invitations, null when nobody invited this address. @tag:parent-invitation",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ReceivedParentInvitation"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ownFamily": {
+      "description": "The invited address's own family, given only together with an invitation. @tag:adult-role",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/OwnFamily"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "alwaysPro",
+    "canCreateFamily",
+    "mail",
+    "status"
+  ],
+  "definitions": {
+    "MailAddressStatus": {
+      "description": "Does this mail address already belong to a family?",
+      "enum": [
+        "with family",
+        "without family"
+      ],
+      "type": "string",
+      "title": "MailAddressStatus"
+    },
+    "ReceivedParentInvitation": {
+      "type": "object",
+      "properties": {
+        "inviterName": {
+          "type": "string"
+        },
+        "inviterMail": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/AdultRole"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "inviterMail",
+        "inviterName",
+        "role"
+      ],
+      "title": "ReceivedParentInvitation"
+    },
+    "AdultRole": {
+      "enum": [
+        "admin",
+        "manager",
+        "member"
+      ],
+      "type": "string",
+      "title": "AdultRole"
+    },
+    "OwnFamily": {
+      "description": "What an invited address loses by accepting: the family it already has. @tag:adult-role",
+      "type": "object",
+      "properties": {
+        "children": {
+          "type": "number"
+        },
+        "devices": {
+          "type": "number"
+        },
+        "adults": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "adults",
+        "children",
+        "devices"
+      ],
+      "title": "OwnFamily"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StatusOfMailAddressResponse",
+  "$id": "https://timelimit.io/StatusOfMailAddressResponse"
+}

@@ -18,19 +18,12 @@
 import { Conflict, Unauthorized } from 'http-errors'
 import { PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../../api/schema'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
+import { ParentSessionInfo } from '../../object/apiresponse'
 import { generateAuthToken, generateIdWithinFamily } from '../../util/token'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
 import { createFamilyAndFirstParent } from '../parent/create-family'
 import { deleteParentSessions } from './cleanup'
 import { parseSessionTokenFromWireFormat, sessionTokenToWireFormat } from './token'
-
-// @tag:parent-console
-export interface ParentSessionInfo {
-  sessionToken: string
-  sessionId: string
-  familyId: string
-  userId: string
-}
 
 // @tag:parent-console
 export const signInParentSession = async ({ database, mailAuthToken }: {

@@ -20,12 +20,13 @@ import { PlaintextParentPassword, assertPlaintextParentPasswordValid } from '../
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { maxMailNotificationFlags } from '../../database/user'
 import { AdultRole } from '../../model/adultrole'
+import { OwnFamily, ParentSessionInfo, ReceivedParentInvitation } from '../../object/apiresponse'
 import { sanitizeMailAddress } from '../../util/mail'
 import { generateIdWithinFamily, generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
 import { deleteFamilies } from '../cleanup/delete-families'
-import { ParentSessionInfo, createSession } from '../parent-session'
+import { createSession } from '../parent-session'
 import { notifyClientsAboutChangesDelayed } from '../websocket'
 
 // @tag:parent-invitation
@@ -36,18 +37,10 @@ export interface ParentInvitationInfo {
 }
 
 // @tag:parent-invitation
-export interface ReceivedParentInvitation {
-  inviterName: string
-  inviterMail: string
-  role: AdultRole // @tag:adult-role
-}
-
-// @tag:parent-invitation
-export interface OwnFamilySize {
+// Та же семья, что уходит приглашённому адресу в /parent/get-status-by-mail-address, плюс её
+// идентификатор: наружу он не идёт, внутри по нему семью удаляют.
+export interface OwnFamilySize extends OwnFamily {
   familyId: string
-  children: number
-  devices: number
-  adults: number
 }
 
 // @tag:parent-invitation

@@ -293,3 +293,8 @@ export interface DeleteAccountPayload {
 
 export { SerializedParentAction, SerializedChildAction, SerializedAppLogicAction } from '../action/serialization'
 export { ServerDataStatus } from '../object/serverdatastatus'
+
+// Answers, not requests: scripts/build-schemas.js publishes their schemas without a validator.
+export {
+  AddDeviceResponse, StatusOfMailAddressResponse, CreateAddDeviceTokenResponse, ParentSessionInfo
+} from '../object/apiresponse'

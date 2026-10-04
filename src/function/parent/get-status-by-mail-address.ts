@@ -17,11 +17,12 @@
 
 import { SimpleDatabaseTransaction } from '../../database/simple'
 import { StaticMessageException } from '../../exception'
+import { MailAddressStatus } from '../../object/apiresponse'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
 
 const getStatusByMailAddress = async ({
   mail, transaction
-}: { mail: string, transaction: SimpleDatabaseTransaction }) => {
+}: { mail: string, transaction: SimpleDatabaseTransaction }): Promise<MailAddressStatus> => {
   if (!mail) {
     throw new StaticMessageException({ staticMessage: 'getStatusByMailAddress: no mail address provided' })
   }

@@ -1,0 +1,21 @@
+{
+  "description": "`POST /parent/create-add-device-token`.",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string"
+    },
+    "deviceId": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "deviceId",
+    "token"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CreateAddDeviceTokenResponse",
+  "$id": "https://timelimit.io/CreateAddDeviceTokenResponse"
+}

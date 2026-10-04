@@ -3591,6 +3591,158 @@ const definitions = {
       "p",
       "u"
     ]
+  },
+  "ServerDataStatus": {
+    "type": "object",
+    "properties": {
+      "devices": {
+        "$ref": "#/definitions/ServerDeviceList"
+      },
+      "devices2": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerExtendedDeviceData"
+        }
+      },
+      "apps": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerInstalledAppsData"
+        }
+      },
+      "rmCategories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "categoryBase": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerUpdatedCategoryBaseData"
+        }
+      },
+      "categoryApp": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerUpdatedCategoryAssignedApps"
+        }
+      },
+      "usedTimes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerUpdatedCategoryUsedTimes"
+        }
+      },
+      "rules": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerUpdatedTimeLimitRules"
+        }
+      },
+      "tasks": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerUpdatedCategoryTasks"
+        }
+      },
+      "users": {
+        "$ref": "#/definitions/ServerUserList"
+      },
+      "krq": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerKeyRequest"
+        }
+      },
+      "kr": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerKeyResponse"
+        }
+      },
+      "pings": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerPing"
+        }
+      },
+      "deviceStates": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServerDeviceState"
+        }
+      },
+      "dh": {
+        "$ref": "#/definitions/ServerDhKey"
+      },
+      "u2f": {
+        "$ref": "#/definitions/U2fData"
+      },
+      "fullVersion": {
+        "type": "number"
+      },
+      "message": {
+        "type": "string"
+      },
+      "apiLevel": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "apiLevel",
+      "fullVersion"
+    ]
+  },
+  "MailAddressStatus": {
+    "description": "Does this mail address already belong to a family?",
+    "enum": [
+      "with family",
+      "without family"
+    ],
+    "type": "string"
+  },
+  "ReceivedParentInvitation": {
+    "type": "object",
+    "properties": {
+      "inviterName": {
+        "type": "string"
+      },
+      "inviterMail": {
+        "type": "string"
+      },
+      "role": {
+        "$ref": "#/definitions/AdultRole"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "inviterMail",
+      "inviterName",
+      "role"
+    ]
+  },
+  "OwnFamily": {
+    "description": "What an invited address loses by accepting: the family it already has. @tag:adult-role",
+    "type": "object",
+    "properties": {
+      "children": {
+        "type": "number"
+      },
+      "devices": {
+        "type": "number"
+      },
+      "adults": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "adults",
+      "children",
+      "devices"
+    ]
   }
 }
 

@@ -4,6 +4,8 @@
 
 * [AcceptParentInvitationRequest](./acceptparentinvitationrequest.md) – `https://timelimit.io/AcceptParentInvitationRequest`
 
+* [AddDeviceResponse](./adddeviceresponse.md "POST /parent/create-family, POST /parent/sign-in-into-family") – `https://timelimit.io/AddDeviceResponse`
+
 * [CanDoPurchaseRequest](./candopurchaserequest.md) – `https://timelimit.io/CanDoPurchaseRequest`
 
 * [CanRecoverPasswordRequest](./canrecoverpasswordrequest.md) – `https://timelimit.io/CanRecoverPasswordRequest`
@@ -11,6 +13,8 @@
 * [ClientPullChangesRequest](./clientpullchangesrequest.md) – `https://timelimit.io/ClientPullChangesRequest`
 
 * [ClientPushChangesRequest](./clientpushchangesrequest.md) – `https://timelimit.io/ClientPushChangesRequest`
+
+* [CreateAddDeviceTokenResponse](./createadddevicetokenresponse.md "POST /parent/create-add-device-token") – `https://timelimit.io/CreateAddDeviceTokenResponse`
 
 * [CreateFamilyByMailTokenRequest](./createfamilybymailtokenrequest.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest`
 
@@ -44,6 +48,8 @@
 
 * [ParentInvitationRequest](./parentinvitationrequest.md) – `https://timelimit.io/ParentInvitationRequest`
 
+* [ParentSessionInfo](./parentsessioninfo.md "Answer of every POST /session/* that opens a session") – `https://timelimit.io/ParentSessionInfo`
+
 * [RecoverParentPasswordRequest](./recoverparentpasswordrequest.md) – `https://timelimit.io/RecoverParentPasswordRequest`
 
 * [RegisterChildDeviceRequest](./registerchilddevicerequest.md) – `https://timelimit.io/RegisterChildDeviceRequest`
@@ -76,6 +82,8 @@
 
 * [SignIntoFamilyRequest](./signintofamilyrequest.md) – `https://timelimit.io/SignIntoFamilyRequest`
 
+* [StatusOfMailAddressResponse](./statusofmailaddressresponse.md "POST /parent/get-status-by-mail-address") – `https://timelimit.io/StatusOfMailAddressResponse`
+
 * [UpdatePrimaryDeviceRequest](./updateprimarydevicerequest.md) – `https://timelimit.io/UpdatePrimaryDeviceRequest`
 
 ## Other Schemas
@@ -83,6 +91,8 @@
 ### Objects
 
 * [CategoryDataStatus](./clientpullchangesrequest-definitions-categorydatastatus.md) – `https://timelimit.io/ClientPullChangesRequest#/definitions/CategoryDataStatus`
+
+* [ChildRequestAnswer](./adddeviceresponse-definitions-childrequestanswer.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ChildRequestAnswer`
 
 * [ChildRequestAnswer](./serverdatastatus-definitions-childrequestanswer.md) – `https://timelimit.io/ServerDataStatus#/definitions/ChildRequestAnswer`
 
@@ -102,6 +112,8 @@
 
 * [NewDeviceInfo](./signintofamilyrequest-definitions-newdeviceinfo.md) – `https://timelimit.io/SignIntoFamilyRequest#/definitions/NewDeviceInfo`
 
+* [OwnFamily](./statusofmailaddressresponse-definitions-ownfamily.md "What an invited address loses by accepting: the family it already has") – `https://timelimit.io/StatusOfMailAddressResponse#/definitions/OwnFamily`
+
 * [PlaintextParentPassword](./acceptparentinvitationrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/AcceptParentInvitationRequest#/definitions/PlaintextParentPassword`
 
 * [PlaintextParentPassword](./createfamilybymailtokenrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest#/definitions/PlaintextParentPassword`
@@ -109,6 +121,8 @@
 * [PlaintextParentPassword](./createfamilywithparentsessionrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/CreateFamilyWithParentSessionRequest#/definitions/PlaintextParentPassword`
 
 * [PlaintextParentPassword](./recoverparentpasswordrequest-definitions-plaintextparentpassword.md) – `https://timelimit.io/RecoverParentPasswordRequest#/definitions/PlaintextParentPassword`
+
+* [ReceivedParentInvitation](./statusofmailaddressresponse-definitions-receivedparentinvitation.md) – `https://timelimit.io/StatusOfMailAddressResponse#/definitions/ReceivedParentInvitation`
 
 * [SerialiezdTriedDisablingDeviceAdminAction](./serializedapplogicaction-definitions-serialiezdtrieddisablingdeviceadminaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerialiezdTriedDisablingDeviceAdminAction`
 
@@ -131,6 +145,8 @@
 * [SerializedAddUserAction](./serializedparentaction-definitions-serializedadduseraction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedAddUserAction`
 
 * [SerializedAnswerChildRequestAction](./serializedparentaction-definitions-serializedanswerchildrequestaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedAnswerChildRequestAction`
+
+* [SerializedAppActivityItem](./adddeviceresponse-definitions-serializedappactivityitem.md) – `https://timelimit.io/AddDeviceResponse#/definitions/SerializedAppActivityItem`
 
 * [SerializedAppActivityItem](./serializedapplogicaction-definitions-serializedappactivityitem.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAppActivityItem`
 
@@ -169,6 +185,8 @@
 * [SerializedIgnoreManipulationAction](./serializedparentaction-definitions-serializedignoremanipulationaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedIgnoreManipulationAction`
 
 * [SerializedIncrementCategoryExtraTimeAction](./serializedparentaction-definitions-serializedincrementcategoryextratimeaction.md) – `https://timelimit.io/SerializedParentAction#/definitions/SerializedIncrementCategoryExtraTimeAction`
+
+* [SerializedInstalledApp](./adddeviceresponse-definitions-serializedinstalledapp.md) – `https://timelimit.io/AddDeviceResponse#/definitions/SerializedInstalledApp`
 
 * [SerializedInstalledApp](./serializedapplogicaction-definitions-serializedinstalledapp.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedInstalledApp`
 
@@ -286,59 +304,117 @@
 
 * [SerializedUploadDevicePublicKeyAction](./serializedapplogicaction-definitions-serializeduploaddevicepublickeyaction.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedUploadDevicePublicKeyAction`
 
+* [ServerAppAllowance](./adddeviceresponse-definitions-serverappallowance.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerAppAllowance`
+
 * [ServerAppAllowance](./serverdatastatus-definitions-serverappallowance.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerAppAllowance`
+
+* [ServerAppRule](./adddeviceresponse-definitions-serverapprule.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerAppRule`
 
 * [ServerAppRule](./serverdatastatus-definitions-serverapprule.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerAppRule`
 
+* [ServerCategoryNetworkId](./adddeviceresponse-definitions-servercategorynetworkid.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerCategoryNetworkId`
+
 * [ServerCategoryNetworkId](./serverdatastatus-definitions-servercategorynetworkid.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerCategoryNetworkId`
+
+* [ServerChildRequest](./adddeviceresponse-definitions-serverchildrequest.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerChildRequest`
 
 * [ServerChildRequest](./serverdatastatus-definitions-serverchildrequest.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerChildRequest`
 
+* [ServerCryptContainer](./adddeviceresponse-definitions-servercryptcontainer.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerCryptContainer`
+
 * [ServerCryptContainer](./serverdatastatus-definitions-servercryptcontainer.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerCryptContainer`
+
+* [ServerDataStatus](./adddeviceresponse-definitions-serverdatastatus.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus`
+
+* [ServerDeviceData](./adddeviceresponse-definitions-serverdevicedata.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDeviceData`
 
 * [ServerDeviceData](./serverdatastatus-definitions-serverdevicedata.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceData`
 
+* [ServerDeviceList](./adddeviceresponse-definitions-serverdevicelist.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDeviceList`
+
 * [ServerDeviceList](./serverdatastatus-definitions-serverdevicelist.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceList`
+
+* [ServerDeviceState](./adddeviceresponse-definitions-serverdevicestate.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDeviceState`
 
 * [ServerDeviceState](./serverdatastatus-definitions-serverdevicestate.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerDeviceState`
 
+* [ServerDhKey](./adddeviceresponse-definitions-serverdhkey.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDhKey`
+
 * [ServerDhKey](./serverdatastatus-definitions-serverdhkey.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerDhKey`
+
+* [ServerExtendedDeviceData](./adddeviceresponse-definitions-serverextendeddevicedata.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerExtendedDeviceData`
 
 * [ServerExtendedDeviceData](./serverdatastatus-definitions-serverextendeddevicedata.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerExtendedDeviceData`
 
+* [ServerInstalledAppsData](./adddeviceresponse-definitions-serverinstalledappsdata.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerInstalledAppsData`
+
 * [ServerInstalledAppsData](./serverdatastatus-definitions-serverinstalledappsdata.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerInstalledAppsData`
+
+* [ServerKeyRequest](./adddeviceresponse-definitions-serverkeyrequest.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerKeyRequest`
 
 * [ServerKeyRequest](./serverdatastatus-definitions-serverkeyrequest.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerKeyRequest`
 
+* [ServerKeyResponse](./adddeviceresponse-definitions-serverkeyresponse.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerKeyResponse`
+
 * [ServerKeyResponse](./serverdatastatus-definitions-serverkeyresponse.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerKeyResponse`
+
+* [ServerNewApp](./adddeviceresponse-definitions-servernewapp.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerNewApp`
 
 * [ServerNewApp](./serverdatastatus-definitions-servernewapp.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerNewApp`
 
+* [ServerPing](./adddeviceresponse-definitions-serverping.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerPing`
+
 * [ServerPing](./serverdatastatus-definitions-serverping.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerPing`
+
+* [ServerSessionDurationItem](./adddeviceresponse-definitions-serversessiondurationitem.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerSessionDurationItem`
 
 * [ServerSessionDurationItem](./serverdatastatus-definitions-serversessiondurationitem.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerSessionDurationItem`
 
+* [ServerTimeLimitRule](./adddeviceresponse-definitions-servertimelimitrule.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerTimeLimitRule`
+
 * [ServerTimeLimitRule](./serverdatastatus-definitions-servertimelimitrule.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerTimeLimitRule`
+
+* [ServerUpdatedCategoryAssignedApps](./adddeviceresponse-definitions-serverupdatedcategoryassignedapps.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryAssignedApps`
 
 * [ServerUpdatedCategoryAssignedApps](./serverdatastatus-definitions-serverupdatedcategoryassignedapps.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryAssignedApps`
 
+* [ServerUpdatedCategoryBaseData](./adddeviceresponse-definitions-serverupdatedcategorybasedata.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryBaseData`
+
 * [ServerUpdatedCategoryBaseData](./serverdatastatus-definitions-serverupdatedcategorybasedata.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryBaseData`
+
+* [ServerUpdatedCategoryTask](./adddeviceresponse-definitions-serverupdatedcategorytask.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryTask`
 
 * [ServerUpdatedCategoryTask](./serverdatastatus-definitions-serverupdatedcategorytask.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryTask`
 
+* [ServerUpdatedCategoryTasks](./adddeviceresponse-definitions-serverupdatedcategorytasks.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryTasks`
+
 * [ServerUpdatedCategoryTasks](./serverdatastatus-definitions-serverupdatedcategorytasks.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryTasks`
+
+* [ServerUpdatedCategoryUsedTimes](./adddeviceresponse-definitions-serverupdatedcategoryusedtimes.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryUsedTimes`
 
 * [ServerUpdatedCategoryUsedTimes](./serverdatastatus-definitions-serverupdatedcategoryusedtimes.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedCategoryUsedTimes`
 
+* [ServerUpdatedTimeLimitRules](./adddeviceresponse-definitions-serverupdatedtimelimitrules.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedTimeLimitRules`
+
 * [ServerUpdatedTimeLimitRules](./serverdatastatus-definitions-serverupdatedtimelimitrules.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUpdatedTimeLimitRules`
+
+* [ServerUsedTimeItem](./adddeviceresponse-definitions-serverusedtimeitem.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUsedTimeItem`
 
 * [ServerUsedTimeItem](./serverdatastatus-definitions-serverusedtimeitem.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUsedTimeItem`
 
+* [ServerUserEntry](./adddeviceresponse-definitions-serveruserentry.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry`
+
 * [ServerUserEntry](./serverdatastatus-definitions-serveruserentry.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry`
+
+* [ServerUserList](./adddeviceresponse-definitions-serveruserlist.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserList`
 
 * [ServerUserList](./serverdatastatus-definitions-serveruserlist.md) – `https://timelimit.io/ServerDataStatus#/definitions/ServerUserList`
 
+* [U2fData](./adddeviceresponse-definitions-u2fdata.md) – `https://timelimit.io/AddDeviceResponse#/definitions/U2fData`
+
 * [U2fData](./serverdatastatus-definitions-u2fdata.md) – `https://timelimit.io/ServerDataStatus#/definitions/U2fData`
+
+* [U2fItem](./adddeviceresponse-definitions-u2fitem.md) – `https://timelimit.io/AddDeviceResponse#/definitions/U2fItem`
 
 * [U2fItem](./serverdatastatus-definitions-u2fitem.md) – `https://timelimit.io/ServerDataStatus#/definitions/U2fItem`
 
@@ -350,9 +426,71 @@
 
 * [Untitled object in SerializedAppLogicAction](./serializedapplogicaction-definitions-serializedaddusedtimeactionversion2-properties-i-items.md) – `https://timelimit.io/SerializedAppLogicAction#/definitions/SerializedAddUsedTimeActionVersion2/properties/i/items`
 
+* [UrlFilter](./adddeviceresponse-definitions-urlfilter.md) – `https://timelimit.io/AddDeviceResponse#/definitions/UrlFilter`
+
 * [UrlFilter](./serverdatastatus-definitions-urlfilter.md) – `https://timelimit.io/ServerDataStatus#/definitions/UrlFilter`
 
 ### Arrays
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdevicelist-properties-data.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDeviceList/properties/data`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-devices2.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/devices2`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-apps.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/apps`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverinstalledappsdata-properties-apps.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerInstalledAppsData/properties/apps`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverinstalledappsdata-properties-activities.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerInstalledAppsData/properties/activities`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-rmcategories.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/rmCategories`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-categorybase.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/categoryBase`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategorybasedata-properties-networks.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryBaseData/properties/networks`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategorybasedata-properties-atw.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryBaseData/properties/atw`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-categoryapp.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/categoryApp`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategoryassignedapps-properties-apps.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryAssignedApps/properties/apps`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-usedtimes.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/usedTimes`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategoryusedtimes-properties-times.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryUsedTimes/properties/times`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategoryusedtimes-properties-sessiondurations.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryUsedTimes/properties/sessionDurations`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-rules.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/rules`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedtimelimitrules-properties-rules.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedTimeLimitRules/properties/rules`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-tasks.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/tasks`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverupdatedcategorytasks-properties-tasks.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUpdatedCategoryTasks/properties/tasks`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serveruserlist-properties-data.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserList/properties/data`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-urlfilter-properties-allow.md) – `https://timelimit.io/AddDeviceResponse#/definitions/UrlFilter/properties/allow`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-urlfilter-properties-block.md) – `https://timelimit.io/AddDeviceResponse#/definitions/UrlFilter/properties/block`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serveruserentry-properties-requests.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/requests`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serveruserentry-properties-appallowances.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/appAllowances`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serveruserentry-properties-apprules.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/appRules`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serveruserentry-properties-newapps.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/newApps`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-krq.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/krq`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-kr.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/kr`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-pings.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/pings`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-serverdatastatus-properties-devicestates.md) – `https://timelimit.io/AddDeviceResponse#/definitions/ServerDataStatus/properties/deviceStates`
+
+* [Untitled array in AddDeviceResponse](./adddeviceresponse-definitions-u2fdata-properties-d.md) – `https://timelimit.io/AddDeviceResponse#/definitions/U2fData/properties/d`
 
 * [Untitled array in ClientPushChangesRequest](./clientpushchangesrequest-properties-actions.md) – `https://timelimit.io/ClientPushChangesRequest#/properties/actions`
 
