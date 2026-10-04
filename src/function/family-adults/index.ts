@@ -19,6 +19,7 @@ import { Conflict, Forbidden } from 'http-errors'
 import { SimpleDatabaseTransaction } from '../../database/simple'
 import { UserModel } from '../../database/user'
 import { AdultRole } from '../../model/adultrole'
+import { generateParentCodeSecret } from '../../model/parentcode'
 import { generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
@@ -42,6 +43,8 @@ export async function setAdultRole ({ transaction, websocket, familyId, userId, 
   if (role !== 'admin') await assertNotLastAdmin({ transaction, familyId, adult, what: 'be demoted' })
 
   await adult.update({ adultRole: role }, { transaction: transaction.legacy.transaction })
+
+  if (role === 'member') await rotateParentCodeSecret({ transaction, familyId })
 
   await announceUserListChange({ transaction, websocket, familyId, devicesChanged: false, level: 1 })
 }
@@ -111,7 +114,21 @@ async function removeFromFamily ({ transaction, websocket, familyId, adult, what
 
   const { devicesChanged } = await removeUserFromFamily({ transaction, familyId, user: adult })
 
+  if (adult.adultRole !== 'member') await rotateParentCodeSecret({ transaction, familyId })
+
   await announceUserListChange({ transaction, websocket, familyId, devicesChanged, level: 2 })
+}
+
+// @tag:adult-role @tag:parent-code
+// Секрет, однажды выданный взрослому, скрытием из ответов не отзывается — только заменой.
+async function rotateParentCodeSecret ({ transaction, familyId }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+}): Promise<void> {
+  await transaction.legacy.database.family.update({ parentCodeSecret: generateParentCodeSecret() }, {
+    where: { familyId },
+    transaction: transaction.legacy.transaction
+  })
 }
 
 async function requireAdult ({ transaction, familyId, userId }: {

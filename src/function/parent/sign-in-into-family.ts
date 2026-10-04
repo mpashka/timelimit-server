@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Conflict } from 'http-errors'
+import { Conflict, Forbidden } from 'http-errors'
 import { NewDeviceInfo } from '../../api/schema'
 import { SimpleDatabase } from '../../database/simple'
 import { sendDeviceLinkedMail } from '../../util/mail'
@@ -28,6 +28,7 @@ import { generateServerDataStatus } from '../sync/get-server-data-status'
 import { EventHandler } from '../../monitoring/eventhandler'
 import { ServerDataStatus } from '../../object/serverdatastatus'
 import { createEmptyClientDataStatus } from '../../object/clientdatastatus'
+import { adultRoleRefusal } from '../../model/adultrole'
 
 export const signInIntoFamily = async ({ database, eventHandler, mailAuthToken, newDeviceInfo, deviceName, websocket, clientLevel }: {
   database: SimpleDatabase
@@ -46,13 +47,19 @@ export const signInIntoFamily = async ({ database, eventHandler, mailAuthToken, 
       where: {
         mail: mailInfo.mail
       },
-      attributes: ['familyId', 'userId'],
+      attributes: ['familyId', 'userId', 'adultRole'],
       transaction: transaction.legacy.transaction
     })
 
     if (!userEntryUnsafe) {
       throw new Conflict()
     }
+
+    // @tag:adult-role
+    // устройство под взрослым получает секрет кода родителя и действует без проверки роли
+    const refusal = adultRoleRefusal({ actual: userEntryUnsafe.adultRole, required: 'manager', what: 'signing a device into the family' })
+
+    if (refusal !== null) throw new Forbidden(refusal)
 
     const userEntry = {
       familyId: userEntryUnsafe.familyId,

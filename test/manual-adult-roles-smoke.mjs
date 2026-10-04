@@ -1,7 +1,7 @@
 // @tag:adult-role @tag:parent-invitation
 // Сквозная проверка ролей взрослых и согласия взрослого со своей семьёй: пустая своя семья
 // удаляется, непустая — отказ; права member / manager / admin, RENAME_ADULT, правило последнего
-// админа, выход, удаление взрослого и семьи. Вне `npm run test:unit` — нужен сервер и база:
+// админа, выход, удаление взрослого и семьи, замена секрета кода родителя. Вне `npm run test:unit` — нужен сервер и база:
 //
 //   NODE_ENV=development PORT=8099 MAIL_SENDER=test@example.com ALWAYS_PRO=yes \
 //     MAIL_WHITELIST=parent@example.com,solo@example.com,busy@example.com \
@@ -73,6 +73,13 @@ const act = async (session, action) => {
 
 const userRow = async (familyId, userId) => (await db.query('SELECT "name", "adultRole" FROM "Users" WHERE "familyId" = $1 AND "userId" = $2', [familyId, userId])).rows[0]
 const familyExists = async (familyId) => (await db.query('SELECT 1 FROM "Families" WHERE "familyId" = $1', [familyId])).rowCount === 1
+const parentCodeSecret = async (familyId) => (await db.query('SELECT "parentCodeSecret" FROM "Families" WHERE "familyId" = $1', [familyId])).rows[0].parentCodeSecret
+// токен почты мимо письма: лимит кодов на адрес уже выбран
+const directMailAuthToken = async (mail) => {
+  const token = 'direct' + Math.random().toString(36).slice(2).padEnd(26, '0').slice(0, 26)
+  await db.query('INSERT INTO "AuthTokens" ("token", "mail", "createdAt", "locale") VALUES ($1, $2, $3, $4)', [token, mail, Date.now(), 'en'])
+  return token
+}
 const extraTime = async (familyId) => Number((await db.query('SELECT "extraTimeInMillis" FROM "Categories" WHERE "familyId" = $1 AND "categoryId" = $2', [familyId, 'cat001'])).rows[0].extraTimeInMillis)
 
 // Сервер шлёт одному адресу не больше двух кодов за пять минут — токены почты здесь на счету.
@@ -176,6 +183,16 @@ expect('an admin renames another adult', (await userRow(familyId, mama.userId))?
 expect('an admin invites', (await post('/parent/invite-parent', { ...as(pavel), mail: 'x@example.com' })).status === 200)
 await post('/parent/revoke-parent-invitation', { ...as(pavel), mail: 'x@example.com' })
 
+// --- понижение до члена: секрет кода меняется, устройство члену не положено
+const secretBeforeDemotion = await parentCodeSecret(familyId)
+await post('/parent/set-adult-role', { ...as(pavel), userId: uncle.userId, role: 'member' })
+expect('demoting to member replaces the parent code secret', (await parentCodeSecret(familyId)) !== secretBeforeDemotion)
+const memberDevice = await post('/parent/sign-in-into-family', {
+  mailAuthToken: await directMailAuthToken('uncle@example.com'), parentDevice: { model: 'test' }, deviceName: 'tablet of uncle'
+})
+expect('a member can not sign a device into the family', memberDevice.status === 403 && memberDevice.text.includes('needs the adult role manager'), memberDevice.text)
+await post('/parent/set-adult-role', { ...as(pavel), userId: uncle.userId, role: 'manager' })
+
 // --- последний админ
 const demoteSelf = await post('/parent/set-adult-role', { ...as(pavel), userId: pavel.userId, role: 'manager' })
 expect('the last admin can not be demoted', demoteSelf.status === 409 && demoteSelf.text.includes('the last admin can not be demoted'), demoteSelf.text)
@@ -192,11 +209,14 @@ expect('admins are equal: one demotes another', uncleDemotesPavel.status === 200
 await post('/parent/set-adult-role', { ...as(uncle), userId: pavel.userId, role: 'admin' })
 
 // --- выход и удаление взрослого
+const secretBeforeLeave = await parentCodeSecret(familyId)
 const mamaLeaves = await post('/parent/leave-family', as(mama))
 expect('a member leaves the family', mamaLeaves.status === 200 && (await userRow(familyId, mama.userId)) === undefined, mamaLeaves.text)
+expect('a member who leaves knew no parent code, the secret stays', (await parentCodeSecret(familyId)) === secretBeforeLeave)
 expect('the session of who left is gone', (await post('/sync/pull-status', { deviceAuthToken: mama.sessionToken, status: emptyStatus() })).status === 401)
 const removeUncle = await post('/parent/remove-adult', { ...as(pavel), userId: uncle.userId })
 expect('an admin removes another adult', removeUncle.status === 200 && (await userRow(familyId, uncle.userId)) === undefined, removeUncle.text)
+expect('removing an adult who knew the parent code replaces the secret', (await parentCodeSecret(familyId)) !== secretBeforeLeave)
 expect('the session of the removed adult is gone', (await post('/parent/list-parent-invitations', as(uncle))).status === 401)
 
 // --- удаление семьи
