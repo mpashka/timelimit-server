@@ -37,7 +37,8 @@ export const createAddDeviceToken = async ({ familyId, transaction }: {
     familyId,
     token: token.toLowerCase(),
     deviceId,
-    createdAt: Date.now().toString()
+    createdAt: Date.now().toString(),
+    userId: null
   }, { transaction: transaction.legacy.transaction })
 
   return { token, deviceId }

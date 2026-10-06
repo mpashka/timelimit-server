@@ -79,9 +79,15 @@ export interface UserAttributesVersion8 {
   adultRole: AdultRole
 }
 
+// @tag:family-join-google
+// Не средство входа: в mail адрес ребёнка не кладётся, иначе им входили бы как взрослым.
+export interface UserAttributesVersion9 {
+  childMail: string | null
+}
+
 export type UserAttributes = UserAttributesVersion1 & UserAttributesVersion2 &
   UserAttributesVersion3 & UserAttributesVersion4 & UserAttributesVersion5 & UserAttributesVersion6 &
-  UserAttributesVersion7 & UserAttributesVersion8
+  UserAttributesVersion7 & UserAttributesVersion8 & UserAttributesVersion9
 
 export type UserModel = Sequelize.Model<UserAttributes> & UserAttributes
 export type UserModelStatic = typeof Sequelize.Model & {
@@ -194,6 +200,15 @@ export const attributesVersion8: SequelizeAttributes<UserAttributesVersion8> = {
   }
 }
 
+// @tag:family-join-google
+export const attributesVersion9: SequelizeAttributes<UserAttributesVersion9> = {
+  childMail: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    defaultValue: null
+  }
+}
+
 export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
@@ -202,7 +217,8 @@ export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion5,
   ...attributesVersion6,
   ...attributesVersion7,
-  ...attributesVersion8
+  ...attributesVersion8,
+  ...attributesVersion9
 }
 
 export const createUserModel = (sequelize: Sequelize.Sequelize): UserModelStatic => sequelize.define('User', attributes) as UserModelStatic

@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "idToken": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "idToken"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JoinPreviewRequest",
+  "$id": "https://timelimit.io/JoinPreviewRequest"
+}

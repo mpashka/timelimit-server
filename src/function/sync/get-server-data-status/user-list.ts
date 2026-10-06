@@ -47,7 +47,8 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
       'mailNotificationFlags',
       'flags',
       'urlFilter',
-      'adultRole'
+      'adultRole',
+      'childMail'
     ],
     transaction: transaction.legacy.transaction
   })).map((item) => ({
@@ -65,7 +66,8 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
     mailNotificationFlags: item.mailNotificationFlags,
     flags: item.flags,
     urlFilter: item.urlFilter,
-    adultRole: item.adultRole
+    adultRole: item.adultRole,
+    childMail: item.childMail
   }))
 
   // @tag:adult-role @tag:parent-code
@@ -172,6 +174,7 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
         llc: limitLoginCategory?.categoryId,
         pbd: limitLoginCategory?.preBlockDuration,
         adultRole: item.type === 'parent' ? item.adultRole : undefined, // @tag:adult-role
+        childMail: viewerParentUserId !== null ? item.childMail ?? undefined : undefined, // @tag:family-join-google
         urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined, // @tag:url-filter
         requests: item.type === 'child' ? requests.get(item.userId) ?? [] : undefined,
         appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined,

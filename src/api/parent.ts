@@ -24,6 +24,7 @@ import { config } from '../config'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../database/simple'
 import { deleteAccount } from '../function/cleanup/account-deletion'
 import { deleteFamilyByAdmin, leaveFamily, removeAdult, setAdultRole } from '../function/family-adults'
+import { setChildMail } from '../function/child-mail'
 import { removeDevice } from '../function/device/remove-device'
 import { createAddDeviceToken } from '../function/parent/create-add-device-token'
 import { createFamily } from '../function/parent/create-family'
@@ -45,7 +46,7 @@ import {
   isCreateFamilyByMailTokenRequest,
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
   isListParentInvitationsRequest, isParentInvitationRequest, isInviteParentRequest,
-  isSetAdultRoleRequest, isRemoveAdultRequest, isLeaveFamilyRequest, isDeleteFamilyRequest,
+  isSetAdultRoleRequest, isSetChildMailRequest, isRemoveAdultRequest, isLeaveFamilyRequest, isDeleteFamilyRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
   isDeleteAccountPayload, isGetAppIconsRequest, isGetAppUsageRequest, isGetLaunchableAppsRequest
@@ -404,6 +405,33 @@ export const createParentRouter = ({
         })
 
         await setAdultRole({ transaction, websocket, familyId, userId: body.userId, role: body.role })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:family-join-google
+  router.post('/set-child-mail', json(), async (req, res, next) => {
+    try {
+      if (!isSetChildMailRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await setChildMail({ transaction, websocket, familyId, childUserId: body.childUserId, mail: body.mail })
       })
 
       res.json({ ok: true })

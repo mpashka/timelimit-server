@@ -36,6 +36,7 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | [pbd](#pbd)                                               | `number`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-pbd.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/pbd")                                               |
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 | [adultRole](#adultrole)                                   | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-adultrole.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/adultRole")                                   |
+| [childMail](#childmail)                                   | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-childmail.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/childMail")                                   |
 | [requests](#requests)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")                                     |
 | [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")                           |
 | [appRules](#apprules)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appRules")                                     |
@@ -383,6 +384,24 @@ https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry
 | `"admin"`   |             |
 | `"manager"` |             |
 | `"member"`  |             |
+
+## childMail
+
+
+
+`childMail`
+
+* is optional
+
+* Type: `string`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-childmail.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/childMail")
+
+### childMail Type
+
+`string`
 
 ## requests
 

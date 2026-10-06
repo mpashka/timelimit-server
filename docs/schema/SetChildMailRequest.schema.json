@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "properties": {
+    "deviceAuthToken": {
+      "type": "string"
+    },
+    "parentUserId": {
+      "type": "string"
+    },
+    "parentPasswordSecondHash": {
+      "type": "string"
+    },
+    "childUserId": {
+      "type": "string"
+    },
+    "mail": {
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "childUserId",
+    "deviceAuthToken",
+    "mail",
+    "parentPasswordSecondHash",
+    "parentUserId"
+  ],
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SetChildMailRequest",
+  "$id": "https://timelimit.io/SetChildMailRequest"
+}

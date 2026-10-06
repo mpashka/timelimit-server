@@ -18,6 +18,7 @@
 import { json } from 'body-parser'
 import { Router } from 'express'
 import { BadRequest, NotImplemented, Unauthorized } from 'http-errors'
+import { createJoinRegisterToken, findLinkedChild, sanitizeChildMail } from '../function/child-mail'
 import { config } from '../config'
 import { SimpleDatabase } from '../database/simple'
 import { createAuthTokenByMailAddress } from '../function/authentication'
@@ -26,6 +27,8 @@ import { sendLoginCode, signInByMailCode } from '../function/authentication/logi
 import { GoogleIdTokenException, verifyGoogleIdToken } from '../util/google-id-token'
 import { isMailAddressCoveredByWhitelist, isMailServerBlacklisted, sanitizeMailAddress } from '../util/mail'
 import {
+  isJoinPreviewRequest,
+  isJoinRequest,
   isSendMailLoginCodeRequest,
   isSignInByGoogleRequest,
   isSignInByMailCodeRequest
@@ -37,6 +40,20 @@ export const createAuthRouter = (database: SimpleDatabase) => {
   // @tag:parent-invitation
   const isMailAddressAllowed = async (mail: string) => isMailAddressCoveredByWhitelist(mail) ||
     await database.transaction((transaction) => isMailAddressKnownToServer({ transaction, mail }))
+
+  const assertGoogleSignInEnabled = () => {
+    if (config.googleClientIds.length === 0) {
+      throw new NotImplemented('sign in by google is disabled because GOOGLE_CLIENT_ID is not set')
+    }
+  }
+
+  const verifiedGoogleMail = async (idToken: string) => (await verifyGoogleIdToken({
+    idToken,
+    clientIds: config.googleClientIds
+  }).catch((ex) => {
+    if (ex instanceof GoogleIdTokenException) throw new Unauthorized('invalid google id token: ' + ex.message)
+    else throw ex
+  })).mail
 
   router.post('/send-mail-login-code-v2', json(), async (req, res, next) => {
     try {
@@ -90,9 +107,7 @@ export const createAuthRouter = (database: SimpleDatabase) => {
   // @tag:parent-console
   router.post('/sign-in-by-google', json(), async (req, res, next) => {
     try {
-      if (config.googleClientIds.length === 0) {
-        throw new NotImplemented('sign in by google is disabled because GOOGLE_CLIENT_ID is not set')
-      }
+      assertGoogleSignInEnabled()
 
       if (!isSignInByGoogleRequest(req.body)) {
         throw new BadRequest()
@@ -100,15 +115,7 @@ export const createAuthRouter = (database: SimpleDatabase) => {
 
       const { locale } = req.body
 
-      const verified = await verifyGoogleIdToken({
-        idToken: req.body.idToken,
-        clientIds: config.googleClientIds
-      }).catch((ex) => {
-        if (ex instanceof GoogleIdTokenException) throw new Unauthorized('invalid google id token: ' + ex.message)
-        else throw ex
-      })
-
-      const mail = sanitizeMailAddress(verified.mail)
+      const mail = sanitizeMailAddress(await verifiedGoogleMail(req.body.idToken))
 
       if (!mail) {
         throw new BadRequest()
@@ -125,6 +132,44 @@ export const createAuthRouter = (database: SimpleDatabase) => {
 
         res.json({ mailAuthToken })
       }
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:family-join-google
+  router.post('/join-preview', json(), async (req, res, next) => {
+    try {
+      assertGoogleSignInEnabled()
+
+      if (!isJoinPreviewRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const mail = sanitizeChildMail(await verifiedGoogleMail(req.body.idToken))
+      const { child, familyName } = await database.transaction((transaction) => findLinkedChild({ transaction, mail }))
+
+      res.json({ familyName, childName: child.name })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:family-join-google
+  router.post('/join', json(), async (req, res, next) => {
+    try {
+      assertGoogleSignInEnabled()
+
+      if (!isJoinRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const { registerToken } = req.body
+      const mail = sanitizeChildMail(await verifiedGoogleMail(req.body.idToken))
+
+      await database.transaction((transaction) => createJoinRegisterToken({ transaction, mail, registerToken }))
+
+      res.json({ ok: true })
     } catch (ex) {
       next(ex)
     }

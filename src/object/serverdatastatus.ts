@@ -76,6 +76,7 @@ export interface ServerUserEntry {
   pbd?: number  // pre block duration, default is zero
   urlFilter?: UrlFilter // @tag:url-filter
   adultRole?: AdultRole // @tag:adult-role
+  childMail?: string // @tag:family-join-google
   requests?: Array<ServerChildRequest> // @tag:child-request
   appAllowances?: Array<ServerAppAllowance> // @tag:app-allowance
   appRules?: Array<ServerAppRule> // @tag:app-rule

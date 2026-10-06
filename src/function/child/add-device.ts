@@ -17,7 +17,7 @@
 
 import { Unauthorized } from 'http-errors'
 import { RegisterChildDeviceRequest } from '../../api/schema'
-import { SimpleDatabase } from '../../database/simple'
+import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { generateAuthToken, generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { prepareDeviceEntry } from '../device/prepare-device-entry'
@@ -54,6 +54,7 @@ export const addChildDevice = async ({ database, eventHandler, websocket, reques
 
     const { deviceId, familyId } = entry
     const deviceAuthToken = generateAuthToken()
+    const userId = await existingChildId({ transaction, familyId, userId: entry.userId })
 
     await transaction.legacy.database.device.create(prepareDeviceEntry({
       familyId,
@@ -61,7 +62,7 @@ export const addChildDevice = async ({ database, eventHandler, websocket, reques
       deviceAuthToken,
       deviceName: request.deviceName,
       newDeviceInfo: request.childDevice,
-      userId: '',
+      userId, // @tag:family-join-google
       isUserKeptSignedIn: false
     }), { transaction: transaction.legacy.transaction })
 
@@ -98,4 +99,22 @@ export const addChildDevice = async ({ database, eventHandler, websocket, reques
       data
     }
   })
+}
+
+// @tag:family-join-google
+// Ребёнка могли удалить, пока код ждал устройство: тогда устройство заводится без пользователя.
+async function existingChildId ({ transaction, familyId, userId }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  userId: string | null
+}): Promise<string> {
+  if (!userId) return ''
+
+  const child = await transaction.legacy.database.user.findOne({
+    where: { familyId, userId, type: 'child' },
+    attributes: ['userId'],
+    transaction: transaction.legacy.transaction
+  })
+
+  return child ? userId : ''
 }

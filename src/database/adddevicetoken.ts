@@ -16,22 +16,30 @@
  */
 
 import * as Sequelize from 'sequelize'
-import { familyIdColumn, idWithinFamilyColumn, labelColumn, timestampColumn } from './columns'
+import { familyIdColumn, idWithinFamilyColumn, labelColumn, optionalIdWithinFamilyColumn, timestampColumn } from './columns'
 import { SequelizeAttributes } from './types'
 
-export interface AddDeviceTokenAttributes {
+export interface AddDeviceTokenAttributesVersion1 {
   token: string
   familyId: string
   deviceId: string
   createdAt: string
 }
 
+// @tag:family-join-google
+export interface AddDeviceTokenAttributesVersion2 {
+  // null = устройство заводится без пользователя, как раньше
+  userId: string | null
+}
+
+export type AddDeviceTokenAttributes = AddDeviceTokenAttributesVersion1 & AddDeviceTokenAttributesVersion2
+
 export type AddDeviceTokenModel = Sequelize.Model<AddDeviceTokenAttributes> & AddDeviceTokenAttributes
 export type AddDeviceTokenModelStatic = typeof Sequelize.Model & {
   new (values?: object, options?: Sequelize.BuildOptions): AddDeviceTokenModel;
 }
 
-export const attributes: SequelizeAttributes<AddDeviceTokenAttributes> = {
+export const attributesVersion1: SequelizeAttributes<AddDeviceTokenAttributesVersion1> = {
   token: {
     ...labelColumn,
     primaryKey: true
@@ -39,6 +47,16 @@ export const attributes: SequelizeAttributes<AddDeviceTokenAttributes> = {
   familyId: { ...familyIdColumn },
   deviceId: { ...idWithinFamilyColumn },
   createdAt: { ...timestampColumn }
+}
+
+// @tag:family-join-google
+export const attributesVersion2: SequelizeAttributes<AddDeviceTokenAttributesVersion2> = {
+  userId: { ...optionalIdWithinFamilyColumn, allowNull: true, defaultValue: null }
+}
+
+export const attributes: SequelizeAttributes<AddDeviceTokenAttributes> = {
+  ...attributesVersion1,
+  ...attributesVersion2
 }
 
 export const createAddDeviceTokenModel = (sequelize: Sequelize.Sequelize): AddDeviceTokenModelStatic => sequelize.define('AddDeviceToken', attributes) as AddDeviceTokenModelStatic

@@ -16,7 +16,7 @@
  */
 
 import { QueryInterface, Sequelize, Transaction } from 'sequelize'
-import { attributes as addDeviceTokenAttributes } from '../../adddevicetoken'
+import { attributesVersion1 as addDeviceTokenAttributes } from '../../adddevicetoken'
 import { attributes as appAttributes } from '../../app'
 import { attributesVersion1 as authTokenAttributes } from '../../authtoken'
 import { attributesVersion1 as categoryAttributes } from '../../category'

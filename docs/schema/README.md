@@ -38,6 +38,10 @@
 
 * [InviteParentRequest](./inviteparentrequest.md) – `https://timelimit.io/InviteParentRequest`
 
+* [JoinPreviewRequest](./joinpreviewrequest.md) – `https://timelimit.io/JoinPreviewRequest`
+
+* [JoinRequest](./joinrequest.md) – `https://timelimit.io/JoinRequest`
+
 * [LeaveFamilyRequest](./leavefamilyrequest.md) – `https://timelimit.io/LeaveFamilyRequest`
 
 * [LinkParentMailAddressRequest](./linkparentmailaddressrequest.md) – `https://timelimit.io/LinkParentMailAddressRequest`
@@ -75,6 +79,8 @@
 * [ServerDataStatus](./serverdatastatus.md) – `https://timelimit.io/ServerDataStatus`
 
 * [SetAdultRoleRequest](./setadultrolerequest.md) – `https://timelimit.io/SetAdultRoleRequest`
+
+* [SetChildMailRequest](./setchildmailrequest.md) – `https://timelimit.io/SetChildMailRequest`
 
 * [SignInByGoogleRequest](./signinbygooglerequest.md) – `https://timelimit.io/SignInByGoogleRequest`
 

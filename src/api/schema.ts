@@ -231,6 +231,26 @@ export interface SetAdultRoleRequest {
   role: AdultRole
 }
 
+// @tag:family-join-google
+export interface SetChildMailRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  childUserId: string
+  mail: string | null
+}
+
+// @tag:family-join-google
+export interface JoinPreviewRequest {
+  idToken: string
+}
+
+// @tag:family-join-google
+export interface JoinRequest {
+  idToken: string
+  registerToken: string
+}
+
 // @tag:adult-role
 export interface RemoveAdultRequest {
   deviceAuthToken: string

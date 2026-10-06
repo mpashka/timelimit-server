@@ -164,7 +164,7 @@ async function assertNotLastAdmin ({ transaction, familyId, adult, what }: {
   }
 }
 
-async function announceUserListChange ({ transaction, websocket, familyId, devicesChanged, level }: {
+export async function announceUserListChange ({ transaction, websocket, familyId, devicesChanged, level }: {
   transaction: SimpleDatabaseTransaction
   websocket: WebsocketApi
   familyId: string
