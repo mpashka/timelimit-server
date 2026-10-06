@@ -45,7 +45,10 @@ export const signInIntoFamily = async ({ database, eventHandler, mailAuthToken, 
 
     const userEntryUnsafe = await transaction.legacy.database.user.findOne({
       where: {
-        mail: mailInfo.mail
+        mail: mailInfo.mail,
+        // @tag:parent-invitation
+        // adultRole defaults to 'admin' on child rows too, so without the type a child's mail would add devices
+        type: 'parent'
       },
       attributes: ['familyId', 'userId', 'adultRole'],
       transaction: transaction.legacy.transaction
