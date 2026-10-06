@@ -30,6 +30,9 @@ export interface ParentInvitationAttributes {
   invitedByUserId: string
   createdAt: string
   role: AdultRole // @tag:adult-role
+  confirmByCode: boolean // @tag:family-join-link
+  // выдан приглашённому и ждёт, пока админ его введёт
+  confirmCode: string | null // @tag:family-join-link
 }
 
 export type ParentInvitationModel = Sequelize.Model<ParentInvitationAttributes> & ParentInvitationAttributes
@@ -50,7 +53,10 @@ export const attributes: SequelizeAttributes<ParentInvitationAttributes> = {
   role: {
     ...createEnumColumn([...adultRoles]),
     defaultValue: 'manager'
-  }
+  },
+  // @tag:family-join-link
+  confirmByCode: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false },
+  confirmCode: { type: Sequelize.STRING(4), allowNull: true, defaultValue: null }
 }
 
 export const createParentInvitationModel = (sequelize: Sequelize.Sequelize): ParentInvitationModelStatic => sequelize.define('ParentInvitation', attributes) as ParentInvitationModelStatic

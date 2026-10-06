@@ -85,9 +85,14 @@ export interface UserAttributesVersion9 {
   childMail: string | null
 }
 
+// @tag:family-join-link
+export interface UserAttributesVersion10 {
+  childMailConfirmByCode: boolean
+}
+
 export type UserAttributes = UserAttributesVersion1 & UserAttributesVersion2 &
   UserAttributesVersion3 & UserAttributesVersion4 & UserAttributesVersion5 & UserAttributesVersion6 &
-  UserAttributesVersion7 & UserAttributesVersion8 & UserAttributesVersion9
+  UserAttributesVersion7 & UserAttributesVersion8 & UserAttributesVersion9 & UserAttributesVersion10
 
 export type UserModel = Sequelize.Model<UserAttributes> & UserAttributes
 export type UserModelStatic = typeof Sequelize.Model & {
@@ -209,6 +214,15 @@ export const attributesVersion9: SequelizeAttributes<UserAttributesVersion9> = {
   }
 }
 
+// @tag:family-join-link
+export const attributesVersion10: SequelizeAttributes<UserAttributesVersion10> = {
+  childMailConfirmByCode: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  }
+}
+
 export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion1,
   ...attributesVersion2,
@@ -218,7 +232,8 @@ export const attributes: SequelizeAttributes<UserAttributes> = {
   ...attributesVersion6,
   ...attributesVersion7,
   ...attributesVersion8,
-  ...attributesVersion9
+  ...attributesVersion9,
+  ...attributesVersion10
 }
 
 export const createUserModel = (sequelize: Sequelize.Sequelize): UserModelStatic => sequelize.define('User', attributes) as UserModelStatic

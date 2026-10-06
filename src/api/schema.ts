@@ -220,6 +220,33 @@ export interface InviteParentRequest {
   parentPasswordSecondHash: string
   mail: string
   role?: AdultRole
+  confirmByCode?: boolean // @tag:family-join-link
+}
+
+// @tag:family-join-link
+export interface ConfirmParentInvitationRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  mail: string
+  code: string
+}
+
+// @tag:family-join-link
+export interface ConfirmDeviceJoinRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  code: string
+}
+
+// @tag:family-join-link
+export interface SendInvitationMailRequest {
+  deviceAuthToken: string
+  parentUserId: string
+  parentPasswordSecondHash: string
+  mail: string
+  link: string
 }
 
 // @tag:adult-role
@@ -238,6 +265,7 @@ export interface SetChildMailRequest {
   parentPasswordSecondHash: string
   childUserId: string
   mail: string | null
+  confirmByCode?: boolean // @tag:family-join-link
 }
 
 // @tag:family-join-google

@@ -48,7 +48,8 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
       'flags',
       'urlFilter',
       'adultRole',
-      'childMail'
+      'childMail',
+      'childMailConfirmByCode'
     ],
     transaction: transaction.legacy.transaction
   })).map((item) => ({
@@ -67,7 +68,8 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
     flags: item.flags,
     urlFilter: item.urlFilter,
     adultRole: item.adultRole,
-    childMail: item.childMail
+    childMail: item.childMail,
+    childMailConfirmByCode: item.childMailConfirmByCode
   }))
 
   // @tag:adult-role @tag:parent-code
@@ -175,6 +177,7 @@ export async function getUserList ({ transaction, familyEntry, viewerParentUserI
         pbd: limitLoginCategory?.preBlockDuration,
         adultRole: item.type === 'parent' ? item.adultRole : undefined, // @tag:adult-role
         childMail: viewerParentUserId !== null ? item.childMail ?? undefined : undefined, // @tag:family-join-google
+        childMailConfirmByCode: viewerParentUserId !== null && item.childMailConfirmByCode ? true : undefined, // @tag:family-join-link
         urlFilter: item.urlFilter !== null ? JSON.parse(item.urlFilter) as UrlFilter : undefined, // @tag:url-filter
         requests: item.type === 'child' ? requests.get(item.userId) ?? [] : undefined,
         appAllowances: item.type === 'child' ? allowances.get(item.userId) ?? [] : undefined,

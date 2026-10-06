@@ -45,6 +45,9 @@ export const assertIdWithinFamily = (id: string) => {
   }
 }
 
+// @tag:family-join-link
+export const generateConfirmCode = randomString.bind(null, '0123456789', 4)
+
 export const generateVersionId = randomString.bind(null, defaultAlphabet, 4)
 
 export const isVersionId = (id: string) => id.length === 4 && /^[a-zA-Z0-9]+$/.test(id)

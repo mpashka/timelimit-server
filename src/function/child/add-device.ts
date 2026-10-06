@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Unauthorized } from 'http-errors'
+import { Conflict, Unauthorized } from 'http-errors'
 import { RegisterChildDeviceRequest } from '../../api/schema'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../../database/simple'
 import { generateAuthToken, generateVersionId } from '../../util/token'
@@ -48,6 +48,11 @@ export const addChildDevice = async ({ database, eventHandler, websocket, reques
 
     if (!entry) {
       throw new Unauthorized()
+    }
+
+    // @tag:family-join-link
+    if (entry.confirmCode !== null && entry.confirmCode !== undefined) {
+      throw new Conflict('waiting for the administrator to enter the code shown on this device')
     }
 
     await entry.destroy({ transaction: transaction.legacy.transaction })

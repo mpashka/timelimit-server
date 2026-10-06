@@ -13,27 +13,20 @@
     "mail": {
       "type": "string"
     },
-    "role": {
-      "enum": [
-        "admin",
-        "manager",
-        "member"
-      ],
+    "link": {
       "type": "string"
-    },
-    "confirmByCode": {
-      "type": "boolean"
     }
   },
   "additionalProperties": false,
   "required": [
     "deviceAuthToken",
+    "link",
     "mail",
     "parentPasswordSecondHash",
     "parentUserId"
   ],
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InviteParentRequest",
-  "$id": "https://timelimit.io/InviteParentRequest"
+  "title": "SendInvitationMailRequest",
+  "$id": "https://timelimit.io/SendInvitationMailRequest"
 }

@@ -94,7 +94,8 @@ export async function createFamilyAndFirstParent ({
     mailNotificationFlags: maxMailNotificationFlags,
     blockedTimes: '',
     flags: '0',
-      adultRole: 'admin' // @tag:adult-role
+      adultRole: 'admin', // @tag:adult-role
+      childMailConfirmByCode: false
   }, { transaction: transaction.legacy.transaction })
 
   return { familyId, userId }

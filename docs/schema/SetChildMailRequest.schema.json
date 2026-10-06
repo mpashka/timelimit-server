@@ -18,6 +18,9 @@
         "null",
         "string"
       ]
+    },
+    "confirmByCode": {
+      "type": "boolean"
     }
   },
   "additionalProperties": false,

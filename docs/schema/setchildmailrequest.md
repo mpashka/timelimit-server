@@ -16,13 +16,14 @@ https://timelimit.io/SetChildMailRequest
 
 # SetChildMailRequest Properties
 
-| Property                                              | Type     | Required | Nullable       | Defined by                                                                                                                                                        |
-| :---------------------------------------------------- | :------- | :------- | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [deviceAuthToken](#deviceauthtoken)                   | `string` | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-deviceauthtoken.md "https://timelimit.io/SetChildMailRequest#/properties/deviceAuthToken")                   |
-| [parentUserId](#parentuserid)                         | `string` | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-parentuserid.md "https://timelimit.io/SetChildMailRequest#/properties/parentUserId")                         |
-| [parentPasswordSecondHash](#parentpasswordsecondhash) | `string` | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-parentpasswordsecondhash.md "https://timelimit.io/SetChildMailRequest#/properties/parentPasswordSecondHash") |
-| [childUserId](#childuserid)                           | `string` | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-childuserid.md "https://timelimit.io/SetChildMailRequest#/properties/childUserId")                           |
-| [mail](#mail)                                         | `string` | Required | can be null    | [SetChildMailRequest](setchildmailrequest-properties-mail.md "https://timelimit.io/SetChildMailRequest#/properties/mail")                                         |
+| Property                                              | Type      | Required | Nullable       | Defined by                                                                                                                                                        |
+| :---------------------------------------------------- | :-------- | :------- | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [deviceAuthToken](#deviceauthtoken)                   | `string`  | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-deviceauthtoken.md "https://timelimit.io/SetChildMailRequest#/properties/deviceAuthToken")                   |
+| [parentUserId](#parentuserid)                         | `string`  | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-parentuserid.md "https://timelimit.io/SetChildMailRequest#/properties/parentUserId")                         |
+| [parentPasswordSecondHash](#parentpasswordsecondhash) | `string`  | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-parentpasswordsecondhash.md "https://timelimit.io/SetChildMailRequest#/properties/parentPasswordSecondHash") |
+| [childUserId](#childuserid)                           | `string`  | Required | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-childuserid.md "https://timelimit.io/SetChildMailRequest#/properties/childUserId")                           |
+| [mail](#mail)                                         | `string`  | Required | can be null    | [SetChildMailRequest](setchildmailrequest-properties-mail.md "https://timelimit.io/SetChildMailRequest#/properties/mail")                                         |
+| [confirmByCode](#confirmbycode)                       | `boolean` | Optional | cannot be null | [SetChildMailRequest](setchildmailrequest-properties-confirmbycode.md "https://timelimit.io/SetChildMailRequest#/properties/confirmByCode")                       |
 
 ## deviceAuthToken
 
@@ -113,5 +114,23 @@ https://timelimit.io/SetChildMailRequest
 ### mail Type
 
 `string`
+
+## confirmByCode
+
+
+
+`confirmByCode`
+
+* is optional
+
+* Type: `boolean`
+
+* cannot be null
+
+* defined in: [SetChildMailRequest](setchildmailrequest-properties-confirmbycode.md "https://timelimit.io/SetChildMailRequest#/properties/confirmByCode")
+
+### confirmByCode Type
+
+`boolean`
 
 # SetChildMailRequest Definitions

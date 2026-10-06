@@ -25,7 +25,7 @@ import { createAuthTokenByMailAddress } from '../function/authentication'
 import { isMailAddressKnownToServer } from '../function/parent-invitation'
 import { sendLoginCode, signInByMailCode } from '../function/authentication/login-by-mail'
 import { GoogleIdTokenException, verifyGoogleIdToken } from '../util/google-id-token'
-import { isMailAddressCoveredByWhitelist, isMailServerBlacklisted, sanitizeMailAddress } from '../util/mail'
+import { canSendMail, isMailAddressCoveredByWhitelist, isMailServerBlacklisted, sanitizeMailAddress } from '../util/mail'
 import {
   isJoinPreviewRequest,
   isJoinRequest,
@@ -55,8 +55,18 @@ export const createAuthRouter = (database: SimpleDatabase) => {
     else throw ex
   })).mail
 
+  // @tag:family-join-link
+  router.get('/capabilities', (_, res) => {
+    res.json({ mailLogin: canSendMail(), googleSignIn: config.googleClientIds.length > 0 })
+  })
+
   router.post('/send-mail-login-code-v2', json(), async (req, res, next) => {
     try {
+      // @tag:family-join-link
+      if (!canSendMail()) {
+        throw new NotImplemented('this server sends no mail because MAIL_TRANSPORT is not set: sign in with Google')
+      }
+
       if (!isSendMailLoginCodeRequest(req.body)) {
         throw new BadRequest()
       }
@@ -167,9 +177,9 @@ export const createAuthRouter = (database: SimpleDatabase) => {
       const { registerToken } = req.body
       const mail = sanitizeChildMail(await verifiedGoogleMail(req.body.idToken))
 
-      await database.transaction((transaction) => createJoinRegisterToken({ transaction, mail, registerToken }))
+      const { confirmCode } = await database.transaction((transaction) => createJoinRegisterToken({ transaction, mail, registerToken }))
 
-      res.json({ ok: true })
+      res.json(confirmCode === null ? { ok: true } : { ok: true, confirmCode }) // @tag:family-join-link
     } catch (ex) {
       next(ex)
     }

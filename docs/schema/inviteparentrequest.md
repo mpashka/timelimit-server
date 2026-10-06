@@ -16,13 +16,14 @@ https://timelimit.io/InviteParentRequest
 
 # InviteParentRequest Properties
 
-| Property                                              | Type     | Required | Nullable       | Defined by                                                                                                                                                        |
-| :---------------------------------------------------- | :------- | :------- | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [deviceAuthToken](#deviceauthtoken)                   | `string` | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-deviceauthtoken.md "https://timelimit.io/InviteParentRequest#/properties/deviceAuthToken")                   |
-| [parentUserId](#parentuserid)                         | `string` | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-parentuserid.md "https://timelimit.io/InviteParentRequest#/properties/parentUserId")                         |
-| [parentPasswordSecondHash](#parentpasswordsecondhash) | `string` | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-parentpasswordsecondhash.md "https://timelimit.io/InviteParentRequest#/properties/parentPasswordSecondHash") |
-| [mail](#mail)                                         | `string` | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-mail.md "https://timelimit.io/InviteParentRequest#/properties/mail")                                         |
-| [role](#role)                                         | `string` | Optional | cannot be null | [InviteParentRequest](inviteparentrequest-properties-role.md "https://timelimit.io/InviteParentRequest#/properties/role")                                         |
+| Property                                              | Type      | Required | Nullable       | Defined by                                                                                                                                                        |
+| :---------------------------------------------------- | :-------- | :------- | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [deviceAuthToken](#deviceauthtoken)                   | `string`  | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-deviceauthtoken.md "https://timelimit.io/InviteParentRequest#/properties/deviceAuthToken")                   |
+| [parentUserId](#parentuserid)                         | `string`  | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-parentuserid.md "https://timelimit.io/InviteParentRequest#/properties/parentUserId")                         |
+| [parentPasswordSecondHash](#parentpasswordsecondhash) | `string`  | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-parentpasswordsecondhash.md "https://timelimit.io/InviteParentRequest#/properties/parentPasswordSecondHash") |
+| [mail](#mail)                                         | `string`  | Required | cannot be null | [InviteParentRequest](inviteparentrequest-properties-mail.md "https://timelimit.io/InviteParentRequest#/properties/mail")                                         |
+| [role](#role)                                         | `string`  | Optional | cannot be null | [InviteParentRequest](inviteparentrequest-properties-role.md "https://timelimit.io/InviteParentRequest#/properties/role")                                         |
+| [confirmByCode](#confirmbycode)                       | `boolean` | Optional | cannot be null | [InviteParentRequest](inviteparentrequest-properties-confirmbycode.md "https://timelimit.io/InviteParentRequest#/properties/confirmByCode")                       |
 
 ## deviceAuthToken
 
@@ -123,5 +124,23 @@ https://timelimit.io/InviteParentRequest
 | `"admin"`   |             |
 | `"manager"` |             |
 | `"member"`  |             |
+
+## confirmByCode
+
+
+
+`confirmByCode`
+
+* is optional
+
+* Type: `boolean`
+
+* cannot be null
+
+* defined in: [InviteParentRequest](inviteparentrequest-properties-confirmbycode.md "https://timelimit.io/InviteParentRequest#/properties/confirmByCode")
+
+### confirmByCode Type
+
+`boolean`
 
 # InviteParentRequest Definitions

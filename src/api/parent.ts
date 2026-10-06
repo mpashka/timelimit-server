@@ -19,25 +19,27 @@ import * as Sequelize from 'sequelize'
 import { json } from 'body-parser'
 import { createHmac } from 'crypto'
 import { Router } from 'express'
-import { BadRequest, Forbidden, Unauthorized } from 'http-errors'
+import { BadRequest, Forbidden, NotImplemented, Unauthorized } from 'http-errors'
 import { config } from '../config'
 import { SimpleDatabase, SimpleDatabaseTransaction } from '../database/simple'
 import { deleteAccount } from '../function/cleanup/account-deletion'
 import { deleteFamilyByAdmin, leaveFamily, removeAdult, setAdultRole } from '../function/family-adults'
-import { setChildMail } from '../function/child-mail'
+import { confirmDeviceJoin, setChildMail } from '../function/child-mail'
 import { removeDevice } from '../function/device/remove-device'
 import { createAddDeviceToken } from '../function/parent/create-add-device-token'
 import { createFamily } from '../function/parent/create-family'
 import { getStatusByMailToken } from '../function/parent/get-status-by-mail-address'
 import { linkMailAddress } from '../function/parent/link-mail-address'
 import {
-  findOwnFamilySize, findReceivedParentInvitation, inviteParent, listParentInvitations, revokeParentInvitation
+  confirmParentInvitation, describeInvitationLetter, findOwnFamilySize, findReceivedParentInvitation, inviteParent,
+  listParentInvitations, revokeParentInvitation
 } from '../function/parent-invitation'
 import { recoverParentPassword } from '../function/parent/recover-parent-password'
 import { signInIntoFamily } from '../function/parent/sign-in-into-family'
 import { resolveSubject } from '../function/sync/subject'
 import { validateU2fIntegrity, U2fValidationError } from '../function/u2f'
 import { createIdentityToken, MissingSignSecretException } from '../util/identity-token'
+import { canSendMail, sendInvitationMail } from '../util/mail'
 import { WebsocketApi } from '../websocket'
 import { AdultRole, adultRoleRefusal } from '../model/adultrole'
 import { AddDeviceResponse, CreateAddDeviceTokenResponse, StatusOfMailAddressResponse } from '../object/apiresponse'
@@ -46,6 +48,7 @@ import {
   isCreateFamilyByMailTokenRequest,
   isCreateRegisterDeviceTokenRequest, isLinkParentMailAddressRequest,
   isListParentInvitationsRequest, isParentInvitationRequest, isInviteParentRequest,
+  isConfirmParentInvitationRequest, isConfirmDeviceJoinRequest, isSendInvitationMailRequest,
   isSetAdultRoleRequest, isSetChildMailRequest, isRemoveAdultRequest, isLeaveFamilyRequest, isDeleteFamilyRequest,
   isMailAuthTokenRequestBody, isRecoverParentPasswordRequest,
   isRemoveDeviceRequest, isSignIntoFamilyRequest, isRequestIdentityTokenRequest,
@@ -323,7 +326,9 @@ export const createParentRouter = ({
           requiredRole: 'admin'
         })
 
-        return inviteParent({ transaction, familyId, invitedByUserId: parentEntry.userId, mail: body.mail, role: body.role ?? 'manager' })
+        return inviteParent({
+          transaction, familyId, invitedByUserId: parentEntry.userId, mail: body.mail, role: body.role ?? 'manager', confirmByCode: body.confirmByCode ?? false
+        })
       })
 
       res.json(invitation)
@@ -386,6 +391,97 @@ export const createParentRouter = ({
     }
   })
 
+  // @tag:family-join-link
+  router.post('/confirm-parent-invitation', json(), async (req, res, next) => {
+    try {
+      if (!isConfirmParentInvitationRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await confirmParentInvitation({ transaction, familyId, mail: body.mail, code: body.code })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:family-join-link
+  router.post('/confirm-device-join', json(), async (req, res, next) => {
+    try {
+      if (!isConfirmDeviceJoinRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      const body = req.body
+
+      await database.transaction(async (transaction) => {
+        const { familyId } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        await confirmDeviceJoin({ transaction, familyId, code: body.code })
+      })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
+  // @tag:family-join-link
+  router.post('/send-invitation-mail', json(), async (req, res, next) => {
+    try {
+      if (!isSendInvitationMailRequest(req.body)) {
+        throw new BadRequest()
+      }
+
+      if (!canSendMail()) {
+        throw new NotImplemented('this server sends no mail because MAIL_TRANSPORT is not set: copy the link and send it yourself')
+      }
+
+      const body = req.body
+
+      if (!/^https?:\/\/\S+$/.test(body.link)) {
+        throw new BadRequest('link must be an http(s) address')
+      }
+
+      const letter = await database.transaction(async (transaction) => {
+        const { familyId, parentEntry } = await assertAuthValidAndReturnDetails({
+          authToken: body.deviceAuthToken,
+          parentId: body.parentUserId,
+          secondPasswordHash: body.parentPasswordSecondHash,
+          transaction,
+          requiredRole: 'admin'
+        })
+
+        return describeInvitationLetter({ transaction, familyId, inviterUserId: parentEntry.userId, mail: body.mail })
+      })
+
+      await sendInvitationMail({ ...letter, link: body.link })
+
+      res.json({ ok: true })
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
   // @tag:adult-role
   router.post('/set-adult-role', json(), async (req, res, next) => {
     try {
@@ -431,7 +527,7 @@ export const createParentRouter = ({
           requiredRole: 'admin'
         })
 
-        await setChildMail({ transaction, websocket, familyId, childUserId: body.childUserId, mail: body.mail })
+        await setChildMail({ transaction, websocket, familyId, childUserId: body.childUserId, mail: body.mail, confirmByCode: body.confirmByCode ?? false })
       })
 
       res.json({ ok: true })

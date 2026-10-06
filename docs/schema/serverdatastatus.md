@@ -2942,6 +2942,7 @@ Reference this group by using
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-urlfilter.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 | [adultRole](#adultrole)                                   | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-adultrole.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/adultRole")                                   |
 | [childMail](#childmail)                                   | `string`  | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-childmail.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/childMail")                                   |
+| [childMailConfirmByCode](#childmailconfirmbycode)         | `boolean` | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-childmailconfirmbycode.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/childMailConfirmByCode")         |
 | [requests](#requests)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-requests.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/requests")                                     |
 | [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appAllowances")                           |
 | [appRules](#apprules)                                     | `array`   | Optional | cannot be null | [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/appRules")                                     |
@@ -3307,6 +3308,24 @@ Reference this group by using
 #### childMail Type
 
 `string`
+
+### childMailConfirmByCode
+
+
+
+`childMailConfirmByCode`
+
+* is optional
+
+* Type: `boolean`
+
+* cannot be null
+
+* defined in: [ServerDataStatus](serverdatastatus-definitions-serveruserentry-properties-childmailconfirmbycode.md "https://timelimit.io/ServerDataStatus#/definitions/ServerUserEntry/properties/childMailConfirmByCode")
+
+#### childMailConfirmByCode Type
+
+`boolean`
 
 ### requests
 

@@ -890,6 +890,9 @@
         "childMail": {
           "type": "string"
         },
+        "childMailConfirmByCode": {
+          "type": "boolean"
+        },
         "requests": {
           "type": "array",
           "items": {

@@ -37,6 +37,7 @@ https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry
 | [urlFilter](#urlfilter)                                   | `object`  | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-urlfilter.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/urlFilter")                                                              |
 | [adultRole](#adultrole)                                   | `string`  | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-adultrole.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/adultRole")                                   |
 | [childMail](#childmail)                                   | `string`  | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-childmail.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/childMail")                                   |
+| [childMailConfirmByCode](#childmailconfirmbycode)         | `boolean` | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-childmailconfirmbycode.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/childMailConfirmByCode")         |
 | [requests](#requests)                                     | `array`   | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-requests.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/requests")                                     |
 | [appAllowances](#appallowances)                           | `array`   | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-appallowances.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/appAllowances")                           |
 | [appRules](#apprules)                                     | `array`   | Optional | cannot be null | [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-apprules.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/appRules")                                     |
@@ -402,6 +403,24 @@ https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry
 ### childMail Type
 
 `string`
+
+## childMailConfirmByCode
+
+
+
+`childMailConfirmByCode`
+
+* is optional
+
+* Type: `boolean`
+
+* cannot be null
+
+* defined in: [AddDeviceResponse](adddeviceresponse-definitions-serveruserentry-properties-childmailconfirmbycode.md "https://timelimit.io/AddDeviceResponse#/definitions/ServerUserEntry/properties/childMailConfirmByCode")
+
+### childMailConfirmByCode Type
+
+`boolean`
 
 ## requests
 

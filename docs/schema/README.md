@@ -14,6 +14,10 @@
 
 * [ClientPushChangesRequest](./clientpushchangesrequest.md) – `https://timelimit.io/ClientPushChangesRequest`
 
+* [ConfirmDeviceJoinRequest](./confirmdevicejoinrequest.md) – `https://timelimit.io/ConfirmDeviceJoinRequest`
+
+* [ConfirmParentInvitationRequest](./confirmparentinvitationrequest.md) – `https://timelimit.io/ConfirmParentInvitationRequest`
+
 * [CreateAddDeviceTokenResponse](./createadddevicetokenresponse.md "POST /parent/create-add-device-token") – `https://timelimit.io/CreateAddDeviceTokenResponse`
 
 * [CreateFamilyByMailTokenRequest](./createfamilybymailtokenrequest.md) – `https://timelimit.io/CreateFamilyByMailTokenRequest`
@@ -67,6 +71,8 @@
 * [RequestWithAuthToken](./requestwithauthtoken.md) – `https://timelimit.io/RequestWithAuthToken`
 
 * [RevokeParentSessionRequest](./revokeparentsessionrequest.md) – `https://timelimit.io/RevokeParentSessionRequest`
+
+* [SendInvitationMailRequest](./sendinvitationmailrequest.md) – `https://timelimit.io/SendInvitationMailRequest`
 
 * [SendMailLoginCodeRequest](./sendmaillogincoderequest.md) – `https://timelimit.io/SendMailLoginCodeRequest`
 

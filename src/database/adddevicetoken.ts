@@ -32,7 +32,13 @@ export interface AddDeviceTokenAttributesVersion2 {
   userId: string | null
 }
 
-export type AddDeviceTokenAttributes = AddDeviceTokenAttributesVersion1 & AddDeviceTokenAttributesVersion2
+// @tag:family-join-link
+export interface AddDeviceTokenAttributesVersion3 {
+  // не null = устройство не заводится, пока админ не введёт эти цифры
+  confirmCode: string | null
+}
+
+export type AddDeviceTokenAttributes = AddDeviceTokenAttributesVersion1 & AddDeviceTokenAttributesVersion2 & AddDeviceTokenAttributesVersion3
 
 export type AddDeviceTokenModel = Sequelize.Model<AddDeviceTokenAttributes> & AddDeviceTokenAttributes
 export type AddDeviceTokenModelStatic = typeof Sequelize.Model & {
@@ -54,9 +60,15 @@ export const attributesVersion2: SequelizeAttributes<AddDeviceTokenAttributesVer
   userId: { ...optionalIdWithinFamilyColumn, allowNull: true, defaultValue: null }
 }
 
+// @tag:family-join-link
+export const attributesVersion3: SequelizeAttributes<AddDeviceTokenAttributesVersion3> = {
+  confirmCode: { type: Sequelize.STRING(4), allowNull: true, defaultValue: null }
+}
+
 export const attributes: SequelizeAttributes<AddDeviceTokenAttributes> = {
   ...attributesVersion1,
-  ...attributesVersion2
+  ...attributesVersion2,
+  ...attributesVersion3
 }
 
 export const createAddDeviceTokenModel = (sequelize: Sequelize.Sequelize): AddDeviceTokenModelStatic => sequelize.define('AddDeviceToken', attributes) as AddDeviceTokenModelStatic

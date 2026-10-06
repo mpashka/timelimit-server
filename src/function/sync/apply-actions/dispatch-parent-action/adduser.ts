@@ -45,7 +45,8 @@ export async function dispatchAddUser ({ action, cache }: {
     mailNotificationFlags: 0,
     blockedTimes: '',
     flags: '0',
-    adultRole: 'manager' // @tag:adult-role
+    adultRole: 'manager', // @tag:adult-role
+    childMailConfirmByCode: false
   }, { transaction: cache.transaction.legacy.transaction })
 
   cache.invalidiateUserList = true

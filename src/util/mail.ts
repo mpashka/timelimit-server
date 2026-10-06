@@ -174,6 +174,33 @@ export const sendDeviceLinkedMail = async ({ receiver, deviceName, locale }: {
   })
 }
 
+// @tag:family-join-link
+export const canSendMail = () => mailTransport !== null
+
+const invitationMailSender = createMailTemplateSender('invitation')
+
+// @tag:family-join-link
+export const sendInvitationMail = async ({ receiver, inviterName, inviterMail, familyName, link }: {
+  receiver: string
+  inviterName: string
+  inviterMail: string
+  familyName: string
+  link: string
+}) => {
+  await invitationMailSender.sendMail({
+    receiver,
+    params: {
+      subject: 'Приглашение в семью «' + familyName + '» в TimeLimit',
+      receiver,
+      inviterName,
+      inviterMail,
+      familyName,
+      link,
+      mailimprint
+    }
+  })
+}
+
 const passwordRecoveryUsedMailSender = createMailTemplateSender('password-recovery-used')
 
 export const sendPasswordRecoveryUsedMail = async ({ receiver, locale }: {

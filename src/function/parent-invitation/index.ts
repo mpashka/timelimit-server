@@ -22,7 +22,7 @@ import { maxMailNotificationFlags } from '../../database/user'
 import { AdultRole } from '../../model/adultrole'
 import { OwnFamily, ParentSessionInfo, ReceivedParentInvitation } from '../../object/apiresponse'
 import { sanitizeMailAddress } from '../../util/mail'
-import { generateIdWithinFamily, generateVersionId } from '../../util/token'
+import { generateConfirmCode, generateIdWithinFamily, generateVersionId } from '../../util/token'
 import { WebsocketApi } from '../../websocket'
 import { requireMailAndLocaleByAuthToken } from '../authentication'
 import { deleteFamilies } from '../cleanup/delete-families'
@@ -34,7 +34,13 @@ export interface ParentInvitationInfo {
   mail: string
   createdAt: number
   role: AdultRole // @tag:adult-role
+  confirmByCode: boolean // @tag:family-join-link
+  // приглашённый уже согласился и держит код; самого кода админ не видит — он его вводит
+  awaitingCode: boolean // @tag:family-join-link
 }
+
+// @tag:family-join-link
+export type AcceptParentInvitationResult = ParentSessionInfo | { awaitingConfirmation: { code: string } }
 
 // @tag:parent-invitation
 // Та же семья, что уходит приглашённому адресу в /parent/get-status-by-mail-address, плюс её
@@ -45,12 +51,13 @@ export interface OwnFamilySize extends OwnFamily {
 
 // @tag:parent-invitation
 // Адрес со своей семьёй приглашать можно: что с ней делать, решает согласие (acceptParentInvitation).
-export async function inviteParent ({ transaction, familyId, invitedByUserId, mail: rawMail, role }: {
+export async function inviteParent ({ transaction, familyId, invitedByUserId, mail: rawMail, role, confirmByCode }: {
   transaction: SimpleDatabaseTransaction
   familyId: string
   invitedByUserId: string
   mail: string
   role: AdultRole
+  confirmByCode: boolean
 }): Promise<ParentInvitationInfo> {
   const mail = invitationAddressOf(rawMail)
 
@@ -78,11 +85,17 @@ export async function inviteParent ({ transaction, familyId, invitedByUserId, ma
       throw new Conflict(mail + ' is already invited into another family')
     }
 
-    if (existingInvitation.role !== role) {
-      await existingInvitation.update({ role }, { transaction: transaction.legacy.transaction })
+    if (existingInvitation.role !== role || existingInvitation.confirmByCode !== confirmByCode) {
+      await existingInvitation.update({ role, confirmByCode }, { transaction: transaction.legacy.transaction })
     }
 
-    return { mail, createdAt: parseInt(existingInvitation.createdAt, 10), role }
+    return {
+      mail,
+      createdAt: parseInt(existingInvitation.createdAt, 10),
+      role,
+      confirmByCode,
+      awaitingCode: confirmByCode && existingInvitation.confirmCode !== null
+    }
   }
 
   const createdAt = Date.now()
@@ -92,10 +105,12 @@ export async function inviteParent ({ transaction, familyId, invitedByUserId, ma
     familyId,
     invitedByUserId,
     createdAt: createdAt.toString(10),
-    role
+    role,
+    confirmByCode,
+    confirmCode: null
   }, { transaction: transaction.legacy.transaction })
 
-  return { mail, createdAt, role }
+  return { mail, createdAt, role, confirmByCode, awaitingCode: false }
 }
 
 // @tag:parent-invitation
@@ -109,7 +124,33 @@ export async function listParentInvitations ({ transaction, familyId }: {
     transaction: transaction.legacy.transaction
   })
 
-  return rows.map((row) => ({ mail: row.mail, createdAt: parseInt(row.createdAt, 10), role: row.role }))
+  return rows.map((row) => ({
+    mail: row.mail,
+    createdAt: parseInt(row.createdAt, 10),
+    role: row.role,
+    confirmByCode: row.confirmByCode,
+    awaitingCode: row.confirmByCode && row.confirmCode !== null
+  }))
+}
+
+// @tag:family-join-link
+export async function confirmParentInvitation ({ transaction, familyId, mail, code }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  mail: string
+  code: string
+}): Promise<void> {
+  const invitation = await transaction.legacy.database.parentInvitation.findOne({
+    where: { familyId, mail: invitationAddressOf(mail) ?? mail },
+    transaction: transaction.legacy.transaction
+  })
+
+  if (!invitation) throw new Conflict('no invitation for ' + mail + ' in this family')
+  if (!invitation.confirmByCode) throw new Conflict('the invitation of ' + mail + ' needs no code')
+  if (invitation.confirmCode === null) throw new Conflict(mail + ' has not accepted yet, so there is no code to confirm')
+  if (invitation.confirmCode !== code.trim()) throw new Conflict('wrong code: ask ' + mail + ' for the four digits on their screen')
+
+  await invitation.update({ confirmByCode: false, confirmCode: null }, { transaction: transaction.legacy.transaction })
 }
 
 // @tag:parent-invitation
@@ -126,6 +167,26 @@ export async function revokeParentInvitation ({ transaction, familyId, mail }: {
   if (removed === 0) {
     throw new Conflict('no invitation for ' + mail + ' in this family')
   }
+}
+
+// @tag:family-join-link
+export async function describeInvitationLetter ({ transaction, familyId, inviterUserId, mail }: {
+  transaction: SimpleDatabaseTransaction
+  familyId: string
+  inviterUserId: string
+  mail: string
+}): Promise<{ receiver: string, inviterName: string, inviterMail: string, familyName: string }> {
+  const { database, transaction: legacyTransaction } = transaction.legacy
+  const receiver = invitationAddressOf(mail) ?? mail
+
+  const invitation = await database.parentInvitation.findOne({ where: { familyId, mail: receiver }, transaction: legacyTransaction })
+
+  if (!invitation) throw new Conflict('no invitation for ' + mail + ' in this family: invite first, then send the letter')
+
+  const inviter = await database.user.findOne({ where: { familyId, userId: inviterUserId }, attributes: ['name', 'mail'], transaction: legacyTransaction })
+  const family = await database.family.findOne({ where: { familyId }, attributes: ['name'], transaction: legacyTransaction })
+
+  return { receiver, inviterName: inviter?.name ?? '', inviterMail: inviter?.mail ?? '', familyName: family?.name ?? '' }
 }
 
 // @tag:parent-invitation
@@ -206,11 +267,11 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
   timeZone: string
   password: PlaintextParentPassword | null
   // no transaction here because this is directly called from an API endpoint
-}): Promise<ParentSessionInfo> => {
+}): Promise<AcceptParentInvitationResult> => {
   if (password) assertPlaintextParentPasswordValid(password)
 
   return database.transaction(async (transaction) => {
-    const { mail } = await requireMailAndLocaleByAuthToken({ mailAuthToken, transaction, invalidate: true })
+    const { mail } = await requireMailAndLocaleByAuthToken({ mailAuthToken, transaction, invalidate: false })
 
     const invitation = await transaction.legacy.database.parentInvitation.findOne({
       where: { mail: mail.toLowerCase() },
@@ -229,6 +290,23 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
           ownFamily.devices + ' devices — delete it or leave it first in your own web console')
       }
 
+    }
+
+    // @tag:family-join-link
+    // Токен входа не гасится, пока код не введён: страница приглашённого опрашивает этим же запросом.
+    if (invitation.confirmByCode) {
+      const code = invitation.confirmCode ?? generateConfirmCode()
+
+      if (invitation.confirmCode === null) {
+        await invitation.update({ confirmCode: code }, { transaction: transaction.legacy.transaction })
+      }
+
+      return { awaitingConfirmation: { code } }
+    }
+
+    await requireMailAndLocaleByAuthToken({ mailAuthToken, transaction, invalidate: true })
+
+    if (ownFamily) {
       await deleteFamilies({ transaction, familiyIds: [ownFamily.familyId] })
     }
 
@@ -252,7 +330,8 @@ export const acceptParentInvitation = async ({ database, websocket, mailAuthToke
       mailNotificationFlags: maxMailNotificationFlags,
       blockedTimes: '',
       flags: '0',
-      adultRole: invitation.role // @tag:adult-role
+      adultRole: invitation.role, // @tag:adult-role
+      childMailConfirmByCode: false
     }, { transaction: transaction.legacy.transaction })
 
     await invitation.destroy({ transaction: transaction.legacy.transaction })
